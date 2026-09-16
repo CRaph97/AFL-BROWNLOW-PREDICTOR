@@ -37,3 +37,21 @@
   `docs/MODEL_COMPARISON.md`, `docs/FEATURE_ABLATION.md`, `docs/CALIBRATION.md`,
   `docs/ERROR_ANALYSIS.md`, `docs/REPUTATION_EXPERIMENT.md`, `docs/EXPERIMENTAL_GAMESTATE_MODEL.md`,
   `docs/PHASE4_DECISIONS.md`. No 2026 forecasts, Monte Carlo simulation, or leaderboard produced.
+- Phase 5: produced the full 2026 Brownlow production forecast. Extended CORE/ADVANCED with the
+  complete, real 2026 home-and-away season (207 matches; additive files only, Phase 1-4 outputs
+  untouched). Built 4 scenarios on Phase 4's validated Plackett-Luce architecture (historical /
+  recent-era / stats-assisted / structural-break sensitivity bands) to address the 2026
+  umpire-statistics rule change -- a genuine structural break with no historical precedent -- combined
+  into a documented, non-uniform ensemble (0.45/0.20/0.35). Ran a recent-history window comparison
+  (recent5 confirmed best, second independent confirmation of Phase 4's recency finding), a
+  reputation on/off comparison, and a 100,000-simulation Monte Carlo season simulation (generative
+  mixture sampling, exact 6-vote-per-match conservation verified in all 100,000 sims). Found and fixed
+  two real methodological issues: (1) utility-space ensembling was mechanically flattening
+  probabilities -- switched to a probability-space linear opinion pool; (2) reputation/season-to-date
+  features cannot exist for an unrevealed season -- fixed via a documented freeze-at-end-of-last-season
+  proxy for reputation, and disclosed (not patched) as a genuine 6-of-207-match gap for the CORE
+  lagged-form season-to-date features. Headline result: Nick Daicos projected as the 2026 leader
+  (~44.9 EV), the most scenario-stable top-10 projection; Zak Butters is the most structural-break-
+  sensitive top-10 player. All 19 Phase 1-4 tests still pass. New docs: `docs/2026_DATA_VALIDATION.md`,
+  `docs/2026_MODELLING_METHODOLOGY.md`, `docs/2026_STRUCTURAL_BREAK.md`, `docs/2026_FINAL_REPORT.md`,
+  `docs/2026_CONTENDER_ANALYSIS.md`, `docs/PHASE4_FINAL.md`. Not committed to git per instruction.

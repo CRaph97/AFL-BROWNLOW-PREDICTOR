@@ -1,0 +1,9 @@
+2026 role_source breakdown (n=9522 player-match rows):
+role_source
+lagged_proxy                    7516
+unknown_insufficient_history    2006
+
+proportions:
+role_source
+lagged_proxy                    0.7893
+unknown_insufficient_history    0.2107

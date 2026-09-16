@@ -1,9 +1,46 @@
 # Project State — AFL Brownlow Predictor
 
 Last updated: 2026-09-17
-Current phase: **Phase 4 (Formal Model Construction + Backtesting) complete, pending user review.**
-Phase 1+2 baseline committed as `034cbf0`, Phase 3 as `c42d46f`. Per the Phase 4 stop condition: no 2026
-Brownlow forecasts, no full-season Monte Carlo simulation, and no public leaderboard have been produced.
+Current phase: **Phase 5 (2026 Production Forecast) complete, pending user review. Not yet committed to git
+per instruction — all Phase 5 changes are in the working tree for morning review.**
+Phase 1+2 baseline committed as `034cbf0`, Phase 3 as `c42d46f`, Phase 4 as `c7d0d09`.
+
+---
+
+## Phase 5 summary (2026 production forecast — see docs/2026_FINAL_REPORT.md for the full detail)
+
+**Strategic change**: 2026 introduced umpire-visible-statistics-assisted voting, a genuine structural
+break with zero historical precedent. Rather than assuming old voting patterns transfer unchanged,
+Phase 5 built 4 scenarios (historical / recent-era / stats-assisted / structural-break sensitivity
+bands) on top of Phase 4's validated Plackett-Luce architecture (no new architecture introduced) and
+combined them into a documented, non-uniform ensemble.
+
+**Data**: the complete, REAL 2026 home-and-away season (207 matches, 25 rounds, 18 teams,
+2026-03-05 to 2026-08-23) was already available in the same fitzRoy mirror used throughout this
+project — no synthetic/proxy data was needed. Full validation: `docs/2026_DATA_VALIDATION.md`.
+
+**Headline result**: Nick Daicos (Collingwood) is the projected 2026 Brownlow leader, ~44.9 expected
+votes (95% Monte Carlo range 39-50), the single most scenario-stable top-10 projection. Zak Butters
+(Port Adelaide) is the most structural-break-sensitive top-10 player (his rank materially depends on
+how much 2026's rule change actually shifts umpire behaviour). Full leaderboard:
+`reports/2026_leaderboard.csv`; contender detail: `docs/2026_CONTENDER_ANALYSIS.md`.
+
+**Two real methodological findings surfaced during this phase** (both documented, not hidden):
+1. Ensembling Plackett-Luce utilities by forcing them to unit variance before averaging is WRONG (it
+   mechanically compresses/flattens the result) — fixed by switching to a probability-space linear
+   opinion pool. See `src/models/build_2026_ensemble.py`'s docstring.
+2. "Reputation"/"season-to-date" features cannot exist for a season whose votes are unrevealed (true
+   for every season's Round 1, not just 2026) — fixed for reputation via a documented freeze-at-
+   end-of-last-season proxy; left as an honest, disclosed 6-match (of 207) gap for the CORE lagged-form
+   season-to-date features, since patching it would break consistency with Phase 4's validated training
+   methodology. See `docs/2026_MODELLING_METHODOLOGY.md` §6b.
+
+**All 19 Phase 1-4 tests still pass unchanged.** No Phase 1-4 file was modified; every Phase 5 output
+is additive (new files only).
+
+**Not done in this run** (documented limitations, not oversights): kick-ins/intercept marks/spoils
+(3 of 17 confirmed umpire stats) are not scraped from the AFL's semi-public API; a defender-specific
+model correction (Phase 4's single largest identified accuracy lever) was not attempted.
 
 ---
 
@@ -272,8 +309,17 @@ assumed available for backtesting yet. Full table: `docs/2026_STATS_MIRROR.md`.
 4. Any objection to closing out the ~4% ADVANCED-join gap and the AFL-API historical-depth question as
    background Phase 3 investigation rather than blocking modelling on them now?
 
-## Next steps (Phase 3, not started)
+## Next steps (historical note: this section predates Phase 3/4/5 and is retained for the record only —
+see the Phase 5 summary at the top of this file for current status)
 
 Model comparison per `docs/MODELLING_PLAN.md` §2 (baseline → boosting → ranking model → game-state
 variant → hierarchical if needed), rolling-origin validation per §4, on the CORE/ADVANCED windows
 established above. No feature weighting, model fitting, or predictions until you confirm the above.
+
+## Actual next steps as of Phase 5 completion
+
+Phase 5 (2026 production forecast) is complete and awaiting your review; nothing has been committed to
+git yet. The natural first task for a future phase is to check the FINAL_ENSEMBLE forecast against the
+real 2026 Brownlow count once it is revealed (see `docs/2026_STRUCTURAL_BREAK.md` §5) — this is the
+first point at which the structural-break assumption becomes genuinely testable rather than a
+sensitivity band.

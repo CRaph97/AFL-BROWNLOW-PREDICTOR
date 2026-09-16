@@ -1,0 +1,13 @@
+{
+  "max_abs_p3_sum_error": 2.220446049250313e-16,
+  "max_abs_p2_sum_error": 2.220446049250313e-16,
+  "max_abs_p1_sum_error": 1.1102230246251565e-16,
+  "max_abs_ev_sum_error_vs_6": 8.881784197001252e-16,
+  "n_2026_matches_total": 207,
+  "n_2026_matches_covered_by_ensemble": 207,
+  "all_matches_covered": true,
+  "n_duplicate_player_match_rows": 0,
+  "expected_season_total_votes": 1242.0,
+  "actual_season_total_expected_votes": 1242.0,
+  "n_2026_core_rows_missing_key_stats": 0
+}
