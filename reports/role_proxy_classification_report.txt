@@ -1,0 +1,64 @@
+Cross-validated (grouped by player) overall accuracy: 0.768
+
+                    precision    recall  f1-score   support
+
+      KEY_DEFENDER       0.94      0.75      0.83       303
+       KEY_FORWARD       0.86      0.76      0.81       297
+   MEDIUM_DEFENDER       0.80      0.83      0.81       564
+    MEDIUM_FORWARD       0.74      0.78      0.76       520
+        MIDFIELDER       0.67      0.87      0.76       672
+MIDFIELDER_FORWARD       0.23      0.03      0.06       182
+              RUCK       0.96      0.96      0.96       164
+
+          accuracy                           0.77      2702
+         macro avg       0.74      0.71      0.71      2702
+      weighted avg       0.75      0.77      0.75      2702
+
+
+Decision tree structure (max_depth=4):
+|--- rebound_50s_z <= -0.62
+|   |--- hitouts_z <= -0.25
+|   |   |--- marks_inside_50_z <= 2.00
+|   |   |   |--- clearances_z <= 0.33
+|   |   |   |   |--- class: MEDIUM_FORWARD
+|   |   |   |--- clearances_z >  0.33
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |--- marks_inside_50_z >  2.00
+|   |   |   |--- clearances_z <= -0.71
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |   |--- clearances_z >  -0.71
+|   |   |   |   |--- class: MEDIUM_FORWARD
+|   |--- hitouts_z >  -0.25
+|   |   |--- hitouts_z <= 1.25
+|   |   |   |--- marks_inside_50_z <= 0.51
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |   |--- marks_inside_50_z >  0.51
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |--- hitouts_z >  1.25
+|   |   |   |--- hitouts_z <= 2.78
+|   |   |   |   |--- class: RUCK
+|   |   |   |--- hitouts_z >  2.78
+|   |   |   |   |--- class: RUCK
+|--- rebound_50s_z >  -0.62
+|   |--- clearances_z <= -0.32
+|   |   |--- one_percenters_z <= 1.01
+|   |   |   |--- goals_z <= -0.49
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |   |   |--- goals_z >  -0.49
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |--- one_percenters_z >  1.01
+|   |   |   |--- uncontested_possessions_z <= 0.19
+|   |   |   |   |--- class: KEY_DEFENDER
+|   |   |   |--- uncontested_possessions_z >  0.19
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |--- clearances_z >  -0.32
+|   |   |--- hitouts_z <= 0.70
+|   |   |   |--- rebound_50s_z <= 0.96
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |   |--- rebound_50s_z >  0.96
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |   |--- hitouts_z >  0.70
+|   |   |   |--- uncontested_possessions_z <= -0.47
+|   |   |   |   |--- class: RUCK
+|   |   |   |--- uncontested_possessions_z >  -0.47
+|   |   |   |   |--- class: RUCK

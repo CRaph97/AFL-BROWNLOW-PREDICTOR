@@ -1,7 +1,9 @@
 # Pinned per the Phase 1 technology decision: minimal dependencies, added only as needed.
-# Modelling libraries (scikit-learn, statsmodels, xgboost/lightgbm/catboost, PyMC) are
-# deliberately NOT included yet -- Phase 2 is data engineering only. Add them in Phase 3
-# when modelling actually begins, pinned the same way.
+# Full model-comparison libraries (xgboost/lightgbm/catboost, PyMC, statsmodels) are still NOT
+# included -- Phase 3 is exploratory analysis / feature engineering only, not model fitting.
+# scikit-learn and scipy were added in Phase 3, justified by a specific, bounded use each:
+# scikit-learn for the role-proxy decision tree (an exploratory classifier, not a Brownlow
+# predictor) and scipy for standard descriptive statistics (Spearman/point-biserial correlation).
 
 pandas==3.0.5
 pyarrow==25.0.1        # parquet read/write
@@ -11,3 +13,5 @@ lxml==6.1.3            # HTML parsing (pandas.read_html backend), used for spot-
 beautifulsoup4==4.15.0
 html5lib==1.1
 pytest==9.1.1
+scipy==1.18.1          # Phase 3: Spearman / point-biserial correlation
+scikit-learn==1.9.1    # Phase 3: role-proxy decision tree + grouped cross-validation + mutual information

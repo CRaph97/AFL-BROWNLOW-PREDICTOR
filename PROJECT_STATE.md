@@ -1,9 +1,88 @@
 # Project State — AFL Brownlow Predictor
 
-Last updated: 2026-09-16
-Current phase: **Phase 2 (Target + Data Foundation) complete, pending user review. Modelling has not
-started — per the stop condition, no feature weighting, model fitting, predictions, or simulations have
-been done.**
+Last updated: 2026-09-17
+Current phase: **Phase 3 (Exploratory Analysis + Feature Engineering) complete, pending user review.**
+Phase 1+2 baseline committed to git (commit `034cbf0`). No predictive modelling has started — per the
+Phase 3 stop condition, no feature weighting, XGBoost tuning, ranking models, 2026 predictions, or
+Monte Carlo simulation have been done. Descriptive/univariate statistics only.
+
+---
+
+## Phase 3 summary (see docs/PHASE3_DECISIONS.md for the full decision log)
+
+**New code:** `src/features/` — 4 `build_*.py` feature-construction modules (relative, context,
+teammate, composite indices), 2 role modules (real-label reference + validated statistical proxy),
+1 assembly script producing the versioned analytical dataset, 4 `analyze_*.py` descriptive-analysis
+scripts, and `event_feasibility.py` (experimental, not merged into the trainable dataset).
+
+**New data:** `data/processed/analytical_features_v1.parquet` (320,861 rows x 148 columns, additive —
+the Phase 2 canonical CORE/ADVANCED tables are untouched), `player_season_role.parquet`,
+`role_reference_2021_2025.parquet`.
+
+**New reports (`reports/`):** `feature_availability.csv`, `univariate_vote_relationships.csv`,
+`role_vote_summary.csv`, `season_vote_relationships.csv`, `correlation_matrix.csv`,
+`candidate_feature_sets.csv`, `role_proxy_confusion_matrix.csv` + classification report,
+`event_score_reconciliation_2024.csv`, `event_game_state_sample_match.csv`, plus 2 logged-for-review
+exception files (role-reference surname collisions).
+
+**New docs:** `docs/FEATURE_REGISTRY.md`, `docs/EXPLORATORY_ANALYSIS.md`, `docs/ROLE_ANALYSIS.md`,
+`docs/TEMPORAL_DRIFT.md`, `docs/LEAKAGE_AUDIT.md`, `docs/PHASE3_DECISIONS.md`.
+
+### Answering the Phase 3 required questions (section Q)
+
+1. **Strongest raw-stat correlates:** SuperCoach/AFL Fantasy points (Spearman 0.37/0.36) — stronger
+   than any single raw box-score stat — followed by `possession_impact_index`, disposals, effective
+   disposals, score involvements, contested possessions.
+2. **Match-relative vs raw:** match-relative disposal/contested-possession z-scores modestly but
+   consistently beat their raw equivalents (~0.01-0.02 correlation units).
+3. **Winner effect:** strong (8-14pp polling-rate gap).
+4. **Winner effect x margin:** yes, dramatically and asymmetrically — winners poll more as margin
+   grows (8.3%→13.5%), losers collapse to near-zero (5.2%→0.05%).
+5. **Teammate competition:** substantial — near 3x reduction in polling rate (27.8%→~9-10%) for an
+   identical own-performance band as more teammates also perform well.
+6. **Nonlinearities:** disposals and goals both strongly convex — the 30→35 disposal jump is worth
+   ~6x the 15→20 jump in polling-rate terms; 3-vote rate more than doubles per additional goal from 4
+   to 6.
+7. **Interactions worth testing:** performance x role, performance x win/margin, performance x
+   teammate competition.
+8. **Era drift:** winner effect flat across 1999-2025; clearances' vote-association has risen ~30-40%
+   relatively since the 2000s; goals show a mild recent decline.
+9. **Role effects:** very large — midfielders poll at 7.4x key defenders' rate and capture 64.5% of
+   all 3-vote games.
+10. **Redundant features:** 18 pairs at |r|>=0.85, notably clearances<->stoppage_clearances (0.91),
+    disposals<->effective_disposals (0.92), afl_fantasy_points<->supercoach_points (0.86).
+11. **CORE/ADVANCED/EXPERIMENTAL sets:** proposed in `docs/PHASE3_DECISIONS.md` and
+    `reports/candidate_feature_sets.csv` (109 CORE+ADVANCED features, 19 ADVANCED-only, 6 excluded as
+    metadata).
+12. **Features to discard:** metadata-only companions, several redundant pairs — see
+    `docs/PHASE3_DECISIONS.md` §4.
+13. **Does torpdata support credible game-state features?** Yes, but only after fixing a real bug
+    found during this audit (see below) — corrected chain-level reconciliation reaches 99.1% (goals)
+    / 96.0% (behinds) exact match against official scores across 215 2024 matches.
+
+### The most important Phase 3 finding: a real bug caught by "verify at scale"
+
+The single-match spot check in Phase 2's `docs/EVENT_DATA_2021_AUDIT.md` implied roughly an 83% behind
+reconstruction rate. Checking all 215 2024 matches (not just one) revealed the naive method actually
+achieves only **11.6%** — because a chain's `final_state` field is copied onto every action row in that
+chain, not just one, so naive row-counting massively over-counts rushed behinds. Root-caused and fixed
+(chain-level deduplication + correct team-attribution rule for `rushedOpp`), bringing the corrected rate
+to **96.0%**. This is now documented precisely in `docs/EXPLORATORY_ANALYSIS.md` §10 and the fixed logic
+lives in `src/features/event_feasibility.py`. Two of 215 matches still show large, undiagnosed
+discrepancies — flagged as an open item, not silently averaged away.
+
+### Open items for Phase 4 (from docs/PHASE3_DECISIONS.md §5-6)
+
+1. Role features must be rebuilt as season-to-date-only (not full-season aggregate) before any
+   forward-looking model use — currently a documented CONDITIONAL leakage risk, safe only for the
+   retrospective analysis done in Phase 3.
+2. The MIDFIELDER_FORWARD role-proxy class is statistically unrecoverable pre-2021 (F1 = 0.06) —
+   needs a decision on how to handle it.
+3. Two 2024 matches with large event-data reconciliation failures warrant a quick follow-up look.
+4. No multivariate model has been fit yet — every Phase 3 finding is univariate/descriptive; redundancy
+   and interaction effects that look large individually may overlap once modelled jointly.
+
+---
 
 ---
 

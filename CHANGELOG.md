@@ -13,3 +13,12 @@
   New docs: `docs/TARGET_VALIDATION.md`, `docs/DATA_COVERAGE.md`, `docs/2026_STATS_MIRROR.md`,
   `docs/EVENT_DATA_2021_AUDIT.md`. Updated: `DATA_DICTIONARY.md`, `PROJECT_STATE.md`,
   `docs/DATA_SOURCE_AUDIT.md` (Phase 2 addendum).
+- Phase 3: versioned analytical feature table (148 columns) built on top of the untouched Phase 2
+  canonical datasets -- match/team-relative features, teammate-competition features, a validated
+  role classifier (real labels 2021-2025, 76.8% cross-validated statistical proxy 1999-2020), and
+  6 transparent composite indices. Full descriptive/univariate exploratory analysis: role effects,
+  temporal drift, nonlinearity, winner x margin interaction, and a formal leakage audit. Found and
+  fixed a significant bug in event-chain score reconstruction (naive method: 11.6% match rate;
+  corrected: 96.0%) via full-season-scale validation. New docs: `docs/FEATURE_REGISTRY.md`,
+  `docs/EXPLORATORY_ANALYSIS.md`, `docs/ROLE_ANALYSIS.md`, `docs/TEMPORAL_DRIFT.md`,
+  `docs/LEAKAGE_AUDIT.md`, `docs/PHASE3_DECISIONS.md`. No predictive model has been fit.
