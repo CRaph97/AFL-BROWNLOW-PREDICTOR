@@ -1,0 +1,25 @@
+source_name,canonical_team_id,canonical_team_name,note
+Adelaide,adelaide,Adelaide,
+Brisbane,brisbane_lions,Brisbane Lions,footywire/player_stats abbreviated label for the same club as 'Brisbane Lions'
+Brisbane Bears,brisbane_lions,Brisbane Lions,"Treated as the same club license/continuation as Brisbane Lions (1997-). This is a documented modelling decision, not an uncontested fact: Brisbane Lions was formed in 1997 by a merger of Brisbane Bears and Fitzroy. AFL Tables and common convention treat Brisbane Lions as the continuing entity of Brisbane Bears. Fitzroy is kept as a SEPARATE canonical team (see 'Fitzroy' row) rather than folded in, since Fitzroy's own 1897-1996 playing history is not conventionally attributed to Brisbane Lions."
+Brisbane Lions,brisbane_lions,Brisbane Lions,
+Carlton,carlton,Carlton,
+Collingwood,collingwood,Collingwood,
+Essendon,essendon,Essendon,
+Fitzroy,fitzroy,Fitzroy,"Defunct after 1996 (merged into Brisbane Lions in 1997). Kept as its own canonical team rather than merged into Brisbane Lions -- see note on 'Brisbane Bears'."
+Footscray,western_bulldogs,Western Bulldogs,Pure rename in 1997. Same club license before and after.
+Fremantle,fremantle,Fremantle,
+Geelong,geelong,Geelong,
+Gold Coast,gold_coast,Gold Coast,
+GWS,greater_western_sydney,Greater Western Sydney,footywire/player_stats abbreviated label
+Greater Western Sydney,greater_western_sydney,Greater Western Sydney,
+Hawthorn,hawthorn,Hawthorn,
+Kangaroos,north_melbourne,North Melbourne,Pure rebrand 1999-2007. Same club license before and after.
+Melbourne,melbourne,Melbourne,
+North Melbourne,north_melbourne,North Melbourne,
+Port Adelaide,port_adelaide,Port Adelaide,
+Richmond,richmond,Richmond,
+St Kilda,st_kilda,St Kilda,
+Sydney,sydney,Sydney,South Melbourne relocated and renamed Sydney in 1982 -- out of scope of our 1984+ core window so not separately mapped.
+West Coast,west_coast,West Coast,
+Western Bulldogs,western_bulldogs,Western Bulldogs,

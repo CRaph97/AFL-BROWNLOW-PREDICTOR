@@ -1,0 +1,80 @@
+season,round,date,team_raw,player_first_name,player_surname,player_id
+2025,1,2025-03-29,Brisbane Lions,Charlie,Cameron,NOID_311438
+2025,2,2025-03-13,Richmond,Jack,Ross,NOID_311539
+2025,2,2025-03-16,West Coast,Jack,Graham,NOID_311901
+2025,3,2025-03-22,Richmond,Jack,Ross,NOID_312114
+2025,4,2025-03-29,Richmond,Jack,Ross,NOID_312481
+2025,4,2025-03-30,West Coast,Jack,Graham,NOID_312590
+2025,4,2025-03-30,West Coast,Jack,Williams,NOID_312603
+2025,5,2025-04-05,Richmond,Jack,Ross,NOID_312780
+2025,5,2025-04-05,Brisbane Lions,Charlie,Cameron,NOID_312795
+2025,5,2025-04-06,West Coast,Jack,Graham,NOID_312890
+2025,5,2025-04-06,West Coast,Jack,Williams,NOID_312902
+2025,6,2025-04-12,West Coast,Jack,Graham,NOID_313165
+2025,6,2025-04-12,West Coast,Jack,Williams,NOID_313178
+2025,6,2025-04-12,Brisbane Lions,Charlie,Cameron,NOID_313209
+2025,6,2025-04-13,Richmond,Jack,Ross,NOID_313287
+2025,7,2025-04-17,Brisbane Lions,Charlie,Cameron,NOID_313416
+2025,7,2025-04-18,West Coast,Jack,Graham,NOID_313509
+2025,7,2025-04-18,West Coast,Jack,Williams,NOID_313523
+2025,7,2025-04-19,Richmond,Jack,Ross,NOID_313655
+2025,8,2025-04-24,Richmond,Jack,Ross,NOID_313863
+2025,8,2025-04-26,Brisbane Lions,Charlie,Cameron,NOID_313991
+2025,8,2025-04-27,West Coast,Jack,Graham,NOID_314223
+2025,8,2025-04-27,West Coast,Jack,Williams,NOID_314236
+2025,9,2025-05-03,West Coast,Jack,Graham,NOID_314430
+2025,9,2025-05-03,West Coast,Jack,Williams,NOID_314443
+2025,9,2025-05-04,Richmond,Jack,Ross,NOID_314599
+2025,9,2025-05-04,Brisbane Lions,Charlie,Cameron,NOID_314612
+2025,10,2025-05-11,Richmond,Jack,Ross,NOID_314944
+2025,10,2025-05-11,West Coast,Jack,Graham,NOID_314959
+2025,10,2025-05-11,Brisbane Lions,Charlie,Cameron,NOID_315049
+2025,11,2025-05-18,Richmond,Jack,Ross,NOID_315358
+2025,11,2025-05-18,Brisbane Lions,Charlie,Cameron,NOID_315393
+2025,11,2025-05-18,West Coast,Jack,Graham,NOID_315443
+2025,12,2025-05-23,Richmond,Jack,Ross,NOID_315564
+2025,12,2025-05-24,Brisbane Lions,Charlie,Cameron,NOID_315647
+2025,12,2025-05-25,West Coast,Jack,Graham,NOID_315788
+2025,13,2025-05-29,Brisbane Lions,Charlie,Cameron,NOID_315900
+2025,13,2025-05-31,Richmond,Jack,Ross,NOID_316070
+2025,13,2025-06-01,West Coast,Jack,Graham,NOID_316180
+2025,13,2025-06-01,West Coast,Jack,Williams,NOID_316191
+2025,14,2025-06-06,Brisbane Lions,Charlie,Cameron,NOID_316291
+2025,14,2025-06-07,Richmond,Jack,Ross,NOID_316323
+2025,14,2025-06-08,West Coast,Jack,Graham,NOID_316480
+2025,14,2025-06-08,West Coast,Jack,Williams,NOID_316490
+2025,15,2025-06-14,Brisbane Lions,Charlie,Cameron,NOID_316682
+2025,15,2025-06-15,West Coast,Jack,Graham,NOID_316870
+2025,15,2025-06-15,West Coast,Jack,Williams,NOID_316881
+2025,16,2025-06-20,Brisbane Lions,Charlie,Cameron,NOID_316980
+2025,16,2025-06-22,Richmond,Jack,Ross,NOID_317220
+2025,17,2025-06-26,Carlton,Billy,Wilson,NOID_317270
+2025,17,2025-06-28,West Coast,Jack,Graham,NOID_317443
+2025,17,2025-06-28,West Coast,Jack,Williams,NOID_317456
+2025,17,2025-06-29,Richmond,Jack,Ross,NOID_317475
+2025,18,2025-07-04,West Coast,Jack,Graham,NOID_317651
+2025,18,2025-07-04,West Coast,Jack,Williams,NOID_317663
+2025,18,2025-07-05,Richmond,Jack,Ross,NOID_317773
+2025,18,2025-07-05,Brisbane Lions,Charlie,Cameron,NOID_317786
+2025,19,2025-07-10,Brisbane Lions,Charlie,Cameron,NOID_317993
+2025,19,2025-07-12,Richmond,Jack,Ross,NOID_318161
+2025,19,2025-07-13,West Coast,Jack,Williams,NOID_318376
+2025,20,2025-07-18,Brisbane Lions,Charlie,Cameron,NOID_318428
+2025,20,2025-07-19,West Coast,Jack,Williams,NOID_318629
+2025,20,2025-07-19,Richmond,Jack,Ross,NOID_318644
+2025,21,2025-07-26,Brisbane Lions,Charlie,Cameron,NOID_318958
+2025,21,2025-07-27,Richmond,Jack,Ross,NOID_319128
+2025,22,2025-08-02,Richmond,Jack,Ross,NOID_319381
+2025,22,2025-08-02,Brisbane Lions,Charlie,Cameron,NOID_319464
+2025,23,2025-08-09,Richmond,Jack,Ross,NOID_319727
+2025,23,2025-08-09,Brisbane Lions,Charlie,Cameron,NOID_319763
+2025,23,2025-08-09,Carlton,Billy,Wilson,NOID_319823
+2025,23,2025-08-10,West Coast,Jack,Graham,NOID_319998
+2025,24,2025-08-15,Brisbane Lions,Charlie,Cameron,NOID_320109
+2025,24,2025-08-16,Carlton,Billy,Wilson,NOID_320191
+2025,24,2025-08-17,Richmond,Jack,Ross,NOID_320348
+2025,24,2025-08-17,West Coast,Jack,Graham,NOID_320434
+2025,25,2025-08-21,Carlton,Billy,Wilson,NOID_320490
+2025,25,2025-08-23,Richmond,Jack,Ross,NOID_320647
+2025,25,2025-08-23,West Coast,Jack,Graham,NOID_320688
+2025,25,2025-08-24,Brisbane Lions,Charlie,Cameron,NOID_320820

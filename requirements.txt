@@ -1,0 +1,13 @@
+# Pinned per the Phase 1 technology decision: minimal dependencies, added only as needed.
+# Modelling libraries (scikit-learn, statsmodels, xgboost/lightgbm/catboost, PyMC) are
+# deliberately NOT included yet -- Phase 2 is data engineering only. Add them in Phase 3
+# when modelling actually begins, pinned the same way.
+
+pandas==3.0.5
+pyarrow==25.0.1        # parquet read/write
+pyreadr==0.5.6         # reads fitzRoy's .rda files without needing R installed
+requests==2.34.2
+lxml==6.1.3            # HTML parsing (pandas.read_html backend), used for spot-check validation only
+beautifulsoup4==4.15.0
+html5lib==1.1
+pytest==9.1.1
