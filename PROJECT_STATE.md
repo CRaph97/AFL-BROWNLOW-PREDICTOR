@@ -1,10 +1,78 @@
 # Project State — AFL Brownlow Predictor
 
 Last updated: 2026-09-17
-Current phase: **Phase 3 (Exploratory Analysis + Feature Engineering) complete, pending user review.**
-Phase 1+2 baseline committed to git (commit `034cbf0`). No predictive modelling has started — per the
-Phase 3 stop condition, no feature weighting, XGBoost tuning, ranking models, 2026 predictions, or
-Monte Carlo simulation have been done. Descriptive/univariate statistics only.
+Current phase: **Phase 4 (Formal Model Construction + Backtesting) complete, pending user review.**
+Phase 1+2 baseline committed as `034cbf0`, Phase 3 as `c42d46f`. Per the Phase 4 stop condition: no 2026
+Brownlow forecasts, no full-season Monte Carlo simulation, and no public leaderboard have been produced.
+
+---
+
+## Phase 4 summary (see docs/PHASE4_DECISIONS.md for the full decision log and all 14 question answers)
+
+**Section A (Phase 3 issue resolution):** role-leakage fixed (strictly lagged, prior-games-only
+inference; 17.3% of rows now honestly UNKNOWN rather than leaked), MIDFIELDER_FORWARD merged into a
+broader hybrid category (accuracy unchanged, confirming the merge was safe), lagged form features
+built, the two anomalous 2024 event-data matches root-caused (genuine incomplete source coverage,
+excluded via a clean rule), three separate CORE/ADVANCED/EXPERIMENTAL datasets built.
+
+**A major correctness bug found and fixed mid-phase**: `PlackettLuceModel` fit unstandardised,
+mixed-scale features through a non-log-space likelihood, causing catastrophic cancellation and silently
+corrupted results on the ADVANCED dataset (correct-3% ~10-20%, exact-3-2-1% exactly 0.000, log loss
+~2.5 — all symptoms, not a real "ADVANCED loses" finding). Fixed via train-only feature standardisation
++ a fully log-space likelihood; 9 new regression tests added (`tests/test_plackett_luce.py`), all
+passing; both the CORE backtest and ADVANCED comparison rerun cleanly after the fix. A second bug (error
+analysis crashing when segmenting by player-level attributes) was also found and fixed. Full writeup:
+`docs/PHASE4_DECISIONS.md`.
+
+**Models built**: Model 0 (Benchmark logistic), Model 1 (Plackett-Luce, the primary structurally-correct
+ranking model), Model 2a/2b (GBM utility / multiclass, using `HistGradientBoosting*` as an XGBoost
+substitute after a native-library ABI issue). **Model 1 with a recent-8-season training window wins on
+every tracked metric** (`docs/MODEL_BACKTEST.md`).
+
+**Experiments completed**: full 22-fold rolling-origin backtest (`docs/MODEL_BACKTEST.md`), ADVANCED vs
+CORE comparison (`docs/PHASE4_DECISIONS.md`), 8-season season-level pseudo-live backtest
+(`docs/MODEL_BACKTEST.md` §7), feature ablation + 3 hypothesis-test pairs (`docs/FEATURE_ABLATION.md`),
+reputation experiment (`docs/REPUTATION_EXPERIMENT.md`), game-state experiment, rerun and reconfirmed
+after the fix (`docs/EXPERIMENTAL_GAMESTATE_MODEL.md`), calibration analysis (`docs/CALIBRATION.md`),
+error analysis by segment (`docs/ERROR_ANALYSIS.md`), and an 8-fold model-stability analysis
+(`docs/PHASE4_DECISIONS.md`).
+
+### Headline findings
+
+1. **Model 1 (Plackett-Luce), recent-8 window**: correct_3=57.5%, exact_321=9.1%, best log loss
+   (0.183) and Brier score (0.088) of any model — a clean sweep, not a marginal win.
+2. **Context (win/margin) is the single biggest feature-family lever** (+5.7pp correct_3) — bigger than
+   any other addition in the whole ablation.
+3. **Role adds large, stable value after controlling for statistics** — `role_KEY_DEFENDER` has the
+   single largest, most stable coefficient of any feature in the model, yet the model still only
+   correctly picks key defenders as the actual 3-vote winner 12.5% of the time (vs 62.0% for
+   midfielders) — a coherent, well-quantified picture of a real, partially-but-not-fully-compensated
+   bias.
+4. **Teammate competition confirmed with a controlled, stable, negative coefficient** — not just a
+   univariate pattern from Phase 3.
+5. **Match-relative features add far less value than Phase 3's univariate analysis suggested** once a
+   properly-structured ranking model is in place — a genuine, honest correction to an earlier finding.
+6. **The win×margin interaction term is completely redundant** — confirmed twice, identical results
+   with/without.
+7. **Nonlinear terms and lagged-form features each trade one thing for another** (calibration vs
+   exact-pick accuracy; ranking vs calibration respectively) rather than being unambiguous wins.
+8. **Reputation (lagged prior vote-rate) helps consistently but modestly** (4 wins/2 ties/1 loss across
+   7 seasons, better on all 4 aggregate metrics) — recommended as an optional, separately-labelled
+   layer given the unresolved reputation-vs-quality interpretation ambiguity.
+9. **ADVANCED beats CORE on ranking despite fewer training seasons**, but is very slightly worse
+   calibrated — a genuine nuanced trade-off, not a clean win either way.
+10. **Event/game-state features do not add meaningful signal** — confirmed twice (before and after the
+    Plackett-Luce fix), with a small, consistent exception on exact-3-2-1-order accuracy specifically.
+11. **GBM-utility is dramatically miscalibrated** (ECE 8-14x worse than other models) despite reasonable
+    ranking — fixable via isotonic recalibration but not usable as-is.
+
+### Recommendation for Phase 5
+
+**Model 1 (Plackett-Luce), recent-8-season window, CORE feature set** as the primary model to convert
+into calibrated match-level vote distributions and season simulations. Benchmark retained as the
+standing baseline. ADVANCED variant carried forward as an alternate for 2015+. GBM variants, the
+reputation layer, and the experimental game-state layer are not part of the core recommendation without
+further work (see `docs/PHASE4_DECISIONS.md` Q14 for the full reasoning).
 
 ---
 

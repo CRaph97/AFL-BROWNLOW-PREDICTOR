@@ -1,0 +1,46 @@
+|--- rebound_50s_z <= -0.62
+|   |--- hitouts_z <= -0.25
+|   |   |--- marks_inside_50_z <= 2.00
+|   |   |   |--- clearances_z <= 0.33
+|   |   |   |   |--- class: MEDIUM_FORWARD
+|   |   |   |--- clearances_z >  0.33
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |--- marks_inside_50_z >  2.00
+|   |   |   |--- clearances_z <= -0.71
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |   |--- clearances_z >  -0.71
+|   |   |   |   |--- class: MEDIUM_FORWARD
+|   |--- hitouts_z >  -0.25
+|   |   |--- hitouts_z <= 1.25
+|   |   |   |--- marks_inside_50_z <= 0.51
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |   |--- marks_inside_50_z >  0.51
+|   |   |   |   |--- class: KEY_FORWARD
+|   |   |--- hitouts_z >  1.25
+|   |   |   |--- hitouts_z <= 2.78
+|   |   |   |   |--- class: RUCK
+|   |   |   |--- hitouts_z >  2.78
+|   |   |   |   |--- class: RUCK
+|--- rebound_50s_z >  -0.62
+|   |--- clearances_z <= -0.32
+|   |   |--- one_percenters_z <= 1.01
+|   |   |   |--- goals_z <= -0.49
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |   |   |--- goals_z >  -0.49
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |--- one_percenters_z >  1.01
+|   |   |   |--- uncontested_possessions_z <= 0.19
+|   |   |   |   |--- class: KEY_DEFENDER
+|   |   |   |--- uncontested_possessions_z >  0.19
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |--- clearances_z >  -0.32
+|   |   |--- hitouts_z <= 0.70
+|   |   |   |--- rebound_50s_z <= 0.96
+|   |   |   |   |--- class: MIDFIELDER
+|   |   |   |--- rebound_50s_z >  0.96
+|   |   |   |   |--- class: MEDIUM_DEFENDER
+|   |   |--- hitouts_z >  0.70
+|   |   |   |--- uncontested_possessions_z <= -0.47
+|   |   |   |   |--- class: RUCK
+|   |   |   |--- uncontested_possessions_z >  -0.47
+|   |   |   |   |--- class: RUCK

@@ -22,3 +22,18 @@
   corrected: 96.0%) via full-season-scale validation. New docs: `docs/FEATURE_REGISTRY.md`,
   `docs/EXPLORATORY_ANALYSIS.md`, `docs/ROLE_ANALYSIS.md`, `docs/TEMPORAL_DRIFT.md`,
   `docs/LEAKAGE_AUDIT.md`, `docs/PHASE3_DECISIONS.md`. No predictive model has been fit.
+- Phase 4: resolved Phase 3 open issues (strictly-lagged role inference, lagged form features,
+  event-data root cause, three separate CORE/ADVANCED/EXPERIMENTAL datasets). Built and rolling-origin
+  backtested 4 model architectures (Benchmark logistic, Plackett-Luce ranking, GBM-utility,
+  GBM-multiclass) across 22 folds/11 test seasons; Model 1 (Plackett-Luce, recent-8 window) wins on
+  every tracked metric. Found and fixed a serious correctness bug (unstandardised mixed-scale features
+  + non-log-space likelihood corrupting the ADVANCED-dataset fit) with 9 new regression tests
+  (`tests/test_plackett_luce.py`); found and fixed a second bug in error-analysis segmentation. Ran and
+  documented: feature ablation + 3 hypothesis-test pairs, reputation experiment (consistent modest
+  improvement), game-state experiment (confirmed null result), calibration analysis (GBM badly
+  miscalibrated, others excellent), error analysis by segment (defenders are the model's biggest blind
+  spot), 8-fold stability analysis (`role_KEY_DEFENDER` is the single largest, most stable coefficient
+  in the model), and an 8-season season-level pseudo-live backtest. New docs: `docs/MODEL_BACKTEST.md`,
+  `docs/MODEL_COMPARISON.md`, `docs/FEATURE_ABLATION.md`, `docs/CALIBRATION.md`,
+  `docs/ERROR_ANALYSIS.md`, `docs/REPUTATION_EXPERIMENT.md`, `docs/EXPERIMENTAL_GAMESTATE_MODEL.md`,
+  `docs/PHASE4_DECISIONS.md`. No 2026 forecasts, Monte Carlo simulation, or leaderboard produced.

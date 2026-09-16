@@ -23,3 +23,9 @@ St Kilda,st_kilda,St Kilda,
 Sydney,sydney,Sydney,South Melbourne relocated and renamed Sydney in 1982 -- out of scope of our 1984+ core window so not separately mapped.
 West Coast,west_coast,West Coast,
 Western Bulldogs,western_bulldogs,Western Bulldogs,
+Sydney Swans,sydney,Sydney,torpdata/chains full club-nickname naming convention -- same club as 'Sydney'
+Adelaide Crows,adelaide,Adelaide,torpdata/chains full club-nickname naming convention -- same club as 'Adelaide'
+Geelong Cats,geelong,Geelong,torpdata/chains full club-nickname naming convention -- same club as 'Geelong'
+GWS GIANTS,greater_western_sydney,Greater Western Sydney,torpdata/chains full club-nickname naming convention -- same club as 'GWS'/'Greater Western Sydney'
+West Coast Eagles,west_coast,West Coast,torpdata/chains full club-nickname naming convention -- same club as 'West Coast'
+Gold Coast SUNS,gold_coast,Gold Coast,torpdata/chains full club-nickname naming convention -- same club as 'Gold Coast'

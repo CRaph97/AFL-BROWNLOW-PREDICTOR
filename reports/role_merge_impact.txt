@@ -1,0 +1,34 @@
+n_MIDFIELDER_FORWARD affected rows (training/eval set): 182 of 2702 (6.74%)
+
+7-class (original) grouped CV accuracy:        0.7683
+6-class (MIDFIELDER_FORWARD merged) grouped CV accuracy: 0.7683
+
+Per-class report, 7-class original:
+                    precision    recall  f1-score   support
+
+      KEY_DEFENDER       0.94      0.75      0.83       303
+       KEY_FORWARD       0.86      0.76      0.81       297
+   MEDIUM_DEFENDER       0.80      0.83      0.81       564
+    MEDIUM_FORWARD       0.74      0.78      0.76       520
+        MIDFIELDER       0.67      0.87      0.76       672
+MIDFIELDER_FORWARD       0.23      0.03      0.06       182
+              RUCK       0.96      0.96      0.96       164
+
+          accuracy                           0.77      2702
+         macro avg       0.74      0.71      0.71      2702
+      weighted avg       0.75      0.77      0.75      2702
+
+Per-class report, 6-class merged:
+                 precision    recall  f1-score   support
+
+ HYBRID_MID_FWD       0.23      0.03      0.06       182
+   KEY_DEFENDER       0.94      0.75      0.83       303
+    KEY_FORWARD       0.86      0.76      0.81       297
+MEDIUM_DEFENDER       0.80      0.83      0.81       564
+ MEDIUM_FORWARD       0.74      0.78      0.76       520
+     MIDFIELDER       0.67      0.87      0.76       672
+           RUCK       0.96      0.96      0.96       164
+
+       accuracy                           0.77      2702
+      macro avg       0.74      0.71      0.71      2702
+   weighted avg       0.75      0.77      0.75      2702

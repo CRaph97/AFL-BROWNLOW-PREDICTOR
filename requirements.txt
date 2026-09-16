@@ -1,9 +1,12 @@
 # Pinned per the Phase 1 technology decision: minimal dependencies, added only as needed.
-# Full model-comparison libraries (xgboost/lightgbm/catboost, PyMC, statsmodels) are still NOT
-# included -- Phase 3 is exploratory analysis / feature engineering only, not model fitting.
-# scikit-learn and scipy were added in Phase 3, justified by a specific, bounded use each:
-# scikit-learn for the role-proxy decision tree (an exploratory classifier, not a Brownlow
-# predictor) and scipy for standard descriptive statistics (Spearman/point-biserial correlation).
+# scikit-learn and scipy were added in Phase 3 (role-proxy decision tree; Spearman/point-biserial
+# correlation) and are now also used in Phase 4 for HistGradientBoosting (Models 2a/2b), logistic
+# regression (Model 0), isotonic calibration, and grouped cross-validation.
+# XGBoost was attempted for Phase 4 but its macOS wheel could not load against this machine's
+# installed libomp (a native-library ABI mismatch); scikit-learn's HistGradientBoosting* was used
+# instead as a comparable histogram-based gradient boosting implementation -- see
+# src/models/gbm_model.py. PyMC/statsmodels/lightgbm/catboost remain unused; add only if a future
+# phase specifically needs them.
 
 pandas==3.0.5
 pyarrow==25.0.1        # parquet read/write
