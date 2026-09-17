@@ -67,6 +67,7 @@ player_id,player_name,team_id
 13178,Sam Davidson,western_bulldogs
 13213,Cooper Hynes,western_bulldogs
 12150,Ollie Wines,port_adelaide
+12422,Darcy Byrne-Jones,port_adelaide
 12433,Aliir Aliir,port_adelaide
 12664,Kane Farrell,port_adelaide
 12695,Willem Drew,port_adelaide
@@ -76,6 +77,7 @@ player_id,player_name,team_id
 12882,Lachie Jones,port_adelaide
 12890,Jordon Sweet,port_adelaide
 12936,Corey Durdin,port_adelaide
+12956,Jason Horne-Francis,port_adelaide
 12991,Jacob Wehr,port_adelaide
 13007,Jase Burgoyne,port_adelaide
 13073,Dante Visentini,port_adelaide
@@ -93,6 +95,7 @@ player_id,player_name,team_id
 12511,Griffin Logue,north_melbourne
 12557,Cameron Zurhaar,north_melbourne
 12563,Nick Larkey,north_melbourne
+12590,Luke Davies-Uniacke,north_melbourne
 12622,Charlie Spargo,north_melbourne
 12788,Tristan Xerri,north_melbourne
 12796,Dylan Stephens,north_melbourne
@@ -187,6 +190,7 @@ player_id,player_name,team_id
 13274,Jagga Smith,carlton
 11713,Taylor Walker,adelaide
 12165,Rory Laird,adelaide
+12367,Alex Neal-Bullen,adelaide
 12405,Wayne Milera,adelaide
 12414,Callum Ah Chee,adelaide
 12434,Ben Keays,adelaide
@@ -268,6 +272,7 @@ player_id,player_name,team_id
 12831,Liam Henry,st_kilda
 12929,Cooper Sharman,st_kilda
 12948,Mitch Owens,st_kilda
+12950,Nasiah Wanganeen-Milera,st_kilda
 12967,Marcus Windhager,st_kilda
 13035,Anthony Caminiti,st_kilda
 13036,Mattaes Phillipou,st_kilda
@@ -359,6 +364,7 @@ player_id,player_name,team_id
 12996,Daniel Turner,melbourne
 13099,Caleb Windsor,melbourne
 12704,Jack Lukosius,port_adelaide
+12757,Brandon Zerk-Thatcher,port_adelaide
 12946,Jackson Mead,port_adelaide
 13301,Josh Lai,port_adelaide
 12087,Elliot Yeo,west_coast
@@ -403,6 +409,7 @@ player_id,player_name,team_id
 13148,Nate Caddy,essendon
 13168,Archie Roberts,essendon
 13177,Isaac Kako,essendon
+13223,Archer Day-Wicks,essendon
 13229,Angus Clarke,essendon
 13231,Zak Johnson,essendon
 13283,Dyson Sharp,essendon
@@ -417,6 +424,7 @@ player_id,player_name,team_id
 13158,Max Gruzewski,greater_western_sydney
 13222,Josaia Delana,greater_western_sydney
 13236,Nick Madden,greater_western_sydney
+13328,Hugo Hall-Kahan,adelaide
 12166,Jack Macrae,st_kilda
 13243,Alix Tauru,st_kilda
 12321,Jesse Hogan,greater_western_sydney
@@ -429,6 +437,7 @@ player_id,player_name,team_id
 12696,Xavier Duursma,essendon
 12755,Jye Caldwell,essendon
 13087,Elijah Tsatas,essendon
+13203,Saad El-Hawli,essendon
 13237,Lachlan Blakiston,essendon
 13238,Archie May,essendon
 11845,Jack Gunston,hawthorn
@@ -473,6 +482,7 @@ player_id,player_name,team_id
 13170,Cooper Lord,carlton
 13273,Harry Dean,carlton
 13297,Talor Byrne,carlton
+13291,Cooper Duff-Tytler,west_coast
 13293,Josh Lindsay,west_coast
 13228,Will Hayes,collingwood
 12177,Jarrod Witts,gold_coast
@@ -503,6 +513,7 @@ player_id,player_name,team_id
 12841,Flynn Perez,hawthorn
 13102,Harvey Gallagher,western_bulldogs
 13179,Josh Dolan,western_bulldogs
+12923,Jamarra Ugle-Hagan,gold_coast
 12794,Will Day,hawthorn
 13201,Isaac Keeler,st_kilda
 13069,Bailey Macdonald,hawthorn
@@ -510,6 +521,7 @@ player_id,player_name,team_id
 13211,Tom Gross,west_coast
 12862,Errol Gulden,sydney
 12420,Dougal Howard,st_kilda
+12730,Callum Coleman-Jones,north_melbourne
 12330,Adam Saad,carlton
 12359,Joel Hamling,sydney
 12729,Peter Ladhams,sydney

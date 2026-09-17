@@ -15,7 +15,17 @@ same real production data.
 | `scenario_predictions_2026.parquet` | `data/processed/scenario_predictions_2026.parquet` | Exact copy (already small). |
 | `contender_probabilities_production.csv` | `data/processed/mc_totals_2026.npy` (100,000 real Monte Carlo draws) | Precomputed once via `src.models.order_scenarios.contender_probabilities` -- the identical function `pages/14_Order_Scenarios.py` calls locally. Avoids shipping a 113MB raw array; the deployed page reads the finished numbers instead of recomputing them from draws it doesn't have. Regenerated after a sort-key fix (was sorted by `prob_winner`, which is ~0.0 for nearly every real contender and so buried genuine top-EV players like Bontempelli behind arbitrary tie order under a `.head(N)` cutoff; now sorted by `mean_votes` -- see the function's docstring). |
 | `contender_probabilities_objective.csv` | `data/processed/mc_totals_objective_2026.npy` (20,000 real draws) | Same method, Objective model. Avoids shipping a 30MB raw array. Regenerated for the same sort-key fix. |
-| `sportsbet_verified_value_opportunities.csv` | `~/code/AFL-BROWNLOW-MARKETS`'s finalized audited output | Real snapshot copy (see `dashboard/betting_data.py`'s own fallback logic, built in a prior task). |
+| `sportsbet_verified_value_opportunities.csv` | `~/code/AFL-BROWNLOW-MARKETS`'s finalized audited output | Real snapshot copy (see `dashboard/betting_data.py`'s own fallback logic, built in a prior task). **Stale as of the hyphenated-surname join fix below** -- this snapshot's `model_probability` column was baked from Production probabilities computed before that fix, so any market row for one of the 12 fixed players or a teammate whose probabilities were legitimately renormalised (see `src/data/build_2026_extension.py`'s `_normalise_surname` fix) is now out of date. Refreshing it requires re-running ingestion in the Markets repo, which is out of scope for this repo alone -- flagged here rather than left silently inconsistent. |
+
+`model_core_2026_dashboard.parquet` and `contender_probabilities_production.csv`
+were regenerated (not just copied) after a Scenario C / footywire identity-join
+fix for hyphenated surnames (12 players, e.g. "Wanganeen-Milera" -> footywire's
+"W-Milera") -- `model_core_2026_dashboard.parquet` came out byte-identical
+(CORE never used the broken join), `contender_probabilities_production.csv`
+changed for the 12 fixed players plus their match-level competitors via
+legitimate probability renormalisation. `contender_probabilities_objective.csv`
+was NOT touched -- Objective doesn't use this join and its outputs are
+confirmed byte-identical before/after.
 
 To refresh any of these after new local data is generated, rerun the
 selection/copy steps above (see git history / `dashboard/data.py` for the

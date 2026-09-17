@@ -39,7 +39,17 @@ FINALS_ROUNDS_2026 = {"SF", "PF", "GF", "QF", "EF", "Wildcard Final"}
 
 
 def _normalise_surname(series: pd.Series) -> pd.Series:
-    return series.str.split().str[-1].str.lower().str.replace(r"[^a-z]", "", regex=True)
+    # footywire's player_stats.rda abbreviates the FIRST component of a hyphenated
+    # compound surname to a single initial (e.g. "Wanganeen-Milera" -> "W-Milera",
+    # "Davies-Uniacke" -> "D-Uniacke"), while afltables spells it in full. Confirmed
+    # against all 12 affected 2026 players (Wanganeen-Milera, Horne-Francis,
+    # Neal-Bullen, Ugle-Hagan, Byrne-Jones, Zerk-Thatcher, Coleman-Jones, El-Hawli,
+    # Day-Wicks, Davies-Uniacke, Hall-Kahan, Duff-Tytler). Taking only the segment
+    # after the last hyphen collapses both conventions to the same key ("milera")
+    # without affecting any non-hyphenated surname (a no-op there).
+    last_token = series.str.split().str[-1]
+    last_hyphen_segment = last_token.str.split("-").str[-1]
+    return last_hyphen_segment.str.lower().str.replace(r"[^a-z]", "", regex=True)
 
 
 def build_core_2026() -> pd.DataFrame:
