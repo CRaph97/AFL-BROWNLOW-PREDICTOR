@@ -1,0 +1,29 @@
+{
+  "n_2026_matches_total": 207,
+  "n_matches_expected": 207,
+  "all_207_matches_present": true,
+  "max_abs_p3_p2_p1_sum_error": 1.5509815654013437e-13,
+  "season_total_expected_votes": 1241.9999999999995,
+  "expected_season_total": 1242.0,
+  "season_total_matches_expected": true,
+  "n_duplicate_player_match_rows": 0,
+  "deterministic_picks_always_3_distinct_players": true,
+  "forbidden_columns_in_scoring_inputs": [],
+  "unavailable_candidate_inputs": [
+    "kick_ins",
+    "intercept_marks",
+    "spoils"
+  ],
+  "group_weights": {
+    "POSSESSION_QUALITY": 16,
+    "CONTEST": 14,
+    "CLEARANCE": 12,
+    "SCORING": 16,
+    "SCORE_CREATION": 10,
+    "TERRITORY": 8,
+    "DEFENCE": 8,
+    "PRESSURE": 8,
+    "RUCK": 4,
+    "TEAM_RESULT": 4
+  }
+}

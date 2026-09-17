@@ -455,3 +455,50 @@ def relative_ranks_for_match(match_id: str) -> pd.DataFrame:
     for stat in ("disposals", "contested_possessions", "clearances", "tackles", "goals"):
         cols += [f"{stat}_team_rank", f"{stat}_team_share"]
     return core[core["match_id"] == match_id][cols]
+
+
+# --------------------------------------------------------------------------
+# 2026 Objective Stats Model (Experimental) -- loaders only. All scoring/
+# weighting logic lives in src/models/objective_stats_model.py and
+# src/models/build_2026_objective_outputs.py, kept separate from this
+# production-dashboard data layer; these functions just read the CSVs that
+# pipeline already produced, exactly like every other loader in this file.
+# --------------------------------------------------------------------------
+
+@st.cache_data
+def load_objective_leaderboard() -> pd.DataFrame:
+    return pd.read_csv(REPORTS / "2026_objective_leaderboard.csv")
+
+
+@st.cache_data
+def load_objective_vs_production() -> pd.DataFrame:
+    return pd.read_csv(REPORTS / "2026_objective_vs_production.csv")
+
+
+@st.cache_data
+def load_objective_votes() -> pd.DataFrame:
+    return pd.read_csv(REPORTS / "2026_objective_votes.csv")
+
+
+@st.cache_data
+def load_objective_match_scores() -> pd.DataFrame:
+    return pd.read_csv(REPORTS / "2026_objective_match_scores.csv")
+
+
+@st.cache_data
+def build_player_objective_round_by_round(player_id) -> pd.DataFrame:
+    """Round-by-round objective vs. production EV/3-2-1/difference for one
+    player, joining the objective votes file with the production predicted-
+    votes file on match_id + player_id (both real, already-computed sources --
+    no probability is recomputed here)."""
+    obj = load_objective_votes()
+    obj = obj[obj["player_id"].astype(str) == str(player_id)].copy()
+    prod = load_predicted_votes()
+    prod = prod[prod["player_id"].astype(str) == str(player_id)][
+        ["match_id", "expected_votes", "predicted_votes"]
+    ].rename(columns={"expected_votes": "production_ev", "predicted_votes": "production_pred_votes"})
+    merged = obj.merge(prod, on="match_id", how="left")
+    merged["ev_difference"] = merged["expected_votes"] - merged["production_ev"]
+    return merged.rename(columns={
+        "expected_votes": "objective_ev", "objective_pred_votes": "objective_pred_votes",
+    }).sort_values("round")

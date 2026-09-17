@@ -1,0 +1,82 @@
+{
+  "POSSESSION_QUALITY_minus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "POSSESSION_QUALITY_plus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "CONTEST_minus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "CONTEST_plus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "CLEARANCE_minus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "CLEARANCE_plus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "SCORING_minus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "SCORING_plus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "SCORE_CREATION_minus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "SCORE_CREATION_plus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "TERRITORY_minus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "TERRITORY_plus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "DEFENCE_minus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "DEFENCE_plus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "PRESSURE_minus25pct": {
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
+  },
+  "PRESSURE_plus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "RUCK_minus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "RUCK_plus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "TEAM_RESULT_minus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  },
+  "TEAM_RESULT_plus25pct": {
+    "top20_overlap_with_base": 20,
+    "top20_overlap_pct": 1.0
+  }
+}
