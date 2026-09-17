@@ -47,9 +47,39 @@ def _normalise_surname(series: pd.Series) -> pd.Series:
     # Day-Wicks, Davies-Uniacke, Hall-Kahan, Duff-Tytler). Taking only the segment
     # after the last hyphen collapses both conventions to the same key ("milera")
     # without affecting any non-hyphenated surname (a no-op there).
+    #
+    # WARNING: on its own this surname key is not safe to join on -- it collapses
+    # any hyphenated surname down to its final plain-word segment, which can (and
+    # did, in production) collide with an unrelated teammate who happens to share
+    # that plain surname (e.g. "Byrne-Jones" -> "jones" collides with teammate
+    # "Lachie Jones"; "Hayes-Brown" -> "brown" collides with teammate "Tom Brown").
+    # _normalise_first_name() below MUST also be included in the join key to
+    # disambiguate these cases -- see build_advanced_2026().
     last_token = series.str.split().str[-1]
     last_hyphen_segment = last_token.str.split("-").str[-1]
     return last_hyphen_segment.str.lower().str.replace(r"[^a-z]", "", regex=True)
+
+
+def _normalise_first_name(series: pd.Series) -> pd.Series:
+    # Only the first INITIAL is used, not the full given name. An earlier version
+    # of this fix required the full first name to match, which correctly resolved
+    # the surname-collision bug (see build_advanced_2026()) but introduced a real
+    # regression of its own: afltables and footywire don't always use the same
+    # nickname convention for the same player (e.g. "Cam"/"Cameron",
+    # "Lachie"/"Lachlan", "Matt"/"Matthew", "Nick"/"Nicholas", "Tom"/"Thomas",
+    # "Zac"/"Zach", "Ollie"/"Oliver", "Sam"/"Samuel", "Will"/"William",
+    # "Mitch"/"Mitchell") -- confirmed directly: requiring full-name equality
+    # dropped 584 real, previously-matching 2026 rows across 39 players. Every
+    # nickname pair observed preserves the first letter, and the two known
+    # surname collisions (Darcy Byrne-Jones vs Lachie/Lachlan Jones; Tom Brown vs
+    # Oliver Hayes-Brown) already differ at the first letter (D/L, T/O), so the
+    # initial alone is sufficient to disambiguate them without reintroducing the
+    # nickname regression. footywire never abbreviates the given name at all
+    # (confirmed: "Darcy B-Jones", "Nasiah W-Milera" keep the full first name),
+    # so this is at least as permissive as necessary, not a narrower guess.
+    first_token = series.str.split().str[0]
+    letters_only = first_token.str.lower().str.replace(r"[^a-z]", "", regex=True)
+    return letters_only.str[0]
 
 
 def build_core_2026() -> pd.DataFrame:
@@ -147,25 +177,73 @@ def build_advanced_2026(core_2026: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     adv["opponent_id"] = adv["Opposition"].map(team_map)
     adv["date"] = pd.to_datetime(adv["Date"]).dt.strftime("%Y-%m-%d")
     adv["surname_key"] = _normalise_surname(adv["Player"])
+    adv["first_name_key"] = _normalise_first_name(adv["Player"])
 
     core = core_2026.copy()
     core["date_str"] = pd.to_datetime(core["date"]).dt.strftime("%Y-%m-%d")
     core["surname_key"] = _normalise_surname(core["player_name"])
+    core["first_name_key"] = _normalise_first_name(core["player_name"])
 
-    adv_cols = ["date", "team_id", "opponent_id", "surname_key"] + list(ADV_COLUMN_RENAME.values())
+    # CORE-side ambiguity guard: two genuinely different players (e.g. Chad
+    # Warner and Corey Warner, real Sydney teammates in 2026) can share the same
+    # (date, team, opponent, surname_key, first_name_key) key. In the data
+    # observed so far this hasn't produced a visibly wrong duplicate (the shared
+    # dates happen to have no matching footywire row for either), but it is a
+    # live, unresolved identity ambiguity -- a single footywire row on such a
+    # date could not be safely attributed to either player, so both must be
+    # excluded from matching rather than left to an accidental correct/incorrect
+    # merge outcome. Flagged BEFORE the merge so it cannot depend on which row
+    # pandas' merge happens to pick.
+    core_key_cols = ["date_str", "team_id", "opponent_id", "surname_key", "first_name_key"]
+    ambiguous_key_ids = core.groupby(core_key_cols)["player_id"].transform("nunique")
+    core["_ambiguous_identity"] = ambiguous_key_ids > 1
+
+    # No stable player_id exists on the footywire side (confirmed in Phase 2 --
+    # afltables uses numeric provider ids, footywire has none), so player_id
+    # cannot be used as the join key here; this composite (date, team, opponent,
+    # surname_key, first_name_key) is the strongest identity available. Requiring
+    # BOTH surname_key and first_name_key to agree is what actually fixes the
+    # collision: a plain-surname collision (e.g. "jones") can now only occur
+    # between two players who ALSO share a first name, on the same team, on the
+    # same date -- genuinely ambiguous, not a guess, and handled below by
+    # dropping (not arbitrarily keeping) any such case.
+    join_key = ["date_str", "team_id", "opponent_id", "surname_key", "first_name_key"]
+    adv_cols = ["date", "team_id", "opponent_id", "surname_key", "first_name_key"] + list(ADV_COLUMN_RENAME.values())
     merged = core.merge(
         adv[adv_cols],
-        left_on=["date_str", "team_id", "opponent_id", "surname_key"],
-        right_on=["date", "team_id", "opponent_id", "surname_key"],
+        left_on=join_key,
+        right_on=["date", "team_id", "opponent_id", "surname_key", "first_name_key"],
         how="left",
         suffixes=("", "_adv"),
     )
-    dup_mask = merged.duplicated(subset=["match_id", "player_id"], keep=False) & merged["effective_disposals"].notna()
-    if dup_mask.any():
+
+    # Ambiguity safeguard: if a single core player-match row matched more than one
+    # distinct footywire row (should not happen with the composite key above, but
+    # verified rather than assumed), do NOT guess by keeping an arbitrary one --
+    # null out the advanced columns for that row so it is correctly reported as
+    # unmatched. A duplicate that is byte-identical across every advanced column
+    # (e.g. a harmless repeated source row) is still safely deduplicated.
+    adv_value_cols = list(ADV_COLUMN_RENAME.values())
+    group_sizes = merged.groupby(["match_id", "player_id"])["effective_disposals"].transform("size")
+    has_match = merged["effective_disposals"].notna()
+    is_dup_group = (group_sizes > 1) & has_match
+    if is_dup_group.any():
+        n_distinct = merged.loc[is_dup_group].groupby(["match_id", "player_id"])[adv_value_cols].transform(
+            lambda s: s.nunique(dropna=False)
+        ).max(axis=1)
+        genuinely_ambiguous = is_dup_group & (n_distinct.reindex(merged.index, fill_value=1) > 1)
+        if genuinely_ambiguous.any():
+            merged.loc[genuinely_ambiguous, adv_value_cols] = pd.NA
         merged = merged.drop_duplicates(subset=["match_id", "player_id"], keep="first")
 
+    # Apply the CORE-side ambiguity guard computed above: any row whose identity
+    # key collided with a different real player_id must not carry a matched
+    # value, even if it happens to look matched.
+    if merged["_ambiguous_identity"].any():
+        merged.loc[merged["_ambiguous_identity"], adv_value_cols] = pd.NA
+
     match_rate = merged["effective_disposals"].notna().mean()
-    out_cols = [c for c in merged.columns if c not in ("date_adv", "date_str", "surname_key")]
+    out_cols = [c for c in merged.columns if c not in ("date_adv", "date_str", "surname_key", "first_name_key", "_ambiguous_identity")]
     out = merged[out_cols]
     validation = {"advanced_join_match_rate_2026": float(match_rate)}
     return out, validation
