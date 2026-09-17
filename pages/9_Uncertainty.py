@@ -4,6 +4,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Uncertainty", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Uncertainty")
 st.caption(
     "Four distinct kinds of uncertainty, kept separate rather than compressed into one "

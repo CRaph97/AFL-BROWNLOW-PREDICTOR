@@ -10,6 +10,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Objective Stats Model", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("2026 Objective Stats Model — Experimental")
 
 st.warning(

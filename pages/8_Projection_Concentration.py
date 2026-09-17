@@ -3,6 +3,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Projection Concentration", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Projection Concentration")
 st.caption(
     "Generic version of the Daicos-projection audit (docs/2026_FINAL_AUDIT.md, section 2) -- "

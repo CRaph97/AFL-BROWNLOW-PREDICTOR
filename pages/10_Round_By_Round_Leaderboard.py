@@ -4,6 +4,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Round-by-Round Leaderboard", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Round-by-Round Leaderboard")
 st.caption(
     "Cumulative expected Brownlow votes using only matches with official round <= the "

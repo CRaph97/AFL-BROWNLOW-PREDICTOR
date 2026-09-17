@@ -3,6 +3,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Team Breakdown", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Team Breakdown")
 st.caption(
     "Per-team view built entirely from the frozen reports/2026_leaderboard.csv and "

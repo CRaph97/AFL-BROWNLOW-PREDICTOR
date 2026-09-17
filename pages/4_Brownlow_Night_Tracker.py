@@ -4,6 +4,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Brownlow Night Tracker", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Brownlow Night Tracker")
 st.caption(
     "Local, session-only. Enter each round's ACTUAL 3-2-1 votes as they are read out on "

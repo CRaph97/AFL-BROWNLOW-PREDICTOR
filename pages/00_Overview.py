@@ -16,6 +16,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="2026 Brownlow Model", layout="wide", initial_sidebar_state="expanded")
+d.highlight_objective_stats_nav()
 
 st.markdown(
     """

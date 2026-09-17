@@ -3,6 +3,7 @@ import streamlit as st
 from dashboard import data as d
 
 st.set_page_config(page_title="Defender Bias Watchlist", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Defender Bias Watchlist")
 
 st.markdown(

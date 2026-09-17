@@ -1,0 +1,61 @@
+model,order_depth,scenario_rank,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth,probability
+Production,5,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,,,,,,0.01762
+Production,5,2,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Lachie Neale,,,,,,0.01286
+Production,5,3,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Will Ashcroft,,,,,,0.01168
+Production,5,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Zak Butters,Harry Sheezel,,,,,,0.01136
+Production,5,5,Nick Daicos,Bailey Smith,Harry Sheezel,Will Ashcroft,Marcus Bontempelli,,,,,,0.01086
+Production,5,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Will Ashcroft,Harry Sheezel,,,,,,0.01081
+Production,5,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Patrick Cripps,,,,,,0.01027
+Production,5,8,Nick Daicos,Bailey Smith,Marcus Bontempelli,Will Ashcroft,Patrick Cripps,,,,,,0.01023
+Production,5,9,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Zak Butters,,,,,,0.00942
+Production,5,10,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Lachie Neale,,,,,,0.00939
+Production,7,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Isaac Heeney,Patrick Cripps,,,,0.0011
+Production,7,2,Nick Daicos,Bailey Smith,Marcus Bontempelli,Zak Butters,Harry Sheezel,Lachie Neale,Will Ashcroft,,,,0.0011
+Production,7,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Lachie Neale,Will Ashcroft,Isaac Heeney,,,,0.00107
+Production,7,4,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Zak Butters,Lachie Neale,Will Ashcroft,,,,0.00098
+Production,7,5,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Patrick Cripps,Zak Butters,,,,0.00097
+Production,7,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Isaac Heeney,Zak Butters,,,,0.00096
+Production,7,7,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Lachie Neale,Will Ashcroft,Isaac Heeney,,,,0.00095
+Production,7,8,Nick Daicos,Bailey Smith,Marcus Bontempelli,Zak Butters,Harry Sheezel,Will Ashcroft,Isaac Heeney,,,,0.00093
+Production,7,9,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Will Ashcroft,Isaac Heeney,Patrick Cripps,,,,0.00093
+Production,7,10,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Patrick Cripps,Lachie Neale,Will Ashcroft,,,,0.00091
+Production,10,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Zak Butters,Lachie Neale,Isaac Heeney,Patrick Cripps,Jordan Dawson,7e-05
+Production,10,2,Nick Daicos,Bailey Smith,Harry Sheezel,Marcus Bontempelli,Zak Butters,Lachie Neale,Will Ashcroft,Isaac Heeney,Patrick Cripps,Jordan Dawson,7e-05
+Production,10,3,Nick Daicos,Bailey Smith,Harry Sheezel,Will Ashcroft,Marcus Bontempelli,Zak Butters,Isaac Heeney,Patrick Cripps,Jordan Dawson,Izak Rankine,7e-05
+Production,10,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Lachie Neale,Isaac Heeney,Zak Butters,Will Ashcroft,Patrick Cripps,Jordan Dawson,6e-05
+Production,10,5,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Lachie Neale,Isaac Heeney,Patrick Cripps,Izak Rankine,Will Ashcroft,Zak Butters,6e-05
+Production,10,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Isaac Heeney,Zak Butters,Lachie Neale,Patrick Cripps,Izak Rankine,6e-05
+Production,10,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Harry Sheezel,Will Ashcroft,Patrick Cripps,Jordan Dawson,Zak Butters,Lachie Neale,Isaac Heeney,6e-05
+Production,10,8,Nick Daicos,Bailey Smith,Marcus Bontempelli,Will Ashcroft,Patrick Cripps,Zak Butters,Harry Sheezel,Lachie Neale,Isaac Heeney,Izak Rankine,6e-05
+Production,10,9,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Isaac Heeney,Zak Butters,Harry Sheezel,Will Ashcroft,Patrick Cripps,Jordan Dawson,6e-05
+Production,10,10,Nick Daicos,Bailey Smith,Marcus Bontempelli,Zak Butters,Harry Sheezel,Patrick Cripps,Lachie Neale,Will Ashcroft,Isaac Heeney,Jordan Dawson,6e-05
+Objective,5,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,,,,,,0.0204
+Objective,5,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,,,,,,0.0185
+Objective,5,3,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,,,,,,0.0145
+Objective,5,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,,,,,,0.0142
+Objective,5,5,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Isaac Heeney,,,,,,0.01355
+Objective,5,6,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,,,,,,0.01065
+Objective,5,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Lachie Neale,,,,,,0.01035
+Objective,5,8,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Lachie Neale,,,,,,0.0103
+Objective,5,9,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Bailey Smith,Patrick Cripps,,,,,,0.0099
+Objective,5,10,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Lachie Neale,,,,,,0.0086
+Objective,7,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.00165
+Objective,7,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.00115
+Objective,7,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,,,,0.0011
+Objective,7,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Isaac Heeney,Patrick Cripps,Jai Newcombe,,,,0.00105
+Objective,7,5,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Lachie Neale,,,,0.001
+Objective,7,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Lachie Neale,Jai Newcombe,,,,0.001
+Objective,7,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Lachie Neale,Isaac Heeney,Jai Newcombe,,,,0.00095
+Objective,7,8,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,Jai Newcombe,Lachie Neale,,,,0.00095
+Objective,7,9,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Lachie Neale,Jai Newcombe,,,,0.0009
+Objective,7,10,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Lachie Neale,Patrick Cripps,Jai Newcombe,,,,0.0009
+Objective,10,1,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Ed Richards,Lachie Neale,Isaac Heeney,Luke Jackson,Jai Newcombe,Max Gawn,0.0001
+Objective,10,2,Nick Daicos,Bailey Smith,Marcus Bontempelli,Max Gawn,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,Luke Davies-Uniacke,Izak Rankine,0.0001
+Objective,10,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,Ed Richards,Jason Horne-Francis,Max Gawn,0.0001
+Objective,10,4,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Jason Horne-Francis,Clayton Oliver,Lachie Neale,Luke Davies-Uniacke,0.0001
+Objective,10,5,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Jai Newcombe,Lachie Neale,Isaac Heeney,Jason Horne-Francis,Luke Davies-Uniacke,Max Gawn,0.0001
+Objective,10,6,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Luke Jackson,Max Gawn,Clayton Oliver,Lachie Neale,Nasiah Wanganeen-Milera,0.0001
+Objective,10,7,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Lachie Neale,Max Gawn,Isaac Heeney,Luke Jackson,Jason Horne-Francis,Izak Rankine,0.0001
+Objective,10,8,Nick Daicos,Marcus Bontempelli,Lachie Neale,Bailey Smith,Patrick Cripps,Isaac Heeney,Jai Newcombe,Nasiah Wanganeen-Milera,Luke Jackson,Chad Warner,0.0001
+Objective,10,9,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Bailey Smith,Lachie Neale,Max Gawn,Patrick Cripps,Caleb Serong,Jai Newcombe,Luke Jackson,0.0001
+Objective,10,10,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Max Gawn,Patrick Cripps,Jai Newcombe,Lachie Neale,Jason Horne-Francis,Will Ashcroft,0.0001

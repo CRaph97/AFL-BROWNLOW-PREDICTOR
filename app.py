@@ -13,7 +13,10 @@ Run with: streamlit run app.py
 """
 import streamlit as st
 
+from dashboard import data as d
+
 st.set_page_config(page_title="Guide & FAQs", layout="wide")
+d.highlight_objective_stats_nav()
 st.title("Guide & FAQs")
 st.caption("A plain-English explanation of the model -- no stats background required.")
 
@@ -182,6 +185,117 @@ How concentrated the match-level probability distribution is.
 > though 3 votes is still the "most likely" outcome in both cases.
 """
     )
+
+st.divider()
+
+# --------------------------------------------------------------------------
+# 2b. Two models, and the terms for comparing them
+# --------------------------------------------------------------------------
+st.header("Two Models: Production vs. Objective")
+st.markdown(
+    """
+This dashboard shows **two separate, independently-built models** -- deliberately not blended
+into one number, so you can see where they agree and where they don't.
+
+**PRODUCTION MODEL** -- the main forecast throughout this dashboard (leaderboard, round view,
+match detail, uncertainty). Historically validated against real past Brownlow counts, and
+adjusted for the 2026 rule change via the Historical / Recent-Era / Stats-Assisted scenario
+blend described above -- this is the final ensemble forecast.
+
+**OBJECTIVE STATS MODEL** -- a completely separate, experimental, **2026-only** model (see the
+*Objective Stats Model* page). It uses only each player's actual 2026 match statistics and
+context (relative performance, team result, nonlinear performance credit) -- it has **no
+historical Brownlow voting data and no reputation effect of any kind**. Its purpose is
+comparison, not replacement: where it agrees with the Production model, that's a useful
+robustness signal; where it disagrees, that disagreement itself is informative.
+"""
+)
+
+with st.expander("**Objective EV**"):
+    st.markdown("The Objective Stats Model's own expected-votes number for a player -- same "
+                "concept as Expected Votes above, computed from a model that never sees "
+                "historical Brownlow votes.")
+
+with st.expander("**Production EV**"):
+    st.markdown("The Production model's expected-votes number -- what's shown everywhere else "
+                "in this dashboard by default.")
+
+with st.expander("**EV Difference**"):
+    st.markdown("Objective EV minus Production EV for a player. A large gap means the two "
+                "models, built on very different information, reach very different views of "
+                "that player's season.")
+
+with st.expander("**Rank Difference**"):
+    st.markdown("How many leaderboard positions apart a player sits between the two models' "
+                "own rankings. Small = the models broadly agree on where this player belongs; "
+                "large = they don't.")
+
+with st.expander("**Model Agreement**"):
+    st.markdown(
+        "Places where the Production and Objective models -- built from different information "
+        "and different assumptions -- **independently reach broadly similar conclusions** "
+        "(similar rank, similar EV, the same 3-2-1 pick in a match, or the same betting value "
+        "call). See the *Model Agreement* page. Agreement is a useful robustness signal, but "
+        "**it does not guarantee either model is correct** -- both could share the same blind spot."
+    )
+
+st.divider()
+
+# --------------------------------------------------------------------------
+# 2c. Betting terms
+# --------------------------------------------------------------------------
+st.header("Betting Terms")
+st.caption(
+    "These appear on the *Betting Opportunities* page, which compares Sportsbet's prices "
+    "against this project's model probabilities (read-only; sourced from a separate, "
+    "manually-refreshed markets project -- see that page for details)."
+)
+
+with st.expander("**Implied Probability**"):
+    st.markdown("What a bookmaker's price implies the true probability is, ignoring their "
+                "margin: `1 / odds`. E.g. odds of 4.00 imply a 25% probability.")
+
+with st.expander("**Model Probability**"):
+    st.markdown("This project's own estimated probability for that same outcome, from Monte "
+                "Carlo simulation.")
+
+with st.expander("**Probability Edge**"):
+    st.markdown("Model Probability minus Implied Probability, in percentage points. A positive "
+                "edge means the model thinks the outcome is more likely than the price suggests.")
+
+with st.expander("**Expected Value / EV**"):
+    st.markdown("The average return per $1 staked if this exact edge were genuinely correct and "
+                "the bet were repeated many times: `model probability x odds - 1`. Positive EV "
+                "does not guarantee a win on any single bet.")
+
+with st.expander("**High-Confidence Value**"):
+    st.markdown("Passed every mapping/settlement/wording check, has a meaningful positive edge "
+                "and EV, and the player's projection itself has low/moderate model disagreement "
+                "and structural-break sensitivity.")
+
+with st.expander("**Model-Sensitive Value**"):
+    st.markdown("Same edge/EV bar as High-Confidence Value, but this player's projection has "
+                "elevated model disagreement or structural-break sensitivity -- the edge is real "
+                "relative to the model, but the model itself is less sure here.")
+
+with st.expander("**Speculative Upside**"):
+    st.markdown("Longer-priced (odds 15+), positive expected value, lower absolute probability -- "
+                "still model-supported, but a longshot by nature.")
+
+with st.expander("**Review Required**"):
+    st.markdown("The mechanical audit (market wording, player/team mapping, settlement rules) "
+                "couldn't fully verify this row -- held out of headline value sections until a "
+                "human checks it, not deleted.")
+
+with st.expander("**Settlement Uncertain**"):
+    st.markdown("A head-to-head or similar market where the two named outcomes have a real, "
+                "non-trivial chance of tying (a dead heat / push) -- excluded from headline value "
+                "because the simulated edge doesn't account for how a push actually settles.")
+
+with st.expander("**Price Suspect**"):
+    st.markdown("The audit found a pricing pattern that looks stale or templated (e.g. every "
+                "team priced at an identical 1.87/1.87) rather than a genuine, currently-accurate "
+                "market -- excluded from headline value pending a fresher price.")
 
 st.divider()
 

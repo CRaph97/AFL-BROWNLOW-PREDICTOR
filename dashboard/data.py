@@ -39,6 +39,45 @@ Z_SCORE_STATS = [
 ]
 
 
+def highlight_objective_stats_nav() -> None:
+    """Give the "Objective Stats Model" sidebar nav item a persistent green
+    tint, on every page (not just while it's the active page).
+
+    Streamlit's automatic multipage sidebar nav is re-rendered by the
+    framework on every page run, and any <style> tag injected by a page
+    script is torn down when navigating to a different page's script -- so
+    this must be called once near the top of every page (including app.py)
+    for the highlight to stay visible while browsing other pages, not just
+    while this file's targeted selector matches. The selector matches on the
+    nav link's href (derived by Streamlit from the filename
+    pages/13_Objective_Stats_Model.py -> "/Objective_Stats_Model"), not on
+    visible text or DOM position, so it doesn't depend on nav order and
+    won't match any other item.
+    """
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"] {
+            background-color: #1f6f43;
+            border-radius: 8px;
+        }
+        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"]:hover {
+            background-color: #175934;
+        }
+        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"] span {
+            color: #f5f7fa !important;
+        }
+        /* Keep the active/selected state visually distinct (a brighter green)
+           rather than letting the persistent tint make it look unselected. */
+        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"][aria-current="page"] {
+            background-color: #2f8f57;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def gradient_style(s: pd.Series, rgb: tuple[int, int, int] = (74, 144, 217)) -> list:
     """Lightweight replacement for pandas Styler.background_gradient (which
     requires matplotlib, a dependency we deliberately avoid here). Linearly
