@@ -10,16 +10,14 @@ probability -- it only displays what those scripts already produced.
 """
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 import streamlit as st
 
 from dashboard import data as d
-from src.models.order_scenarios import POSITION_COLS, contender_probabilities
+from src.models.order_scenarios import POSITION_COLS
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORTS_DIR = ROOT / "reports"
-PROCESSED_DIR = ROOT / "data" / "processed"
 
 st.set_page_config(page_title="Order Scenarios", layout="wide")
 d.highlight_objective_stats_nav()
@@ -33,17 +31,6 @@ st.caption(
 @st.cache_data
 def load_scenarios() -> pd.DataFrame:
     return pd.read_csv(REPORTS_DIR / "2026_order_scenarios.csv")
-
-
-@st.cache_data
-def load_totals(model: str):
-    if model == "Production":
-        totals = np.load(PROCESSED_DIR / "mc_totals_2026.npy")
-        players = pd.read_csv(REPORTS_DIR / "2026_mc_player_index.csv")
-    else:
-        totals = np.load(PROCESSED_DIR / "mc_totals_objective_2026.npy")
-        players = pd.read_csv(REPORTS_DIR / "2026_objective_mc_player_index.csv")
-    return totals, players
 
 
 try:
@@ -81,8 +68,7 @@ c1, c2 = st.columns(2)
 for col, model_label in [(c1, "Production"), (c2, "Objective")]:
     with col:
         st.markdown(f"**{model_label}**")
-        totals, players = load_totals(model_label)
-        contenders = contender_probabilities(totals, players).head(15)
+        contenders = d.load_contender_probabilities(model_label).head(15)
         disp = contenders[["player_name", "prob_winner", "prob_top2", "prob_top3",
                             "prob_top5", "prob_top7", "prob_top10"]].copy()
         for c in disp.columns[1:]:

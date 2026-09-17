@@ -15,6 +15,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -22,6 +23,29 @@ ROOT = Path(__file__).resolve().parent.parent
 REPORTS = ROOT / "reports"
 DOCS = ROOT / "docs"
 PROCESSED = ROOT / "data" / "processed"
+DEPLOYMENT = ROOT / "data" / "deployment"
+
+
+def _resolve_path(local_path: Path, deployment_filename: str) -> Path:
+    """Centralised local-file-with-cloud-fallback resolution.
+
+    `data/processed/` is a local-only, gitignored directory (see .gitignore)
+    containing large intermediate research artefacts that were never meant to
+    be committed. On Streamlit Community Cloud that directory doesn't exist at
+    all after a fresh clone, so any loader reading from it directly raises
+    FileNotFoundError there. This helper makes every such loader prefer the
+    real local file when present (unchanged local-dev behaviour) and fall back
+    to a bundled, git-tracked file in data/deployment/ otherwise. The
+    deployment file is either an exact copy or an exact column/row subset of
+    the same real data -- never a re-derived or altered value -- see
+    data/deployment/README.md (build provenance) for how each one was made.
+    """
+    if local_path.exists():
+        return local_path
+    fallback = DEPLOYMENT / deployment_filename
+    if fallback.exists():
+        return fallback
+    return local_path  # let the original FileNotFoundError surface with the intended path
 
 # The 8 raw-stat families that have a `_match_z` column in model_core_2026 --
 # this is the exact set the prior audit fork used to build
@@ -159,7 +183,8 @@ def load_quality_checks() -> dict:
 def load_core_2026() -> pd.DataFrame:
     """Player-match rows for the 2026 season only, from the frozen production
     feature table used to build the audited forecast."""
-    df = pd.read_parquet(PROCESSED / "model_core_2026.parquet")
+    path = _resolve_path(PROCESSED / "model_core_2026.parquet", "model_core_2026_dashboard.parquet")
+    df = pd.read_parquet(path)
     df = df[df["season"] == 2026].reset_index(drop=True)
     # player_id is stored as string in this parquet but as int64 in the
     # reports/2026_*.csv files -- normalise to numeric so joins/filters by
@@ -395,9 +420,41 @@ def load_scenario_predictions_2026() -> pd.DataFrame:
     these columns, so this dashboard does not attempt to reconstruct a
     round-level "final ensemble EV" from them, to avoid presenting an
     unverified number as if it were the audited pipeline's output)."""
-    df = pd.read_parquet(PROCESSED / "scenario_predictions_2026.parquet")
+    path = _resolve_path(PROCESSED / "scenario_predictions_2026.parquet", "scenario_predictions_2026.parquet")
+    df = pd.read_parquet(path)
     df["player_id"] = pd.to_numeric(df["player_id"], errors="coerce")
     return df
+
+
+@st.cache_data
+def load_contender_probabilities(model_label: str) -> pd.DataFrame:
+    """Winner/Top2/Top3/Top5/Top7/Top10 probability + mean_votes per player,
+    for the Production or Objective model's season Monte Carlo.
+
+    Locally, computes this fresh from the real raw per-simulation totals
+    (data/processed/mc_totals[_objective]_2026.npy, 100,000 / 20,000 draws) via
+    the exact same src.models.order_scenarios.contender_probabilities used to
+    build reports/2026_order_scenarios.csv. Those .npy files are large
+    (113MB / 30MB) local-only research artefacts, not meant to be shipped to
+    Streamlit Cloud -- so when they're not present, this instead reads a
+    precomputed CSV in data/deployment/ containing this exact function's
+    output, computed once from the same real arrays (see
+    data/deployment/README.md). Either path returns identical numbers; no
+    probability is invented or recomputed differently for deployment.
+    """
+    from src.models.order_scenarios import contender_probabilities
+
+    npy_name = "mc_totals_2026.npy" if model_label == "Production" else "mc_totals_objective_2026.npy"
+    idx_name = "2026_mc_player_index.csv" if model_label == "Production" else "2026_objective_mc_player_index.csv"
+    npy_path = PROCESSED / npy_name
+    if npy_path.exists():
+        totals = np.load(npy_path)
+        players = pd.read_csv(REPORTS / idx_name)
+        return contender_probabilities(totals, players)
+
+    fallback_name = ("contender_probabilities_production.csv" if model_label == "Production"
+                      else "contender_probabilities_objective.csv")
+    return pd.read_csv(DEPLOYMENT / fallback_name)
 
 
 @st.cache_data
