@@ -29,16 +29,28 @@ df = bd.load_verified_opportunities()
 
 if df.empty:
     st.warning(
-        "No betting-opportunity data found.\n\n"
-        f"- Looked for: `{status['path']}`\n"
-        f"- AFL-BROWNLOW-MARKETS checkout found: {status['markets_repo_found']}\n"
-        f"- Output file found: {status['file_found']}\n\n"
-        "Run `python -m src.ingestion.refresh_sportsbet` in AFL-BROWNLOW-MARKETS, or set the "
-        "`AFL_BROWNLOW_MARKETS_PATH` environment variable to point at that checkout."
+        "No betting-opportunity data found (neither a live AFL-BROWNLOW-MARKETS checkout nor "
+        "the bundled deployment snapshot).\n\n"
+        f"- Live checkout looked for: `{status['live_path']}` (found: {status['markets_repo_found']})\n"
+        f"- Bundled snapshot looked for: `{status['snapshot_path']}` (found: {status['snapshot_available']})\n\n"
+        "Run `python -m src.ingestion.refresh_sportsbet` in AFL-BROWNLOW-MARKETS, set the "
+        "`AFL_BROWNLOW_MARKETS_PATH` environment variable to point at that checkout, or restore "
+        "`data/deployment/sportsbet_verified_value_opportunities.csv`."
     )
     st.stop()
 
-st.caption(f"Data last refreshed: {df['timestamp'].max()}  ·  source: `{status['path']}`")
+_source_label = {
+    "live_markets_repo": "live AFL-BROWNLOW-MARKETS checkout",
+    "bundled_deployment_snapshot": "bundled static deployment snapshot (this repo's copy, refreshed manually)",
+}.get(status["source_kind"], status["source_kind"])
+st.caption(f"Data last refreshed: {df['timestamp'].max()}  ·  source: {_source_label}")
+if status["source_kind"] == "bundled_deployment_snapshot":
+    st.info(
+        "Running from the bundled static snapshot -- this deployment has no access to the "
+        "AFL-BROWNLOW-MARKETS repo (expected when hosted, e.g. on Streamlit Community Cloud). "
+        "Prices will not update until the snapshot is refreshed and redeployed; see README.md's "
+        "Deployment section."
+    )
 
 df = bd.with_objective_columns(df)
 

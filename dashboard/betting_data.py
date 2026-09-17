@@ -13,9 +13,17 @@ by, or a dependency of, this module.
 Path is configured via the AFL_BROWNLOW_MARKETS_PATH environment variable,
 defaulting to a sibling checkout at ~/code/AFL-BROWNLOW-MARKETS (see that
 repo's docs/INTEGRATION_PLAN.md for why a direct file read was chosen over an
-export/copy step). If the repo or its output file isn't present, every loader
-here returns an empty DataFrame rather than raising, so the Streamlit page
-can fail gracefully.
+export/copy step). That sibling checkout only exists on this machine, though
+-- a deployed copy of this repo (e.g. Streamlit Community Cloud) has no
+access to it. For that case, this module falls back automatically to a
+bundled, repo-relative static snapshot of the same file at
+data/deployment/sportsbet_verified_value_opportunities.csv, refreshed
+manually before each deploy (see README.md's Deployment section). Nothing
+here ever scrapes Sportsbet or shells out to the Markets repo's ingestion
+tooling -- both the live and snapshot paths only ever read an
+already-finalized CSV. If neither source is present, every loader here
+returns an empty DataFrame rather than raising, so the Streamlit page can
+fail gracefully.
 """
 from __future__ import annotations
 
@@ -28,9 +36,28 @@ import streamlit as st
 
 from src.models.objective_market_probability import load_objective_market_model, objective_probability_for_row
 
+_VERIFIED_CSV_NAME = "sportsbet_verified_value_opportunities.csv"
+
 DEFAULT_MARKETS_REPO = Path.home() / "code" / "AFL-BROWNLOW-MARKETS"
 MARKETS_REPO = Path(os.environ.get("AFL_BROWNLOW_MARKETS_PATH", str(DEFAULT_MARKETS_REPO)))
-VERIFIED_CSV = MARKETS_REPO / "reports" / "sportsbet_verified_value_opportunities.csv"
+LIVE_VERIFIED_CSV = MARKETS_REPO / "reports" / _VERIFIED_CSV_NAME
+
+# Repo-relative, so it resolves correctly regardless of the machine or
+# working directory a deployment runs from.
+DEPLOYMENT_SNAPSHOT_CSV = Path(__file__).resolve().parent.parent / "data" / "deployment" / _VERIFIED_CSV_NAME
+
+
+def _resolve_verified_csv() -> tuple[Path, str]:
+    """Live Markets-repo checkout wins when present (local dev); otherwise
+    the bundled deployment snapshot; otherwise there's simply no data."""
+    if LIVE_VERIFIED_CSV.exists():
+        return LIVE_VERIFIED_CSV, "live_markets_repo"
+    if DEPLOYMENT_SNAPSHOT_CSV.exists():
+        return DEPLOYMENT_SNAPSHOT_CSV, "bundled_deployment_snapshot"
+    return LIVE_VERIFIED_CSV, "none"
+
+
+VERIFIED_CSV, _SOURCE_KIND = _resolve_verified_csv()
 
 DISPLAY_COLUMNS = {
     "market_name": "Market",
@@ -50,11 +77,16 @@ MAIN_TABLE_COLUMNS = list(DISPLAY_COLUMNS.keys())
 
 
 def data_source_status() -> dict:
-    """Presentational only - used by the page to explain why a table might be empty."""
+    """Presentational only - used by the page to explain which data source is
+    active (or why a table might be empty)."""
     return {
         "path": str(VERIFIED_CSV),
+        "source_kind": _SOURCE_KIND,  # "live_markets_repo" | "bundled_deployment_snapshot" | "none"
         "markets_repo_found": MARKETS_REPO.exists(),
         "file_found": VERIFIED_CSV.exists(),
+        "live_path": str(LIVE_VERIFIED_CSV),
+        "snapshot_path": str(DEPLOYMENT_SNAPSHOT_CSV),
+        "snapshot_available": DEPLOYMENT_SNAPSHOT_CSV.exists(),
     }
 
 

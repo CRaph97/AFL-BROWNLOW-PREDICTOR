@@ -59,6 +59,34 @@ total (ahead/on/behind model). This is **local browser-session state only** — 
 written to disk or shared between sessions, and it never overwrites a model prediction; it
 only adds a separate "actual" column alongside it.
 
+## Deployment
+
+The dashboard can be deployed to [Streamlit Community Cloud](https://streamlit.io/cloud) as-is.
+
+- **Entrypoint:** `app.py` (repo root) — set this as the "Main file path" when creating the
+  Streamlit Cloud app.
+- **Dependency file:** `requirements.txt`.
+- **Betting Opportunities page online:** this page normally reads a finalized, already-audited
+  output file live from a sibling checkout of the separate `AFL-BROWNLOW-MARKETS` repo — which
+  a Streamlit Cloud deployment has no access to. When that live checkout isn't reachable, the
+  page automatically falls back to a bundled, timestamped static snapshot committed at
+  `data/deployment/sportsbet_verified_value_opportunities.csv`, and the page clearly labels
+  itself as running from that snapshot (with the snapshot's own "last refreshed" timestamp)
+  rather than silently going stale. No Sportsbet scraping ever runs from the deployed app —
+  all ingestion/scraping/mapping code stays in the separate `AFL-BROWNLOW-MARKETS` repo.
+- **Refreshing the snapshot before a redeploy:** after `AFL-BROWNLOW-MARKETS` has produced a
+  fresh `reports/sportsbet_verified_value_opportunities.csv`, copy it into this repo and push:
+
+  ```bash
+  cp ~/code/AFL-BROWNLOW-MARKETS/reports/sportsbet_verified_value_opportunities.csv \
+     data/deployment/sportsbet_verified_value_opportunities.csv
+  git add data/deployment/sportsbet_verified_value_opportunities.csv
+  git commit -m "Refresh bundled Sportsbet snapshot for deployment"
+  git push
+  ```
+
+  Streamlit Community Cloud redeploys automatically on push to the connected branch.
+
 **Betting Opportunities:** compares Sportsbet Brownlow prices against this model's probabilities
 (edge, expected value, model disagreement, structural-break sensitivity). This page is
 **read-only downstream of the Brownlow model** in two senses: it never changes a model

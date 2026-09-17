@@ -10,6 +10,8 @@
 # streamlit + plotly added for the 2026 review dashboard (app.py / dashboard/ / pages/) -- a
 # read-only presentation layer over the frozen production outputs, no modelling dependency.
 
+numpy==2.5.3           # transitive via pandas/pyarrow already, pinned explicitly since dashboard/ and
+                        # src/models/ import it directly
 pandas==3.0.5
 pyarrow==25.0.1        # parquet read/write
 pyreadr==0.5.6         # reads fitzRoy's .rda files without needing R installed
