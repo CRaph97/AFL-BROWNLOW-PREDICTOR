@@ -40,7 +40,7 @@ streamlit run app.py
 
 Opens at `http://localhost:8501`. Pages (left sidebar): Player Detail, Scenario Comparison,
 Model Disagreement, Brownlow Night Tracker, Round View, Match Detail, Defender Bias Watchlist,
-Projection Concentration, Uncertainty.
+Projection Concentration, Uncertainty, Betting Opportunities.
 
 **Files that power it:**
 - `app.py` — landing page (summary cards + Top 20 leaderboard)
@@ -58,5 +58,23 @@ and compares the resulting actual cumulative total against the model's predicted
 total (ahead/on/behind model). This is **local browser-session state only** — nothing is
 written to disk or shared between sessions, and it never overwrites a model prediction; it
 only adds a separate "actual" column alongside it.
+
+**Betting Opportunities:** compares Sportsbet Brownlow prices against this model's probabilities
+(edge, expected value, model disagreement, structural-break sensitivity). This page is
+**read-only downstream of the Brownlow model** in two senses: it never changes a model
+prediction, and it doesn't even compute the betting-market numbers itself — all scraping,
+mapping, and value-audit logic lives in a separate repo, [AFL-BROWNLOW-MARKETS](../AFL-BROWNLOW-MARKETS),
+which this page reads a single finalized CSV from.
+
+- **Where the data comes from:** `AFL-BROWNLOW-MARKETS/reports/sportsbet_verified_value_opportunities.csv`,
+  read via `dashboard/betting_data.py`. Path defaults to `~/code/AFL-BROWNLOW-MARKETS`; override with
+  the `AFL_BROWNLOW_MARKETS_PATH` environment variable if that repo is checked out elsewhere.
+- **Refresh instructions:** this page does not fetch anything itself. In the AFL-BROWNLOW-MARKETS repo,
+  run `python -m src.ingestion.refresh_sportsbet` (see that repo's `docs/REFRESH_WORKFLOW.md`), then
+  restart this Streamlit app (or just this page) to pick up the new file.
+- **If the file is missing or that repo isn't checked out**, the page shows a clear message instead of
+  failing — it never crashes the rest of the dashboard.
+- **No arbitrage, no automated betting, no stake sizing** — this page shows a probability comparison
+  only. It does not place bets and never will.
 
 Companion report: [`docs/2026_BROWNLOW_REVIEW_REPORT.md`](docs/2026_BROWNLOW_REVIEW_REPORT.md).
