@@ -20,10 +20,35 @@ st.markdown(
     """
     <style>
     .stApp { background-color: #0e1117; }
+
+    /* Streamlit's default text colors assume a light page background (often a
+       translucent dark grey), which reads as near-invisible once the page
+       background is forced dark above. Override with concrete light colors
+       sized for a near-black background, without switching themes. */
+    .stApp h1, .stApp h2, .stApp h3 {
+        color: #f0f6fc !important;
+    }
+    .stApp p, .stApp span, .stApp label, .stApp li {
+        color: #c9d1d9;
+    }
+    .stApp [data-testid="stCaptionContainer"] {
+        color: #9da7b3 !important;
+    }
+
     .metric-card {
         background-color: #161b22; border: 1px solid #30363d; border-radius: 8px;
         padding: 14px 18px; margin-bottom: 8px;
     }
+    .metric-card [data-testid="stMetricLabel"] {
+        color: #9da7b3 !important;
+    }
+    .metric-card [data-testid="stMetricValue"] {
+        color: #f0f6fc !important;
+        font-weight: 600;
+    }
+    /* Metric delta ("green status chip") color is left to Streamlit's own
+       semantic (positive/negative) styling -- not overridden here, only kept
+       legible via the surrounding label/value/card contrast above. */
     </style>
     """,
     unsafe_allow_html=True,
