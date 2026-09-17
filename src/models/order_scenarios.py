@@ -76,13 +76,29 @@ def most_common_by_position(totals: np.ndarray, players: pd.DataFrame, depth: in
 
 def contender_probabilities(totals: np.ndarray, players: pd.DataFrame,
                              thresholds=(1, 2, 3, 5, 7, 10)) -> pd.DataFrame:
+    """Per-player Winner/TopN probabilities and mean simulated votes.
+
+    Sorted by mean_votes (expected votes), NOT prob_winner: with a dominant
+    favourite in the draws, prob_winner is ~0.0 for nearly every real
+    contender (only the outright title favourites have any mass there), so
+    sorting by it leaves hundreds of players tied at exactly 0.0 -- a stable
+    sort then orders that entire tied block by whatever row order `players`
+    happened to arrive in (e.g. team-alphabetical from the index CSV), not by
+    actual contention. That previously caused genuine top-3-EV players (e.g.
+    Marcus Bontempelli, near-zero prob_winner but ~93% prob_top10) to be
+    pushed below a `.head(N)` cutoff in favour of fringe players who simply
+    sat earlier in the arbitrary tie order. mean_votes has no such tie
+    plateau and is already the ranking metric used everywhere else in this
+    project (the leaderboard, the simulation summary), so sorting by it here
+    keeps this table's ordering consistent with them.
+    """
     ranks = ranks_from_totals(totals)
     out = players.copy()
     for t in thresholds:
         label = "prob_winner" if t == 1 else f"prob_top{t}"
         out[label] = (ranks <= t).mean(axis=0)
     out["mean_votes"] = totals.mean(axis=0)
-    return out.sort_values("prob_winner", ascending=False).reset_index(drop=True)
+    return out.sort_values("mean_votes", ascending=False).reset_index(drop=True)
 
 
 def build_order_scenarios_csv(model_totals: dict[str, tuple[np.ndarray, pd.DataFrame]],
