@@ -283,7 +283,25 @@ def build_player_round_by_round(player_id: int) -> pd.DataFrame:
     reports/2026_match_probabilities.csv (p3/p2/p1/p0/expected_votes) and
     reports/2026_predicted_votes.csv (deterministic pick). No probability is
     recomputed or renormalised -- p3/p2/p1/p0/expected_votes are copied
-    verbatim from the frozen production file."""
+    verbatim from the frozen production file.
+
+    A small number of players (a pre-existing, documented production-pipeline
+    gap -- see docs/2026_OBJECTIVE_MODEL.md section 11 and
+    docs/2026_BROWNLOW_REVIEW_REPORT.md section 7 -- affects
+    Alex Neal-Bullen, Jason Horne-Francis, Darcy Byrne-Jones,
+    Nasiah Wanganeen-Milera, and Luke Davies-Uniacke as of this build) have
+    real rows in model_core_2026 (they played real 2026 matches) but ZERO
+    rows in reports/2026_match_probabilities.csv / 2026_predicted_votes.csv,
+    because their Scenario C/ensemble/simulation step never resolved. Without
+    the guard below, the left-merges here would silently keep all of that
+    player's CORE rows with p3/p2/p1/expected_votes = NaN -- a non-empty
+    dataframe that looks like real (if unimpressive) data, which is exactly
+    the bug this function used to have: every page that gates on `.empty` to
+    show a "no data resolved" warning instead rendered a NaN/0-filled table
+    for these players. Detect the "no real production probability data at
+    all for this player" case explicitly and return truly empty (same
+    columns) so that existing gate works as intended, generically, for any
+    player this affects now or in the future -- not a name-specific patch."""
     core = load_core_2026()
     prow = core[core["player_id"] == player_id].copy()
     if prow.empty:
@@ -293,6 +311,11 @@ def build_player_round_by_round(player_id: int) -> pd.DataFrame:
     mp_player = mp[mp["player_id"] == player_id][
         ["match_id", "p3", "p2", "p1", "p0", "expected_votes"]
     ]
+    if mp_player.empty:
+        # Real player, real CORE rows, but no production probability data
+        # exists anywhere for them -- return empty (not NaN-filled) so
+        # callers' `.empty` checks correctly show the "no data" warning.
+        return prow.iloc[0:0]
     pv = load_predicted_votes()
     pv_player = pv[pv["player_id"] == player_id][["match_id", "predicted_votes"]]
 
