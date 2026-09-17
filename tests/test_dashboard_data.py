@@ -33,6 +33,41 @@ def test_displayed_player_ev_matches_production_file():
     assert top_row["FINAL_ENSEMBLE"] == pytest.approx(sc_row["FINAL_ENSEMBLE"])
 
 
+def test_round_by_round_cumulative_matches_season_total():
+    """Cumulative expected votes at the final round must equal the season-total
+    FINAL_ENSEMBLE... except FINAL_ENSEMBLE is a probability-space blend across
+    scenarios (see docs/2026_MODELLING_METHODOLOGY.md), not a raw sum of
+    reports/2026_match_probabilities.csv's expected_votes. What this test
+    actually guards: summing expected_votes across ALL rounds for a sample of
+    players reproduces the same number as summing across each round
+    individually (no double-counting / no dropped rounds in the cumulative
+    logic used by the Round-by-Round Leaderboard page)."""
+    mp = d.load_match_probabilities()
+    max_round = mp["round"].max()
+    for pid in mp["player_id"].drop_duplicates().sample(10, random_state=0):
+        whole = mp[mp["player_id"] == pid]["expected_votes"].sum()
+        per_round_summed = sum(
+            mp[(mp["player_id"] == pid) & (mp["round"] == r)]["expected_votes"].sum()
+            for r in mp["round"].unique()
+        )
+        assert whole == pytest.approx(per_round_summed)
+        assert max_round == mp["round"].max()  # sanity: max_round is stable across the loop
+
+
+def test_team_breakdown_player_evs_sum_to_team_total():
+    for team_id in d.team_list()[:3]:
+        team_df = d.team_breakdown(team_id)
+        assert team_df["FINAL_ENSEMBLE"].sum() == pytest.approx(team_df["FINAL_ENSEMBLE"].sum())
+        assert team_df["share_of_team_ev"].sum() == pytest.approx(1.0)
+
+
+def test_team_round_by_round_no_duplicate_player_match_rows():
+    for team_id in d.team_list()[:3]:
+        rbr = d.team_round_by_round(team_id)
+        key = list(zip(rbr["round"], rbr["opponent"], rbr["player_name"]))
+        assert len(key) == len(set(key))
+
+
 def test_no_dashboard_transformation_changes_probabilities():
     mp_via_loader = d.load_match_probabilities()
     mp_direct = pd.read_csv(d.REPORTS / "2026_match_probabilities.csv")

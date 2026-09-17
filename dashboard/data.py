@@ -377,6 +377,75 @@ def round_level_disagreement_table(player_ids: tuple[int, ...]) -> pd.DataFrame:
     return pivot.sort_values("round_disagreement", ascending=False)
 
 
+@st.cache_data
+def team_list() -> list[str]:
+    return sorted(load_leaderboard()["team_id"].unique().tolist())
+
+
+@st.cache_data
+def team_breakdown(team_id: str) -> pd.DataFrame:
+    """Per-player season summary for one team, built entirely from existing
+    reports/2026_leaderboard.csv columns (FINAL_ENSEMBLE, sim_median_votes,
+    projected_*_vote_games) -- no recomputation. Adds a "Share of Team
+    Expected Votes" column (player FINAL_ENSEMBLE / team total FINAL_ENSEMBLE)."""
+    lb = load_leaderboard()
+    team = lb[lb["team_id"] == team_id].copy()
+    team_total = team["FINAL_ENSEMBLE"].sum()
+    team["share_of_team_ev"] = team["FINAL_ENSEMBLE"] / team_total if team_total else 0.0
+    return team.sort_values("FINAL_ENSEMBLE", ascending=False).reset_index(drop=True)
+
+
+def team_concentration(team_breakdown_df: pd.DataFrame) -> float:
+    """Herfindahl-style concentration of a team's expected votes across its
+    players: sum of each player's (share of team EV)^2. Ranges from ~1/n
+    (perfectly even) to 1.0 (one player holds the entire team total)."""
+    return float((team_breakdown_df["share_of_team_ev"] ** 2).sum())
+
+
+# Minimum expected votes for a team player-match row to be considered
+# "material" enough to list in the Team Breakdown round-by-round table --
+# reuses the same 0.8 EV floor that classify_significant_games() already
+# uses as its "borderline polling game" threshold, so no new cutoff is
+# invented here.
+TEAM_ROUND_EV_FLOOR = 0.8
+
+
+@st.cache_data
+def team_round_by_round(team_id: str) -> pd.DataFrame:
+    """Round, opponent, player, EV, deterministic pick, p3/p2/p1 for every
+    player-match row belonging to `team_id` with expected_votes >=
+    TEAM_ROUND_EV_FLOOR. Joins reports/2026_match_probabilities.csv (for
+    every player's p3/p2/p1/expected_votes) with match_meta_table() (for the
+    opponent) and reports/2026_predicted_votes.csv (for the deterministic
+    pick, defaulting to 0 for rows with no deterministic vote)."""
+    mp = load_match_probabilities()
+    team_rows = mp[(mp["team_id"] == team_id) & (mp["expected_votes"] >= TEAM_ROUND_EV_FLOOR)].copy()
+
+    meta = match_meta_table()[["match_id", "team_a", "team_b"]]
+    team_rows = team_rows.merge(meta, on="match_id", how="left")
+    team_rows["opponent_id"] = team_rows.apply(
+        lambda r: r["team_b"] if r["team_a"] == team_id else r["team_a"], axis=1
+    )
+    team_rows["opponent_display"] = team_rows["opponent_id"].map(_display_team)
+
+    pv = load_predicted_votes()[["match_id", "player_id", "predicted_votes"]]
+    team_rows = team_rows.merge(pv, on=["match_id", "player_id"], how="left")
+    team_rows["predicted_votes"] = team_rows["predicted_votes"].fillna(0).astype(int)
+
+    return team_rows.sort_values(["round", "expected_votes"], ascending=[True, False])[
+        [
+            "round",
+            "opponent_display",
+            "player_name",
+            "expected_votes",
+            "predicted_votes",
+            "p3",
+            "p2",
+            "p1",
+        ]
+    ].rename(columns={"opponent_display": "opponent", "predicted_votes": "most_likely_votes"})
+
+
 def relative_ranks_for_match(match_id: str) -> pd.DataFrame:
     """Team-relative rank/share columns already computed in model_core_2026
     (e.g. disposals_team_rank, clearances_team_share) for every player in a
