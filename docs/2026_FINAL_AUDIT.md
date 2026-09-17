@@ -20,28 +20,28 @@ Final ensemble expected votes: **47.23** across 22 matches (up from 44.9/201 mat
 
 | round | opponent | result | p3 | p2 | p1 | expected_votes | deterministic_pick | primary_drivers |
 |---|---|---|---|---|---|---|---|---|
-| 1 | st_kilda | win by 12 | 0.709 | 0.222 | 0.056 | 2.628 | 3 | disposals=41 (z=2.7); clearances=4 (z=1.9); inside 50s=5 (z=1.6) |
-| 2 | adelaide | loss by 14 | 0.678 | 0.252 | 0.082 | 2.622 | 3 | disposals=33 (z=2.1); clearances=4 (z=1.5); goals=2 (z=1.8); inside 50s=10 (z=3.8) |
-| 4 | greater_western_sydney | win by 33 | 0.932 | 0.064 | 0.004 | 2.927 | 3 | disposals=36 (z=2.0); contested possessions=12 (z=2.0); clearances=6 (z=2.3); tackles=5 (z=1.6); goals=2 (z=1.9); inside 50s=12 (z=4.4) |
-| 6 | fremantle | loss by 6 | 0.429 | 0.259 | 0.15 | 1.955 | 3 | disposals=31 (z=2.6); contested possessions=10 (z=1.2); clearances=5 (z=1.9); inside 50s=7 (z=2.9) |
-| 7 | carlton | win by 5 | 0.947 | 0.05 | 0.002 | 2.945 | 3 | disposals=39 (z=2.9); contested possessions=16 (z=3.3); clearances=8 (z=3.6); inside 50s=8 (z=2.9) |
-| 8 | essendon | win by 77 | 0.46 | 0.495 | 0.043 | 2.413 | 2 | disposals=42 (z=2.7); contested possessions=14 (z=2.8); clearances=8 (z=4.0); inside 50s=8 (z=3.3); marks=8 (z=1.1) |
-| 9 | hawthorn | draw by 0 | 0.467 | 0.303 | 0.151 | 2.16 | 3 | disposals=34 (z=2.2); contested possessions=10 (z=1.6); clearances=4 (z=1.4); tackles=5 (z=1.5); inside 50s=8 (z=3.2) |
-| 10 | geelong | loss by 54 | 0.001 | 0.014 | 0.021 | 0.052 | 0 | disposals=29 (z=1.4) |
-| 11 | sydney | loss by 6 | 0.013 | 0.029 | 0.087 | 0.184 | 0 | disposals=28 (z=1.4); goals=2 (z=2.5); inside 50s=5 (z=1.2); contested marks=1 (z=1.4) |
-| 12 | west_coast | win by 10 | 0.947 | 0.051 | 0.002 | 2.944 | 3 | disposals=34 (z=2.7); clearances=7 (z=2.0); goals=3 (z=2.7); inside 50s=5 (z=1.6) |
-| 13 | western_bulldogs | loss by 4 | 0.33 | 0.246 | 0.175 | 1.657 | 3 | disposals=37 (z=2.7); contested possessions=12 (z=2.1); clearances=5 (z=1.6); inside 50s=6 (z=1.7) |
-| 14 | melbourne | loss by 8 | 0.476 | 0.411 | 0.096 | 2.345 | 3 | disposals=35 (z=2.7); contested possessions=12 (z=2.0); clearances=6 (z=2.3); goals=2 (z=1.7); inside 50s=7 (z=2.0); marks=6 (z=1.2) |
-| 16 | port_adelaide | win by 26 | 0.909 | 0.099 | 0.005 | 2.928 | 3 | disposals=41 (z=3.1); contested possessions=14 (z=2.8); clearances=9 (z=3.5); tackles=4 (z=1.3); inside 50s=6 (z=1.8) |
-| 17 | richmond | win by 34 | 0.97 | 0.03 | 0.001 | 2.969 | 3 | disposals=37 (z=2.9); contested possessions=11 (z=2.0); clearances=7 (z=3.3); goals=3 (z=2.2); inside 50s=9 (z=3.3) |
-| 18 | gold_coast | win by 6 | 0.852 | 0.128 | 0.018 | 2.829 | 3 | disposals=31 (z=1.9); contested possessions=11 (z=1.5); clearances=8 (z=3.0); inside 50s=6 (z=2.0) |
-| 19 | north_melbourne | win by 4 | 0.346 | 0.263 | 0.184 | 1.747 | 3 | disposals=28 (z=1.6) |
-| 20 | carlton | win by 21 | 0.527 | 0.326 | 0.11 | 2.345 | 3 | disposals=36 (z=2.9); inside 50s=4 (z=1.1) |
-| 21 | adelaide | win by 34 | 0.909 | 0.085 | 0.006 | 2.902 | 3 | disposals=39 (z=3.3); contested possessions=18 (z=2.9); clearances=7 (z=2.2); inside 50s=4 (z=1.2) |
-| 22 | geelong | loss by 25 | 0.107 | 0.26 | 0.236 | 1.075 | 2 | disposals=35 (z=2.7); contested possessions=13 (z=2.0); clearances=9 (z=2.8); inside 50s=7 (z=2.0) |
-| 23 | west_coast | win by 19 | 0.878 | 0.109 | 0.011 | 2.865 | 3 | disposals=39 (z=3.1); contested possessions=17 (z=2.5); clearances=10 (z=2.9); inside 50s=11 (z=3.5) |
-| 24 | hawthorn | draw by 0 | 0.783 | 0.174 | 0.035 | 2.732 | 3 | disposals=36 (z=2.9); inside 50s=8 (z=2.9) |
-| 25 | brisbane_lions | loss by 63 | 0.0 | 0.001 | 0.005 | 0.007 | 0 | disposals=26 (z=1.3); contested possessions=12 (z=1.7); clearances=5 (z=1.1); inside 50s=5 (z=1.5) |
+| 0 | st_kilda | win by 12 | 0.709 | 0.222 | 0.056 | 2.628 | 3 | disposals=41 (z=2.7); clearances=4 (z=1.9); inside 50s=5 (z=1.6) |
+| 1 | adelaide | loss by 14 | 0.678 | 0.252 | 0.082 | 2.622 | 3 | disposals=33 (z=2.1); clearances=4 (z=1.5); goals=2 (z=1.8); inside 50s=10 (z=3.8) |
+| 3 | greater_western_sydney | win by 33 | 0.932 | 0.064 | 0.004 | 2.927 | 3 | disposals=36 (z=2.0); contested possessions=12 (z=2.0); clearances=6 (z=2.3); tackles=5 (z=1.6); goals=2 (z=1.9); inside 50s=12 (z=4.4) |
+| 5 | fremantle | loss by 6 | 0.429 | 0.259 | 0.15 | 1.955 | 3 | disposals=31 (z=2.6); contested possessions=10 (z=1.2); clearances=5 (z=1.9); inside 50s=7 (z=2.9) |
+| 6 | carlton | win by 5 | 0.947 | 0.05 | 0.002 | 2.945 | 3 | disposals=39 (z=2.9); contested possessions=16 (z=3.3); clearances=8 (z=3.6); inside 50s=8 (z=2.9) |
+| 7 | essendon | win by 77 | 0.46 | 0.495 | 0.043 | 2.413 | 2 | disposals=42 (z=2.7); contested possessions=14 (z=2.8); clearances=8 (z=4.0); inside 50s=8 (z=3.3); marks=8 (z=1.1) |
+| 8 | hawthorn | draw by 0 | 0.467 | 0.303 | 0.151 | 2.16 | 3 | disposals=34 (z=2.2); contested possessions=10 (z=1.6); clearances=4 (z=1.4); tackles=5 (z=1.5); inside 50s=8 (z=3.2) |
+| 9 | geelong | loss by 54 | 0.001 | 0.014 | 0.021 | 0.052 | 0 | disposals=29 (z=1.4) |
+| 10 | sydney | loss by 6 | 0.013 | 0.029 | 0.087 | 0.184 | 0 | disposals=28 (z=1.4); goals=2 (z=2.5); inside 50s=5 (z=1.2); contested marks=1 (z=1.4) |
+| 11 | west_coast | win by 10 | 0.947 | 0.051 | 0.002 | 2.944 | 3 | disposals=34 (z=2.7); clearances=7 (z=2.0); goals=3 (z=2.7); inside 50s=5 (z=1.6) |
+| 12 | western_bulldogs | loss by 4 | 0.33 | 0.246 | 0.175 | 1.657 | 3 | disposals=37 (z=2.7); contested possessions=12 (z=2.1); clearances=5 (z=1.6); inside 50s=6 (z=1.7) |
+| 13 | melbourne | loss by 8 | 0.476 | 0.411 | 0.096 | 2.345 | 3 | disposals=35 (z=2.7); contested possessions=12 (z=2.0); clearances=6 (z=2.3); goals=2 (z=1.7); inside 50s=7 (z=2.0); marks=6 (z=1.2) |
+| 15 | port_adelaide | win by 26 | 0.909 | 0.099 | 0.005 | 2.928 | 3 | disposals=41 (z=3.1); contested possessions=14 (z=2.8); clearances=9 (z=3.5); tackles=4 (z=1.3); inside 50s=6 (z=1.8) |
+| 16 | richmond | win by 34 | 0.97 | 0.03 | 0.001 | 2.969 | 3 | disposals=37 (z=2.9); contested possessions=11 (z=2.0); clearances=7 (z=3.3); goals=3 (z=2.2); inside 50s=9 (z=3.3) |
+| 17 | gold_coast | win by 6 | 0.852 | 0.128 | 0.018 | 2.829 | 3 | disposals=31 (z=1.9); contested possessions=11 (z=1.5); clearances=8 (z=3.0); inside 50s=6 (z=2.0) |
+| 18 | north_melbourne | win by 4 | 0.346 | 0.263 | 0.184 | 1.747 | 3 | disposals=28 (z=1.6) |
+| 19 | carlton | win by 21 | 0.527 | 0.326 | 0.11 | 2.345 | 3 | disposals=36 (z=2.9); inside 50s=4 (z=1.1) |
+| 20 | adelaide | win by 34 | 0.909 | 0.085 | 0.006 | 2.902 | 3 | disposals=39 (z=3.3); contested possessions=18 (z=2.9); clearances=7 (z=2.2); inside 50s=4 (z=1.2) |
+| 21 | geelong | loss by 25 | 0.107 | 0.26 | 0.236 | 1.075 | 2 | disposals=35 (z=2.7); contested possessions=13 (z=2.0); clearances=9 (z=2.8); inside 50s=7 (z=2.0) |
+| 22 | west_coast | win by 19 | 0.878 | 0.109 | 0.011 | 2.865 | 3 | disposals=39 (z=3.1); contested possessions=17 (z=2.5); clearances=10 (z=2.9); inside 50s=11 (z=3.5) |
+| 23 | hawthorn | draw by 0 | 0.783 | 0.174 | 0.035 | 2.732 | 3 | disposals=36 (z=2.9); inside 50s=8 (z=2.9) |
+| 24 | brisbane_lions | loss by 63 | 0.0 | 0.001 | 0.005 | 0.007 | 0 | disposals=26 (z=1.3); contested possessions=12 (z=1.7); clearances=5 (z=1.1); inside 50s=5 (z=1.5) |
 
 ### EV threshold summary
 
@@ -87,21 +87,21 @@ Of 1,768 defender (KEY_DEFENDER/MEDIUM_DEFENDER role-tagged) player-match rows i
 
 | round | player_name | team_id | opponent_id | disposals | contested_marks | one_percenters | expected_votes |
 |---|---|---|---|---|---|---|---|
-| 8 | Archie Roberts | essendon | collingwood | 42 | 1.0 | 2.0 | 0.08 |
-| 4 | Lachie Whitfield | greater_western_sydney | collingwood | 39 | 0.0 | 2.0 | 0.21 |
-| 13 | Tom McCartin | sydney | richmond | 26 | 6.0 | 4.0 | 0.04 |
-| 20 | Harris Andrews | brisbane_lions | west_coast | 22 | 5.0 | 9.0 | 0.27 |
-| 8 | Josh Daicos | collingwood | essendon | 35 | 0.0 | 2.0 | 0.48 |
-| 8 | Josh Battle | hawthorn | gold_coast | 29 | 2.0 | 5.0 | 0.37 |
-| 22 | Callum Wilkie | st_kilda | sydney | 26 | 3.0 | 7.0 | 0.06 |
-| 18 | Bailey Dale | western_bulldogs | sydney | 32 | 1.0 | 2.0 | 0.48 |
-| 11 | Lachie Ash | greater_western_sydney | west_coast | 34 | 0.0 | 2.0 | 0.17 |
-| 9 | Bodhi Uwland | gold_coast | greater_western_sydney | 26 | 3.0 | 6.0 | 0.16 |
-| 20 | Tom McCartin | sydney | adelaide | 26 | 0.0 | 18.0 | 0.06 |
-| 21 | James Sicily | hawthorn | essendon | 27 | 3.0 | 3.0 | 0.15 |
-| 19 | Max Holmes | geelong | greater_western_sydney | 34 | 0.0 | 1.0 | 0.25 |
-| 13 | Jack Sinclair | st_kilda | hawthorn | 33 | 0.0 | 3.0 | 0.12 |
-| 9 | Dan Houston | collingwood | hawthorn | 32 | 0.0 | 3.0 | 0.33 |
+| 7 | Archie Roberts | essendon | collingwood | 42 | 1.0 | 2.0 | 0.08 |
+| 3 | Lachie Whitfield | greater_western_sydney | collingwood | 39 | 0.0 | 2.0 | 0.21 |
+| 12 | Tom McCartin | sydney | richmond | 26 | 6.0 | 4.0 | 0.04 |
+| 19 | Harris Andrews | brisbane_lions | west_coast | 22 | 5.0 | 9.0 | 0.27 |
+| 7 | Josh Daicos | collingwood | essendon | 35 | 0.0 | 2.0 | 0.48 |
+| 7 | Josh Battle | hawthorn | gold_coast | 29 | 2.0 | 5.0 | 0.37 |
+| 21 | Callum Wilkie | st_kilda | sydney | 26 | 3.0 | 7.0 | 0.06 |
+| 17 | Bailey Dale | western_bulldogs | sydney | 32 | 1.0 | 2.0 | 0.48 |
+| 10 | Lachie Ash | greater_western_sydney | west_coast | 34 | 0.0 | 2.0 | 0.17 |
+| 8 | Bodhi Uwland | gold_coast | greater_western_sydney | 26 | 3.0 | 6.0 | 0.16 |
+| 19 | Tom McCartin | sydney | adelaide | 26 | 0.0 | 18.0 | 0.06 |
+| 20 | James Sicily | hawthorn | essendon | 27 | 3.0 | 3.0 | 0.15 |
+| 18 | Max Holmes | geelong | greater_western_sydney | 34 | 0.0 | 1.0 | 0.25 |
+| 12 | Jack Sinclair | st_kilda | hawthorn | 33 | 0.0 | 3.0 | 0.12 |
+| 8 | Dan Houston | collingwood | hawthorn | 32 | 0.0 | 3.0 | 0.33 |
 
 **Not manually corrected** -- listed for disclosure only, per the audit brief.
 

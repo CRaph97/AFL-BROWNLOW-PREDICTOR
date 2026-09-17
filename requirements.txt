@@ -7,6 +7,8 @@
 # instead as a comparable histogram-based gradient boosting implementation -- see
 # src/models/gbm_model.py. PyMC/statsmodels/lightgbm/catboost remain unused; add only if a future
 # phase specifically needs them.
+# streamlit + plotly added for the 2026 review dashboard (app.py / dashboard/ / pages/) -- a
+# read-only presentation layer over the frozen production outputs, no modelling dependency.
 
 pandas==3.0.5
 pyarrow==25.0.1        # parquet read/write
@@ -18,3 +20,5 @@ html5lib==1.1
 pytest==9.1.1
 scipy==1.18.1          # Phase 3: Spearman / point-biserial correlation
 scikit-learn==1.9.1    # Phase 3: role-proxy decision tree + grouped cross-validation + mutual information
+streamlit==1.64.0      # 2026 review dashboard
+plotly==6.3.0          # 2026 review dashboard: interval/comparison charts

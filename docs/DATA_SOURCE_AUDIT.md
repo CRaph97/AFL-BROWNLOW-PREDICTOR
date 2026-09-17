@@ -35,6 +35,12 @@ than silently edited into the sections below, so the record shows what was wrong
    footywire's round numbers can differ by one within the same season (the AFL's "Opening Round"/Round 0
    convention vs. afltables' Round 1 start). This was not anticipated in Phase 1 and is now a hard rule in
    all our join code: **never join across sources on round number, always use date.**
+   **Phase 5 addendum:** this finding only covered cross-source join risk. A live 2026 audit found a
+   deeper gap it missed -- afltables' own round *label* also doesn't match the AFL's official round number
+   within a single season (same Opening Round cause): raw round N (N&ge;2) is official round N-1. Fixed
+   for 2026 in `src/data/round_normalization_2026.py`; see `docs/2026_ROUND_INTEGRITY_AUDIT.md` for the
+   full investigation. 2023-2025 likely carry the same mislabeling and are flagged there as an unactioned
+   follow-up (round is never a model feature or join key, so this does not affect any Phase 4 result).
 
 Nothing else in this document has been found to need correction; the licensing posture, Champion Data
 inaccessibility, and general source inventory in the sections below all held up under Phase 2 scrutiny.

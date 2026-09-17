@@ -27,6 +27,7 @@ import pyreadr
 
 from src.data.build_core_dataset import COLUMN_RENAME, KEEP_RAW_COLUMNS, load_team_mapping as load_team_mapping_core
 from src.data.build_advanced_dataset import ADV_COLUMN_RENAME
+from src.data.round_normalization_2026 import official_round
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw" / "fitzroy_data"
@@ -48,6 +49,13 @@ def build_core_2026() -> pd.DataFrame:
 
     is_final = df["round"].astype(str).isin(FINALS_ROUNDS_2026)
     core = df[(df["season"] == SEASON_2026) & ~is_final].copy()
+
+    # afltables' raw round label is off by one from the AFL's official round number for
+    # every round after the split Opening Round -- see round_normalization_2026.py for the
+    # full root-cause writeup (confirmed via the Phase 5 2026-integrity audit). Keep the raw
+    # value for traceability, but `round` downstream must be the official number.
+    core["round_raw_source"] = core["round"].astype(str)
+    core["round"] = core["round"].astype(str).map(official_round).astype(str)
 
     assert core["brownlow_votes"].fillna(0).eq(0).all(), (
         "2026 rows unexpectedly carry non-zero Brownlow votes -- the count may have been revealed; "

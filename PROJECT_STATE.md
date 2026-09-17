@@ -323,3 +323,40 @@ git yet. The natural first task for a future phase is to check the FINAL_ENSEMBL
 real 2026 Brownlow count once it is revealed (see `docs/2026_STRUCTURAL_BREAK.md` §5) — this is the
 first point at which the structural-break assumption becomes genuinely testable rather than a
 sensitivity band.
+
+## Post-Phase-5 audit and review dashboard (current status)
+
+A targeted production audit (not a new modelling phase) found and fixed a 6-match coverage gap —
+`docs/2026_FINAL_AUDIT.md` — bringing coverage to 207/207 matches and revising Nick Daicos's headline
+projection from 44.9 to **47.2** EV (mechanical, from adding his own previously-missing Round 1 match;
+survived a dedicated over-concentration audit). All figures elsewhere in this file that still say 44.9
+or "201/207" predate that fix; `docs/2026_FINAL_AUDIT.md` and `reports/2026_leaderboard.csv` are the
+current source of truth.
+
+A read-only Streamlit review dashboard (`app.py`, `dashboard/`, `pages/`) was then built on top of the
+audited outputs for use before/during Brownlow count night — see the "2026 Brownlow Review Dashboard"
+section of `README.md` and `docs/2026_BROWNLOW_REVIEW_REPORT.md`. It changes no prediction and adds no
+new modelling; 8 new integrity tests (`tests/test_dashboard_data.py`) confirm this.
+
+A user-reported round-label bug (2026 matches shown one round late) was then traced, fixed, and
+generalized — see `docs/2026_ROUND_INTEGRITY_AUDIT.md` (2026) and `docs/ROUND_NORMALIZATION.md`
+(2023-2025 follow-up). Root cause: afltables labels the AFL's unnumbered "Opening Round" as
+"Round 1" and numbers everything after sequentially, one higher than the AFL's own official
+round number, for every season from **2024** onward (2023 was independently confirmed
+unaffected — its Opening Round was itself labelled "Round 1" by both afltables and footywire).
+Classified as display/label-only (Class A): `round` is never a join key, sort key, or model
+feature anywhere in the codebase. Fixed at source in `src/data/build_core_dataset.py` via the
+new `src/data/round_normalization.py`, with `player_match_core_1984_2025.parquet`,
+`player_match_advanced_2010_2025.parquet`, `model_core.parquet`, and `model_advanced.parquet`
+rebuilt (9,522 rows changed per affected season, 2024 and 2025 only; zero rows changed for 2023
+or earlier). Three further match_id-keyed files were found stale mid-fix
+(`player_match_role_lagged.parquet`, `oos_predictions_core.parquet`,
+`experimental_gamestate_features.parquet`) and fixed with a targeted `match_id`-string patch
+rather than a re-run of their source pipelines — no model was retrained. Verified via full
+column-level diffs (every non-round/match_id column byte-identical), a checksum comparison of
+the one column transiently affected mid-fix (`role`/`role_source` — a join-key staleness
+artifact, fully restored, confirmed via SHA-256 hash match against the pre-fix baseline), an
+empirical metric recomputation (2025 Model1_PlackettLuce match-level metrics reproduced to full
+float precision from the corrected files), and the full test suite (37/37 passing, including
+5 new/updated season-aware assertions). No Phase 4 report or model output required
+regeneration. Nothing committed to git.

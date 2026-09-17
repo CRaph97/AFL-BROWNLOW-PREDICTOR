@@ -20,6 +20,8 @@ from pathlib import Path
 import pandas as pd
 import pyreadr
 
+from src.data.round_normalization import official_round
+
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw" / "fitzroy_data"
 INTERIM_DIR = ROOT / "data" / "interim"
@@ -142,6 +144,20 @@ def build() -> pd.DataFrame:
     core["absolute_margin"] = core["margin"].abs()
     core["win_loss_draw"] = core["margin"].apply(lambda m: "win" if m > 0 else ("loss" if m < 0 else "draw"))
 
+    # afltables' raw `round` label is not always the AFL's official round number for seasons
+    # with an unnumbered Opening Round. Confirmed by direct cross-check against footywire's
+    # independently-sourced Round column (player_stats.rda) for every round of every season
+    # 2023-2026: 2023 matches afltables exactly (no shift needed); 2024, 2025 and 2026 all
+    # shift by the same pattern as the already-fixed 2026 case (afltables raw round 1 ->
+    # official "Opening Round" / 0; raw round N>=2 -> official N-1). See
+    # docs/ROUND_NORMALIZATION.md for the full per-season evidence. Round remains descriptive
+    # metadata only -- it is never used as a join key or model feature anywhere in this
+    # codebase (grep-audited in docs/2026_ROUND_INTEGRITY_AUDIT.md and reconfirmed here).
+    core["round_raw_source"] = core["round"].astype(str)
+    core["round"] = [
+        str(official_round(raw, season)) for raw, season in zip(core["round_raw_source"], core["season"])
+    ]
+
     core["match_id"] = (
         core["season"].astype(str) + "_R" + core["round"].astype(str) + "_"
         + core["home_team_id"] + "_v_" + core["away_team_id"] + "_" + core["date"].astype(str)
@@ -152,7 +168,7 @@ def build() -> pd.DataFrame:
 
     final_columns = [
         # identifiers
-        "season", "round", "match_id", "date", "venue",
+        "season", "round", "round_raw_source", "match_id", "date", "venue",
         "player_id", "player_name", "team_id", "opponent_id", "home_away",
         # match context
         "team_score", "opponent_score", "margin", "win_loss_draw", "absolute_margin",
