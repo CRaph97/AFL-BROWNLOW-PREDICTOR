@@ -605,6 +605,76 @@ def load_objective_match_scores() -> pd.DataFrame:
 
 
 @st.cache_data
+def load_dual_model_comparison() -> pd.DataFrame:
+    """Canonical, single-source-of-truth Production-vs-Objective per-player
+    comparison. Every page comparing the two models (H2H, multi-player,
+    team rankings, and -- ideally -- Model Agreement) should read this
+    instead of re-joining reports/2026_leaderboard.csv and
+    reports/2026_objective_leaderboard.csv inline, to avoid two copies of the
+    same join logic drifting apart.
+
+    player_id is the join key: Production's leaderboard stores it as int64,
+    Objective's as str, but the underlying values are the same real ids
+    (confirmed: both pipelines assign ids from the same 2026 CORE player
+    identities) -- normalised to str once, here, at the loader boundary.
+
+    This is an OUTER join, not inner: Objective's 2026 CORE set includes ~167
+    players excluded from Production's ensemble by the season-to-date/Round-1
+    exclusion documented in docs/2026_DATA_VALIDATION.md (a player's first
+    game of the season has no prior-round rolling-average feature to score
+    on). Those players get NaN production_ev/production_rank -- callers MUST
+    render that as an explicit "not available in Production" state, never a
+    bare 0, since 0 would misrepresent "no votes" as "unscoreable"."""
+    prod = load_leaderboard()[["player_id", "player_name", "team_id", "rank", "FINAL_ENSEMBLE"]].copy()
+    obj = load_objective_leaderboard()[["player_id", "player_name", "team_id", "rank", "objective_ev"]].copy()
+    prod["player_id"] = prod["player_id"].astype(str)
+    obj["player_id"] = obj["player_id"].astype(str)
+    prod = prod.rename(columns={
+        "player_name": "player_name_prod", "team_id": "team_id_prod",
+        "rank": "production_rank", "FINAL_ENSEMBLE": "production_ev",
+    })
+    obj = obj.rename(columns={
+        "player_name": "player_name_obj", "team_id": "team_id_obj",
+        "rank": "objective_rank", "objective_ev": "objective_ev",
+    })
+    merged = prod.merge(obj, on="player_id", how="outer")
+
+    assert not merged["player_id"].duplicated().any(), (
+        "duplicate player_id after Production/Objective merge -- identity join is unsafe"
+    )
+    team_mismatch = merged[merged["team_id_prod"].notna() & merged["team_id_obj"].notna() & (merged["team_id_prod"] != merged["team_id_obj"])]
+    assert team_mismatch.empty, f"team_id disagrees between models for shared players: {team_mismatch['player_id'].tolist()}"
+
+    merged["player_name"] = merged["player_name_prod"].fillna(merged["player_name_obj"])
+    merged["team_id"] = merged["team_id_prod"].fillna(merged["team_id_obj"])
+    merged["in_production"] = merged["production_ev"].notna()
+    merged["in_objective"] = merged["objective_ev"].notna()
+    merged["model_difference"] = merged["production_ev"] - merged["objective_ev"]
+    merged["absolute_difference"] = merged["model_difference"].abs()
+    merged["average_ev"] = merged[["production_ev", "objective_ev"]].mean(axis=1, skipna=True)
+
+    out = merged[[
+        "player_id", "player_name", "team_id",
+        "production_ev", "production_rank", "in_production",
+        "objective_ev", "objective_rank", "in_objective",
+        "model_difference", "absolute_difference", "average_ev",
+    ]].sort_values("player_id").reset_index(drop=True)
+    return out
+
+
+def dual_model_team_rankings(team_id: str) -> pd.DataFrame:
+    """The dual-model comparison restricted to one team, with TEAM-relative
+    ranks computed here (on full-precision EV, not a display-rounded value) --
+    distinct from production_rank/objective_rank above, which are each
+    model's GLOBAL (whole-competition) rank."""
+    df = load_dual_model_comparison()
+    sub = df[df["team_id"] == team_id].copy()
+    sub["production_team_rank"] = sub["production_ev"].rank(ascending=False, method="min")
+    sub["objective_team_rank"] = sub["objective_ev"].rank(ascending=False, method="min")
+    return sub
+
+
+@st.cache_data
 def build_player_objective_round_by_round(player_id) -> pd.DataFrame:
     """Round-by-round objective vs. production EV/3-2-1/difference for one
     player, joining the objective votes file with the production predicted-
