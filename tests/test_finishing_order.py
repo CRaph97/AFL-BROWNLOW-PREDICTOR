@@ -159,3 +159,25 @@ class TestDeploymentFallback:
         merged = before.merge(after, on="player_id", suffixes=("_before", "_after"))
         assert (merged["production_topn_before"] - merged["production_topn_after"]).abs().max() == 0
         assert (merged["objective_topn_before"] - merged["objective_topn_after"]).abs().max() == 0
+
+
+def test_quick_summary_lists_append_each_models_own_season_ev():
+    """Display-only tweak: each Top-N list entry must show that SAME model's
+    own season EV, not a shared/mixed value, formatted to 1 decimal, with
+    the existing bold-disagreement marking left intact."""
+    from streamlit.testing.v1 import AppTest
+    import dashboard.finishing_order as fo
+
+    table = fo.topn_table(5)
+    top_prod = table.sort_values("production_topn", ascending=False).head(5).iloc[0]
+    top_obj = table.sort_values("objective_topn", ascending=False).head(5).iloc[0]
+
+    at = AppTest.from_file(str(ROOT / "pages" / "26_Finishing_Order.py"), default_timeout=60)
+    at.run()
+    assert not at.exception
+    lines = [m.value for m in at.markdown if (m.value or "").startswith("-")]
+
+    expected_prod = f"{top_prod['player_name']} — EV {top_prod['mean_votes']:.1f}"
+    expected_obj = f"{top_obj['player_name']} — EV {top_obj['objective_mean_votes']:.1f}"
+    assert any(expected_prod in line for line in lines), lines
+    assert any(expected_obj in line for line in lines), lines

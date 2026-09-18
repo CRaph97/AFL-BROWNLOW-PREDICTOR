@@ -44,20 +44,20 @@ wheelo_top = set(
 c1, c2, c3 = st.columns(3)
 with c1:
     st.markdown(f"**Production {N_LABELS[n]}**")
-    for name in table.sort_values("production_topn", ascending=False).head(n)["player_name"]:
-        mark = "**" if name not in obj_top else ""
-        st.markdown(f"- {mark}{name}{mark}")
+    for _, r in table.sort_values("production_topn", ascending=False).head(n).iterrows():
+        mark = "**" if r["player_name"] not in obj_top else ""
+        st.markdown(f"- {mark}{r['player_name']} — EV {r['mean_votes']:.1f}{mark}")
 with c2:
     st.markdown(f"**Objective {N_LABELS[n]}**")
-    for name in table.sort_values("objective_topn", ascending=False).head(n)["player_name"]:
-        mark = "**" if name not in prod_top else ""
-        st.markdown(f"- {mark}{name}{mark}")
+    for _, r in table.sort_values("objective_topn", ascending=False).head(n).iterrows():
+        mark = "**" if r["player_name"] not in prod_top else ""
+        st.markdown(f"- {mark}{r['player_name']} — EV {r['objective_mean_votes']:.1f}{mark}")
 with c3:
     st.markdown(f"**Wheelo {N_LABELS[n]} by EV**")
     if table["wheelo_ev"].notna().any():
-        for name in table.dropna(subset=["wheelo_ev"]).sort_values("wheelo_ev", ascending=False).head(n)["player_name"]:
-            mark = "**" if name not in (prod_top | obj_top) else ""
-            st.markdown(f"- {mark}{name}{mark}")
+        for _, r in table.dropna(subset=["wheelo_ev"]).sort_values("wheelo_ev", ascending=False).head(n).iterrows():
+            mark = "**" if r["player_name"] not in (prod_top | obj_top) else ""
+            st.markdown(f"- {mark}{r['player_name']} — EV {r['wheelo_ev']:.1f}{mark}")
     else:
         st.caption("No Wheelo data available.")
 st.caption("**Bold** = this player appears in only one model's list above.")

@@ -111,8 +111,10 @@ def topn_table(n: int) -> pd.DataFrame:
     wheelo = wheelo.copy()
     wheelo["player_id"] = wheelo["player_id"].apply(_normalise_player_id)
 
+    obj = obj.rename(columns={"mean_votes": "objective_mean_votes"})
+
     merged = prod[["player_id", "player_name", "team_id", "production_topn", "production_rank", "mean_votes"]].merge(
-        obj[["player_id", "objective_topn", "objective_rank"]], on="player_id", how="outer",
+        obj[["player_id", "objective_topn", "objective_rank", "objective_mean_votes"]], on="player_id", how="outer",
     ).merge(
         wheelo[["player_id", "wheelo_ev", "wheelo_rank"]], on="player_id", how="left",
     )
