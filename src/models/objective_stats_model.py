@@ -86,6 +86,36 @@ ADV_STAT_COLS = [
 UNAVAILABLE_INPUTS = ["kick_ins", "intercept_marks", "spoils"]
 
 
+def _stabilise_placeholder_ids(core: pd.DataFrame) -> pd.DataFrame:
+    """CORE assigns a fresh `NOID2026_<row-index>` placeholder to any 2026 row
+    whose real afltables id was missing (see build_2026_extension.py's
+    build_core_2026()) -- correct for CORE/match-level use, but a real bug once
+    this Objective pipeline groups by player_id to build a SEASON leaderboard:
+    a player with an unresolved id on every one of their matches (confirmed for
+    5 real 2026 players -- Charlie Cameron, Jack Ross, Billy Wilson, Jack
+    Graham, Jack Williams) got a DIFFERENT placeholder id per match, so their
+    season groupby never merged them -- each match became its own near-zero
+    "player" row instead of summing into one real season total (e.g. Charlie
+    Cameron: 23 separate rows, seasonEV fragments of 0.0002-0.51, instead of one
+    row at the correct sum, ~0.93).
+
+    Fix: within this pipeline's own in-memory copy only (never touching the
+    shared model_core_2026.parquet file Production also reads), replace every
+    NOID2026_* id with a stable synthetic id derived from (team_id,
+    normalised player_name). The same name+team combination across a single
+    season is not an ambiguous join -- it is the same literal string already
+    agreed to be one player by upstream identity resolution, just missing a
+    numeric id -- so this is a safe generic aggregation key, not a guess.
+    """
+    core = core.copy()
+    is_placeholder = core["player_id"].astype(str).str.startswith("NOID2026_")
+    if is_placeholder.any():
+        name_key = core.loc[is_placeholder, "player_name"].str.lower().str.replace(r"[^a-z]", "", regex=True)
+        team_key = core.loc[is_placeholder, "team_id"].astype(str)
+        core.loc[is_placeholder, "player_id"] = "NOID2026_" + team_key + "_" + name_key
+    return core
+
+
 def load_2026_input_frame() -> pd.DataFrame:
     """CORE 2026 rows left-joined with the ADVANCED 2026 extra stat columns.
     2026-only, no other season. ~1.9% of rows have no ADVANCED match (footywire
@@ -94,8 +124,15 @@ def load_2026_input_frame() -> pd.DataFrame:
     """
     core = pd.read_parquet(PROCESSED / "model_core_2026.parquet")
     core = core[core["season"] == 2026].copy()
+    core = _stabilise_placeholder_ids(core)
     adv = pd.read_parquet(PROCESSED / "model_advanced_2026.parquet")
     adv = adv[adv["season"] == 2026].copy()
+    # ADVANCED carries the exact same per-row player_id column as CORE (it is
+    # CORE's 2026 rows plus extra footywire columns, not a re-identified table
+    # -- see build_2026_extension.py::build_advanced_2026()), so it must be
+    # stabilised the same way or the merge below would silently stop matching
+    # every previously-affected player now that CORE's id has changed.
+    adv = _stabilise_placeholder_ids(adv)
     adv_cols = ["match_id", "player_id"] + ADV_STAT_COLS
     merged = core.merge(adv[adv_cols], on=["match_id", "player_id"], how="left")
     return merged

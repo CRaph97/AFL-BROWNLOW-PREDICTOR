@@ -29,33 +29,33 @@ Production,10,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Will As
 Production,10,8,Nick Daicos,Bailey Smith,Patrick Cripps,Marcus Bontempelli,Will Ashcroft,Harry Sheezel,Lachie Neale,Isaac Heeney,Nasiah Wanganeen-Milera,Zak Butters,4e-05
 Production,10,9,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Will Ashcroft,Harry Sheezel,Lachie Neale,Isaac Heeney,Zak Butters,Jordan Dawson,4e-05
 Production,10,10,Nick Daicos,Bailey Smith,Will Ashcroft,Harry Sheezel,Isaac Heeney,Patrick Cripps,Marcus Bontempelli,Lachie Neale,Jordan Dawson,Nasiah Wanganeen-Milera,4e-05
-Objective,5,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,,,,,,0.0204
-Objective,5,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,,,,,,0.0185
-Objective,5,3,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,,,,,,0.0145
-Objective,5,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,,,,,,0.0142
-Objective,5,5,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Isaac Heeney,,,,,,0.01355
-Objective,5,6,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,,,,,,0.01065
-Objective,5,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Lachie Neale,,,,,,0.01035
-Objective,5,8,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Lachie Neale,,,,,,0.0103
-Objective,5,9,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Bailey Smith,Patrick Cripps,,,,,,0.0099
-Objective,5,10,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Lachie Neale,,,,,,0.0086
-Objective,7,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.00165
-Objective,7,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.00115
-Objective,7,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,,,,0.0011
-Objective,7,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Isaac Heeney,Patrick Cripps,Jai Newcombe,,,,0.00105
-Objective,7,5,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Lachie Neale,,,,0.001
-Objective,7,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Lachie Neale,Jai Newcombe,,,,0.001
-Objective,7,7,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Lachie Neale,Isaac Heeney,Jai Newcombe,,,,0.00095
-Objective,7,8,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,Jai Newcombe,Lachie Neale,,,,0.00095
-Objective,7,9,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Lachie Neale,Jai Newcombe,,,,0.0009
-Objective,7,10,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Lachie Neale,Patrick Cripps,Jai Newcombe,,,,0.0009
-Objective,10,1,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Ed Richards,Lachie Neale,Isaac Heeney,Luke Jackson,Jai Newcombe,Max Gawn,0.0001
+Objective,5,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,,,,,,0.0223
+Objective,5,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,,,,,,0.0217
+Objective,5,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,,,,,,0.01445
+Objective,5,4,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,,,,,,0.0136
+Objective,5,5,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Isaac Heeney,,,,,,0.01305
+Objective,5,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Lachie Neale,,,,,,0.0121
+Objective,5,7,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Bailey Smith,Patrick Cripps,,,,,,0.01165
+Objective,5,8,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,,,,,,0.0116
+Objective,5,9,Nick Daicos,Marcus Bontempelli,Bailey Smith,Lachie Neale,Isaac Heeney,,,,,,0.01005
+Objective,5,10,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Lachie Neale,,,,,,0.0099
+Objective,7,1,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.0017
+Objective,7,2,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Jai Newcombe,Lachie Neale,,,,0.0016
+Objective,7,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Lachie Neale,Jai Newcombe,,,,0.0012
+Objective,7,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Isaac Heeney,Patrick Cripps,Jai Newcombe,,,,0.0012
+Objective,7,5,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Lachie Neale,Luke Jackson,,,,0.0011
+Objective,7,6,Nick Daicos,Marcus Bontempelli,Bailey Smith,Lachie Neale,Isaac Heeney,Patrick Cripps,Jai Newcombe,,,,0.0011
+Objective,7,7,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Lachie Neale,Jai Newcombe,,,,0.001
+Objective,7,8,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Bailey Smith,Jai Newcombe,Lachie Neale,,,,0.001
+Objective,7,9,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Lachie Neale,,,,0.00095
+Objective,7,10,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Lachie Neale,Isaac Heeney,Clayton Oliver,,,,0.00095
+Objective,10,1,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Lachie Neale,Isaac Heeney,Clayton Oliver,Luke Jackson,Zak Butters,Jai Newcombe,0.0001
 Objective,10,2,Nick Daicos,Bailey Smith,Marcus Bontempelli,Max Gawn,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,Luke Davies-Uniacke,Izak Rankine,0.0001
-Objective,10,3,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,Jai Newcombe,Lachie Neale,Ed Richards,Jason Horne-Francis,Max Gawn,0.0001
-Objective,10,4,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Jason Horne-Francis,Clayton Oliver,Lachie Neale,Luke Davies-Uniacke,0.0001
-Objective,10,5,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Jai Newcombe,Lachie Neale,Isaac Heeney,Jason Horne-Francis,Luke Davies-Uniacke,Max Gawn,0.0001
-Objective,10,6,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Patrick Cripps,Luke Jackson,Max Gawn,Clayton Oliver,Lachie Neale,Nasiah Wanganeen-Milera,0.0001
-Objective,10,7,Nick Daicos,Marcus Bontempelli,Bailey Smith,Patrick Cripps,Lachie Neale,Max Gawn,Isaac Heeney,Luke Jackson,Jason Horne-Francis,Izak Rankine,0.0001
-Objective,10,8,Nick Daicos,Marcus Bontempelli,Lachie Neale,Bailey Smith,Patrick Cripps,Isaac Heeney,Jai Newcombe,Nasiah Wanganeen-Milera,Luke Jackson,Chad Warner,0.0001
-Objective,10,9,Nick Daicos,Marcus Bontempelli,Isaac Heeney,Bailey Smith,Lachie Neale,Max Gawn,Patrick Cripps,Caleb Serong,Jai Newcombe,Luke Jackson,0.0001
-Objective,10,10,Nick Daicos,Marcus Bontempelli,Bailey Smith,Isaac Heeney,Max Gawn,Patrick Cripps,Jai Newcombe,Lachie Neale,Jason Horne-Francis,Will Ashcroft,0.0001
+Objective,10,3,Bailey Smith,Marcus Bontempelli,Nick Daicos,Patrick Cripps,Lachie Neale,Isaac Heeney,Jai Newcombe,Will Ashcroft,Max Gawn,Nasiah Wanganeen-Milera,0.0001
+Objective,10,4,Nick Daicos,Bailey Smith,Marcus Bontempelli,Lachie Neale,Patrick Cripps,Isaac Heeney,Clayton Oliver,Luke Jackson,Max Gawn,Ed Richards,0.0001
+Objective,10,5,Bailey Smith,Nick Daicos,Marcus Bontempelli,Luke Jackson,Isaac Heeney,Patrick Cripps,Lachie Neale,Izak Rankine,Luke Davies-Uniacke,Max Gawn,0.0001
+Objective,10,6,Nick Daicos,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Isaac Heeney,Jai Newcombe,Luke Jackson,Max Gawn,Will Ashcroft,Lachie Neale,0.0001
+Objective,10,7,Nick Daicos,Marcus Bontempelli,Patrick Cripps,Bailey Smith,Isaac Heeney,Jai Newcombe,Max Gawn,Clayton Oliver,Lachie Neale,Luke Jackson,0.0001
+Objective,10,8,Nick Daicos,Isaac Heeney,Bailey Smith,Marcus Bontempelli,Patrick Cripps,Lachie Neale,Harry Sheezel,Jai Newcombe,Clayton Oliver,Luke Jackson,0.0001
+Objective,10,9,Nick Daicos,Bailey Smith,Isaac Heeney,Jai Newcombe,Marcus Bontempelli,Lachie Neale,Patrick Cripps,Luke Jackson,Jordan Dawson,Ed Richards,0.0001
+Objective,10,10,Nick Daicos,Bailey Smith,Marcus Bontempelli,Isaac Heeney,Patrick Cripps,Max Gawn,Lachie Neale,Jai Newcombe,Zak Butters,Will Ashcroft,0.0001

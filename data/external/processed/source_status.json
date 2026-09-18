@@ -1,0 +1,61 @@
+{
+  "retrieved_at": "2026-09-18T00:18:35.292911+00:00",
+  "sources": {
+    "wheelo": {
+      "status": "ok",
+      "url": null,
+      "path": "/Users/christopherraphael/code/AFL-BROWNLOW-PREDICTOR/data/external/wheelo-brownlow-predictions.csv",
+      "n_rows": 9522,
+      "identity_summary": {
+        "n_rows": 9522,
+        "status_counts": {
+          "resolved": 9411,
+          "unresolved": 101,
+          "ambiguous": 10
+        },
+        "n_unresolved_names": 6,
+        "unresolved_names": [
+          "Bailey J. Williams",
+          "Billy Wilson",
+          "Charlie Cameron",
+          "Jack Graham",
+          "Jack Ross",
+          "Jack Williams"
+        ],
+        "n_ambiguous_names": 2,
+        "ambiguous_names": [
+          "Chad Warner",
+          "Corey Warner"
+        ]
+      }
+    },
+    "espn": {
+      "status": "ok",
+      "url": "https://www.espn.com.au/afl/story/_/page/POINTSBET20242/afl-2026-brownlow-medal-predictor-tracker-leaderboard-odds-every-vote",
+      "raw_snapshot": "/Users/christopherraphael/code/AFL-BROWNLOW-PREDICTOR/data/external/raw/espn_2026-09-18.html",
+      "parser_version": "espn_source.py:v1",
+      "n_rows": 28,
+      "note": "partial coverage -- ESPN publishes its own top-N leaderboard, not the full competition"
+    },
+    "betfair": {
+      "status": "ok",
+      "url": "https://www.betfair.com.au/hub/sports/afl/brownlow-medal-predictor/",
+      "raw_snapshot": "/Users/christopherraphael/code/AFL-BROWNLOW-PREDICTOR/data/external/raw/betfair_2026-09-18.html",
+      "parser_version": "betfair_source.py:v1",
+      "n_rows": 54,
+      "note": "partial coverage -- only 22 of 207 2026 matches had a recap article in the 2026-09-18 snapshot; round-level attribution not reliable, season-total only"
+    },
+    "afl_com_au": {
+      "status": "unavailable",
+      "reason": "page is a JavaScript-rendered navigation shell; no prediction data present in static HTML (confirmed by direct fetch, not merely a summarisation-tool guess)",
+      "raw_snapshot": "/Users/christopherraphael/code/AFL-BROWNLOW-PREDICTOR/data/external/raw/afl_com_au_2026-09-18.html",
+      "url": "https://www.afl.com.au/brownlow-medal/predictor"
+    },
+    "wheelo_live_site": {
+      "status": "unavailable",
+      "reason": "single-page app; static HTML contains only a player-name dropdown list, no prediction values (data is loaded via a JS/API call not captured by a static fetch). The local CSV (see 'wheelo' above) is used as the actual Wheelo source instead.",
+      "raw_snapshot": "/Users/christopherraphael/code/AFL-BROWNLOW-PREDICTOR/data/external/raw/wheelo_site_2026-09-18.html",
+      "url": "https://www.wheeloratings.com/afl_brownlow.html"
+    }
+  }
+}

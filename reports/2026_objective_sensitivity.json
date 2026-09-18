@@ -12,36 +12,36 @@
     "top20_overlap_pct": 1.0
   },
   "CONTEST_plus25pct": {
-    "top20_overlap_with_base": 19,
-    "top20_overlap_pct": 0.95
+    "top20_overlap_with_base": 18,
+    "top20_overlap_pct": 0.9
   },
   "CLEARANCE_minus25pct": {
-    "top20_overlap_with_base": 19,
-    "top20_overlap_pct": 0.95
+    "top20_overlap_with_base": 18,
+    "top20_overlap_pct": 0.9
   },
   "CLEARANCE_plus25pct": {
     "top20_overlap_with_base": 19,
     "top20_overlap_pct": 0.95
   },
   "SCORING_minus25pct": {
-    "top20_overlap_with_base": 19,
-    "top20_overlap_pct": 0.95
+    "top20_overlap_with_base": 17,
+    "top20_overlap_pct": 0.85
   },
   "SCORING_plus25pct": {
     "top20_overlap_with_base": 20,
     "top20_overlap_pct": 1.0
   },
   "SCORE_CREATION_minus25pct": {
-    "top20_overlap_with_base": 19,
-    "top20_overlap_pct": 0.95
+    "top20_overlap_with_base": 18,
+    "top20_overlap_pct": 0.9
   },
   "SCORE_CREATION_plus25pct": {
     "top20_overlap_with_base": 20,
     "top20_overlap_pct": 1.0
   },
   "TERRITORY_minus25pct": {
-    "top20_overlap_with_base": 20,
-    "top20_overlap_pct": 1.0
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
   },
   "TERRITORY_plus25pct": {
     "top20_overlap_with_base": 19,
@@ -60,16 +60,16 @@
     "top20_overlap_pct": 0.95
   },
   "PRESSURE_plus25pct": {
-    "top20_overlap_with_base": 20,
-    "top20_overlap_pct": 1.0
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
   },
   "RUCK_minus25pct": {
     "top20_overlap_with_base": 20,
     "top20_overlap_pct": 1.0
   },
   "RUCK_plus25pct": {
-    "top20_overlap_with_base": 20,
-    "top20_overlap_pct": 1.0
+    "top20_overlap_with_base": 19,
+    "top20_overlap_pct": 0.95
   },
   "TEAM_RESULT_minus25pct": {
     "top20_overlap_with_base": 20,

@@ -57,11 +57,18 @@ def test_production_mc_mean_matches_simulation_summary():
 
 
 def test_objective_mc_mean_matches_simulation_summary():
+    """Threshold was `> 700` before a later fix (see
+    test_objective_placeholder_id_fix.py): 5 real players with an unresolved
+    id on every match (Charlie Cameron, Jack Ross, Billy Wilson, Jack Graham,
+    Jack Williams) used to fragment into a fresh near-duplicate "player" row
+    per match (82 extra rows total), inflating the count above 700. After
+    stabilising their identity to one row each, the real, correct player count
+    is 668 -- fewer rows, not a regression."""
     totals, players = _load_objective()
     sim = pd.read_csv(REPORTS / "2026_objective_simulation_summary.csv")
     players = players.assign(mc_mean=totals.mean(axis=0))
     merged = players.merge(sim[["player_id", "sim_mean_votes"]], on="player_id", how="inner")
-    assert len(merged) > 700
+    assert len(merged) > 600  # sanity: the join actually matched most players
     assert (merged["mc_mean"] - merged["sim_mean_votes"]).abs().max() < 1e-6
 
 
