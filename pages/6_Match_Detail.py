@@ -17,9 +17,26 @@ watchlist = d.load_defender_watchlist()
 obj_votes = d.load_objective_votes()
 wheelo_ml = ed.load_wheelo_match_level()
 
-meta_sorted = meta.sort_values(["round", "match_id"])
+# "round" is stored as a string ("0","1",...,"20"), so a plain sort_values
+# lexicographically orders "R1, R10, R11, ..., R2, R20, ...". Sort by an
+# integer cast for round order; keep the existing match_id tiebreak for
+# stable ordering within a round.
+meta_sorted = meta.assign(_round_num=meta["round"].astype(int)).sort_values(["_round_num", "match_id"]).drop(columns="_round_num")
 options = meta_sorted.apply(lambda r: f"R{r['round']}: {r['result_label']}", axis=1).tolist()
-choice = st.selectbox("Select match", options, index=0)
+
+# Deep-link support: a caller (e.g. the To Poll a Vote page's "Open Match
+# Detail" links) can set st.session_state["match_detail_preselect_match_id"]
+# before calling st.switch_page here to preselect a specific match. Popped
+# immediately after use so a later direct, un-deep-linked visit to this page
+# still defaults normally (index 0) rather than keeping a stale selection.
+default_index = 0
+preselect_id = st.session_state.pop("match_detail_preselect_match_id", None)
+if preselect_id is not None:
+    match_ids_in_order = meta_sorted["match_id"].tolist()
+    if preselect_id in match_ids_in_order:
+        default_index = match_ids_in_order.index(preselect_id)
+
+choice = st.selectbox("Select match", options, index=default_index)
 m = meta_sorted.iloc[options.index(choice)]
 match_id = m["match_id"]
 

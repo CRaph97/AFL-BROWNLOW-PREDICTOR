@@ -39,15 +39,37 @@ def test_old_betting_opportunities_page_untouched_and_still_runs():
 
 
 def test_every_existing_page_still_runs_standalone():
+    """st.page_link() can only resolve a target page inside a live
+    st.navigation() context -- a page that uses it (e.g.
+    23_Brownlow_Betting_Opportunities.py, which links to the extracted
+    27_To_Poll_A_Vote.py page) raises StreamlitPageNotFoundError when run
+    standalone outside app.py's router. That's a testing artifact, not a
+    production bug, since the deployed app always goes through app.py --
+    verified separately, through the real router, by
+    test_page_link_pages_work_via_real_router() below."""
     files = sorted(glob.glob(str(ROOT / "pages" / "*.py")))
     assert len(files) >= 25, "expected all pre-existing pages plus the relocated Guide & FAQs"
+    pages_requiring_router_context = {"23_Brownlow_Betting_Opportunities.py"}
     failures = []
     for f in files:
+        if Path(f).name in pages_requiring_router_context:
+            continue
         at = AppTest.from_file(f, default_timeout=60)
         at.run()
         if at.exception:
             failures.append((f, str(at.exception)))
     assert not failures, failures
+
+
+def test_page_link_pages_work_via_real_router():
+    """Pages excluded above (because they use st.page_link, which needs a
+    live st.navigation() context) must still work when actually reached the
+    way a user reaches them: through app.py's router."""
+    at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60)
+    at.run()
+    at.switch_page("pages/23_Brownlow_Betting_Opportunities.py")
+    at.run()
+    assert not at.exception
 
 
 def test_guide_and_faqs_relocated_not_duplicated():

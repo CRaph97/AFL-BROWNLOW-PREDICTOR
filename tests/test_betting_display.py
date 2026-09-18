@@ -323,9 +323,9 @@ class TestDrilldownMissingOptionalStatColumn:
 
     def test_page_renders_and_degrades_gracefully_with_missing_column(self, monkeypatch):
         """End-to-end: run the REAL page (via AppTest) with a CORE table
-        missing 'hitouts', and confirm the whole page still renders --
-        including every section below "To Poll a Vote" -- with the graceful
-        message shown for the affected player, not a page-crashing exception."""
+        missing 'hitouts', and confirm the "To Poll a Vote" page (where this
+        drill-down now lives, moved out of Brownlow Betting Opportunities)
+        still renders -- not a page-crashing exception."""
         from streamlit.testing.v1 import AppTest
         from dashboard import data as d_mod
 
@@ -333,10 +333,19 @@ class TestDrilldownMissingOptionalStatColumn:
         crippled = real_core.drop(columns=["hitouts"])
         monkeypatch.setattr(d_mod, "load_core_2026", lambda: crippled)
 
-        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at = AppTest.from_file(str(ROOT / "pages" / "27_To_Poll_A_Vote.py"), default_timeout=60)
         at.run()
         assert not at.exception
-        headers = [h.value for h in at.header]
+
+        # Betting Opportunities itself (now just a summary card + link to the
+        # page above) must also still render, via the real router since it
+        # uses st.page_link.
+        at2 = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60)
+        at2.run()
+        at2.switch_page("pages/23_Brownlow_Betting_Opportunities.py")
+        at2.run()
+        assert not at2.exception
+        headers = [h.value for h in at2.header]
         assert "5. Team Explorer" in headers
         assert "9. Advanced / All Markets" in headers
 
@@ -365,14 +374,15 @@ class TestFinishingPositionExcludesFlaggedIdentities:
 
 class TestToPollAVoteSingleDrilldownSelector:
     """The per-player expander list was replaced with one searchable
-    selectbox (key='tpav_drilldown_player') -- verifies the page is
-    materially shorter and both a normal and a previously-crash-prone
-    player still resolve through it."""
+    selectbox (key='tpav_drilldown_player') -- verifies the page (now
+    pages/27_To_Poll_A_Vote.py, extracted out of Brownlow Betting
+    Opportunities) is materially shorter and both a normal and a
+    previously-crash-prone player still resolve through it."""
 
     def test_page_has_one_drilldown_selector_not_a_list_of_expanders(self):
         from streamlit.testing.v1 import AppTest
 
-        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at = AppTest.from_file(str(ROOT / "pages" / "27_To_Poll_A_Vote.py"), default_timeout=60)
         at.run()
         assert not at.exception
         selectors = [s for s in at.selectbox if s.key == "tpav_drilldown_player"]
@@ -380,14 +390,14 @@ class TestToPollAVoteSingleDrilldownSelector:
         assert "Tim English" in selectors[0].options
         assert "Mabior Chol" in selectors[0].options
         # Materially shorter: the old design produced one expander per
-        # "To Poll a Vote" player (~dozens); the redesigned page's total
-        # expander count across the WHOLE page must stay in the single digits.
+        # "To Poll a Vote" player (~dozens); this page's total expander
+        # count must stay in the single digits.
         assert len(at.expander) < 20
 
     def test_selected_player_drilldown_renders_without_exception(self):
         from streamlit.testing.v1 import AppTest
 
-        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at = AppTest.from_file(str(ROOT / "pages" / "27_To_Poll_A_Vote.py"), default_timeout=60)
         at.run()
         sel = [s for s in at.selectbox if s.key == "tpav_drilldown_player"][0]
         sel.set_value("Tim English").run()
