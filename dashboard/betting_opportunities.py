@@ -264,14 +264,27 @@ QUALIFYING_CONFIDENCE = [
 ]
 _EVIDENCE_RANK = {c: i for i, c in enumerate(QUALIFYING_CONFIDENCE)}
 
+# Display text only -- internal classification keys (src/betting/
+# classification.py's ConfidenceResult.confidence values) are never renamed,
+# only how they're shown. Renamed from "Confidence"/"High Confidence" wording
+# after a real audit found the LOGIC is correct (an EV/edge/value-agreement
+# signal computed from real simulated probabilities vs. bookmaker-implied
+# probability -- see classify_confidence()'s own rationale strings) but the
+# old label text misleadingly read as an outcome-probability claim ("High
+# Confidence" sounds like "this will probably happen", not "the price looks
+# mispriced"). No threshold or probability value changed by this rename.
 CONFIDENCE_BADGES = {
-    "HIGH_CONFIDENCE_WHEELO_CONFIRMED": "\U0001F7E2 High Confidence + Wheelo Confirmed",
-    "HIGH_CONFIDENCE_WHEELO_NEUTRAL": "\U0001F7E2 High Confidence",
-    "MEDIUM_CONFIDENCE": "\U0001F7E1 Medium Confidence",
-    "HIGH_RISK_HIGH_REWARD": "\U0001F7E0 High Risk / High Reward",
+    "HIGH_CONFIDENCE_WHEELO_CONFIRMED": "\U0001F7E2 Strong Value Signal + Wheelo Support",
+    "HIGH_CONFIDENCE_WHEELO_NEUTRAL": "\U0001F7E2 Strong Value Signal",
+    "MEDIUM_CONFIDENCE": "\U0001F7E1 Moderate Value Signal",
+    "HIGH_RISK_HIGH_REWARD": "\U0001F7E0 Speculative Value",
     "MODEL_DISAGREEMENT": "⚪ Model Disagreement",
     "NO_VALUE": "⚪ No Value",
 }
+
+VALUE_SIGNAL_CAPTION = (
+    "Value Signal describes model agreement about the price, not the probability the bet will win."
+)
 
 
 def confidence_badge(confidence: str) -> str:
@@ -522,3 +535,59 @@ def drilldown_summary(drilldown: pd.DataFrame) -> dict:
     if "production" in out and "objective" in out:
         out["models_agree"] = out["production"][:2] == out["objective"][:2]
     return out
+
+
+def build_drill_table(top5: pd.DataFrame) -> pd.DataFrame:
+    """Pure-data version of the Round/Opponent/Result/Production.../
+    Objective.../Wheelo... table shown by both pages/27_To_Poll_A_Vote.py
+    and pages/28_Player_Search.py -- extracted so neither page recomputes or
+    reformats this independently. `top5` is match_level_drilldown()'s output,
+    already sliced to the rows the caller wants shown."""
+    prod_p_any = (top5["production_p3"] + top5["production_p2"] + top5["production_p1"]).apply(format_pct)
+    obj_p_any = (top5["objective_p3"] + top5["objective_p2"] + top5["objective_p1"]).apply(format_pct)
+    return pd.DataFrame({
+        "Round": top5["round"], "Opponent": top5["opponent_display"], "Result": top5["result_label"],
+        "Production P3": top5["production_p3"].apply(format_pct),
+        "Production P2": top5["production_p2"].apply(format_pct),
+        "Production P1": top5["production_p1"].apply(format_pct),
+        "Production P(any)": prod_p_any,
+        "Production EV": top5["production_ev"].round(3),
+        "Objective P3": top5["objective_p3"].apply(format_pct),
+        "Objective P2": top5["objective_p2"].apply(format_pct),
+        "Objective P1": top5["objective_p1"].apply(format_pct),
+        "Objective P(any)": obj_p_any,
+        "Objective EV": top5["objective_ev"].round(3),
+        "Wheelo pred. votes": top5["wheelo_match_ev"],
+        "Wheelo P3 (%)": top5["wheelo_p3_pct"],
+    })
+
+
+KEY_STAT_DISPLAY_COLS = [
+    ("disposals", "Disposals"), ("contested_possessions", "Contested poss."),
+    ("clearances", "Clearances"), ("tackles", "Tackles"), ("goals", "Goals"),
+    ("inside_50s", "Inside 50s"), ("hitouts", "Hitouts"),
+    ("metres_gained", "Metres gained"), ("score_involvements", "Score involvements"),
+]
+
+
+def build_key_stats_table(rows: pd.DataFrame) -> tuple[pd.DataFrame, bool]:
+    """Pure-data key-evidence table (existing box-score stats only, no new
+    feature engineering) for one or more match_level_drilldown() rows.
+    Shared by pages/27_To_Poll_A_Vote.py (shows all 5 rounds at once) and
+    pages/28_Player_Search.py (shows just the user-selected round) so the
+    set of columns/omission rule can never drift between the two. Returns
+    (table, any_column_was_omitted_for_missing_data)."""
+    key_stats = pd.DataFrame({"Round": rows["round"], "Opponent": rows["opponent_display"]})
+    any_missing = False
+    for col, label in KEY_STAT_DISPLAY_COLS:
+        if col in rows.columns and rows[col].notna().any():
+            key_stats[label] = rows[col]
+        else:
+            any_missing = True
+    if "disposals_team_share" in rows.columns and rows["disposals_team_share"].notna().any():
+        key_stats["Team disposal share"] = rows["disposals_team_share"].apply(
+            lambda x: f"{x * 100:.1f}%" if pd.notna(x) else "N/A"
+        )
+    else:
+        any_missing = True
+    return key_stats, any_missing

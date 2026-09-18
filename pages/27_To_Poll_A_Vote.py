@@ -28,6 +28,7 @@ st.caption(
     "Neds / PointsBet 'to poll a vote' markets priced against Production and Objective's own "
     "simulations, with Wheelo as independent corroboration. Decision-support only."
 )
+st.caption(f"ℹ️ {bo.VALUE_SIGNAL_CAPTION}")
 
 raw_opportunities = bo.load_opportunities()
 if raw_opportunities.empty:
@@ -67,23 +68,7 @@ def _render_polling_drilldown(prow) -> None:
         st.markdown(f"- **Production and Objective point at the same game:** {'Yes' if summary['models_agree'] else 'No'}")
 
     top5 = drilldown.head(5).copy()
-    top5["Production P(any)"] = (top5["production_p3"] + top5["production_p2"] + top5["production_p1"]).apply(bo.format_pct)
-    top5["Objective P(any)"] = (top5["objective_p3"] + top5["objective_p2"] + top5["objective_p1"]).apply(bo.format_pct)
-    drill_table = pd.DataFrame({
-        "Round": top5["round"], "Opponent": top5["opponent_display"], "Result": top5["result_label"],
-        "Production P3": top5["production_p3"].apply(bo.format_pct),
-        "Production P2": top5["production_p2"].apply(bo.format_pct),
-        "Production P1": top5["production_p1"].apply(bo.format_pct),
-        "Production P(any)": top5["Production P(any)"],
-        "Production EV": top5["production_ev"].round(3),
-        "Objective P3": top5["objective_p3"].apply(bo.format_pct),
-        "Objective P2": top5["objective_p2"].apply(bo.format_pct),
-        "Objective P1": top5["objective_p1"].apply(bo.format_pct),
-        "Objective P(any)": top5["Objective P(any)"],
-        "Objective EV": top5["objective_ev"].round(3),
-        "Wheelo pred. votes": top5["wheelo_match_ev"],
-        "Wheelo P3 (%)": top5["wheelo_p3_pct"],
-    })
+    drill_table = bo.build_drill_table(top5)
     st.dataframe(drill_table, use_container_width=True, hide_index=True)
     st.caption(
         "Wheelo has no P2/P1 data -- \"P(any)\" is never estimated for Wheelo, only shown "
@@ -106,25 +91,7 @@ def _render_polling_drilldown(prow) -> None:
     # every one of these 5 matches) -- a column match_level_drilldown() had to
     # fill with NA because it's absent from this environment's CORE table is
     # omitted here entirely, rather than shown as a column of blanks.
-    optional_stat_cols = [
-        ("disposals", "Disposals"), ("contested_possessions", "Contested poss."),
-        ("clearances", "Clearances"), ("tackles", "Tackles"), ("goals", "Goals"),
-        ("inside_50s", "Inside 50s"), ("hitouts", "Hitouts"),
-        ("metres_gained", "Metres gained"), ("score_involvements", "Score involvements"),
-    ]
-    key_stats = pd.DataFrame({"Round": top5["round"], "Opponent": top5["opponent_display"]})
-    any_missing = False
-    for col, label in optional_stat_cols:
-        if col in top5.columns and top5[col].notna().any():
-            key_stats[label] = top5[col]
-        else:
-            any_missing = True
-    if "disposals_team_share" in top5.columns and top5["disposals_team_share"].notna().any():
-        key_stats["Team disposal share"] = top5["disposals_team_share"].apply(
-            lambda x: f"{x * 100:.1f}%" if pd.notna(x) else "N/A"
-        )
-    else:
-        any_missing = True
+    key_stats, any_missing = bo.build_key_stats_table(top5)
     st.caption("Existing match stats (key evidence, where recorded):")
     st.dataframe(key_stats, use_container_width=True, hide_index=True)
     if any_missing:
@@ -135,10 +102,19 @@ tpav = opportunities[opportunities["market_type"] == "TO_POLL_A_VOTE"]
 if tpav.empty:
     st.caption("No 'To Poll a Vote' markets currently available.")
 else:
-    search3 = st.text_input("Player search", key="tpav_search")
+    fc1, fc2 = st.columns([2, 1])
+    search3 = fc1.text_input("Player search", key="tpav_search")
+    min_prob_choice = fc2.selectbox(
+        "Minimum model probability", ["Any", "25%", "50%", "60%", "70%", "80%"], key="tpav_min_prob",
+        help="Filters on min(Production, Objective) season probability -- or whichever one exists "
+             "if only one model resolved this player. Separate from Value Signal.",
+    )
     piv = bo.with_bookmaker_odds(tpav, ["player_id"])
     if search3:
         piv = piv[piv["player_name"].str.contains(search3, case=False, na=False)]
+    if min_prob_choice != "Any":
+        threshold = int(min_prob_choice.rstrip("%")) / 100.0
+        piv = piv[piv["conservative_internal_probability"] >= threshold]
     piv = piv.assign(_sort=piv["conservative_internal_probability"] - piv["implied_probability"]).sort_values("_sort", ascending=False)
     show = pd.DataFrame({
         "Player": piv["player_name"],
@@ -149,7 +125,7 @@ else:
         "Production %": piv["production_probability"].apply(bo.format_pct),
         "Objective %": piv["objective_probability"].apply(bo.format_pct),
         "Wheelo support": piv["wheelo_support_label"],
-        "Confidence": piv["confidence_badge"],
+        "Value Signal": piv["confidence_badge"],
     })
     st.dataframe(show, use_container_width=True, hide_index=True, height=500)
 

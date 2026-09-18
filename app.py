@@ -42,6 +42,7 @@ pages = {
         st.Page("pages/25_Technical_Summary.py", title="Technical Summary", default=True),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
         st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
+        st.Page("pages/28_Player_Search.py", title="Player Search"),
         st.Page("pages/27_To_Poll_A_Vote.py", title="To Poll a Vote"),
         st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities"),

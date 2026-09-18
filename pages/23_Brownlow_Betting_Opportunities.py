@@ -30,6 +30,7 @@ st.caption(
     "page never places a bet, sizes a stake, or automates a bookmaker account, and never "
     "changes any model's predictions."
 )
+st.caption(f"ℹ️ {bo.VALUE_SIGNAL_CAPTION}")
 
 summary = bo.load_refresh_summary()
 raw_opportunities = bo.load_opportunities()
@@ -89,7 +90,7 @@ else:
         "bet": "Selection", "best_bookmaker": "Best bookmaker", "best_odds": "Best odds",
         "implied_probability": "Implied %", "production_probability": "Production %",
         "objective_probability": "Objective %", "conservative_edge_pp": "Model gap (pp)",
-        "wheelo_support_label": "Wheelo evidence", "confidence_badge": "Confidence",
+        "wheelo_support_label": "Wheelo evidence", "confidence_badge": "Value Signal",
     }
     # Each opportunity row already IS one bookmaker's price (source-specific),
     # so "best odds" for a single row is just that row's own odds -- the
@@ -169,7 +170,7 @@ else:
             "Best odds": piv["best_odds"].apply(bo.format_odds),
             "Best bookmaker": piv["best_bookmaker"],
             "Implied %": piv["implied_probability"].apply(bo.format_pct),
-            "Confidence": piv["confidence_badge"],
+            "Value Signal": piv["confidence_badge"],
             "+Edge": piv["edge_indicator"],
         }).sort_values("Production %", ascending=False)
         st.dataframe(show, use_container_width=True, hide_index=True, height=500)
@@ -326,7 +327,7 @@ if team_player_markets.empty:
 else:
     st.dataframe(pd.DataFrame({
         "Bet": team_player_markets["bet"], "Best odds": team_player_markets["odds"].apply(bo.format_odds),
-        "Bookmaker": team_player_markets["source"], "Confidence": team_player_markets["confidence_badge"],
+        "Bookmaker": team_player_markets["source"], "Value Signal": team_player_markets["confidence_badge"],
     }), use_container_width=True, hide_index=True, height=300)
 
 st.divider()
@@ -392,7 +393,7 @@ else:
         st.dataframe(pd.DataFrame({
             "Player": market_table["player_name"], "Bet": market_table["bet"],
             "Bookmaker": market_table["source"], "Odds": market_table["odds"].apply(bo.format_odds),
-            "Confidence": market_table["confidence_badge"],
+            "Value Signal": market_table["confidence_badge"],
         }), use_container_width=True, hide_index=True)
 
 st.divider()
@@ -430,7 +431,7 @@ else:
             "PointsBet odds": piv["pointsbet_odds"].apply(bo.format_odds), "Best odds": piv["best_odds"].apply(bo.format_odds),
             "Production %": piv["production_probability"].apply(bo.format_pct),
             "Objective %": piv["objective_probability"].apply(bo.format_pct),
-            "Wheelo support": piv["wheelo_support_label"], "Confidence": piv["confidence_badge"],
+            "Wheelo support": piv["wheelo_support_label"], "Value Signal": piv["confidence_badge"],
         }), use_container_width=True, hide_index=True)
 
 st.divider()
@@ -483,7 +484,7 @@ st.caption("The exhaustive raw market inventory, including UNMODELLED and flagge
 f1, f2, f3, f4, f5, f6 = st.columns(6)
 bookmaker_filter = f1.selectbox("Bookmaker", ["All", "Neds", "PointsBet"])
 confidence_options = sorted(opportunities["confidence"].dropna().unique().tolist())
-confidence_filter = f2.multiselect("Confidence", confidence_options, default=confidence_options)
+confidence_filter = f2.multiselect("Value Signal", confidence_options, default=confidence_options)
 market_options = sorted(opportunities["market_type"].dropna().unique().tolist())
 market_filter = f3.multiselect("Market type", market_options, default=market_options)
 search9 = f4.text_input("Player / team search", key="adv_search")
@@ -507,7 +508,7 @@ st.caption(f"{len(adv)} of {len(opportunities)} rows match the current filters."
 simple_view = pd.DataFrame({
     "Bet": adv["bet"], "Bookmaker": adv["source"].apply(lambda s: "PointsBet" if str(s).startswith("pointsbet") else "Neds"),
     "Odds": adv["odds"].apply(bo.format_odds), "Production %": adv["production_probability"].apply(bo.format_pct),
-    "Objective %": adv["objective_probability"].apply(bo.format_pct), "Confidence": adv["confidence_badge"],
+    "Objective %": adv["objective_probability"].apply(bo.format_pct), "Value Signal": adv["confidence_badge"],
     "Data quality": adv["data_quality_flags"].fillna("none"),
 })
 st.dataframe(simple_view, use_container_width=True, hide_index=True, height=500)
