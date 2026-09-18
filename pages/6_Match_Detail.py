@@ -1,6 +1,9 @@
+import pandas as pd
 import streamlit as st
 
+from dashboard import betting_opportunities as bo
 from dashboard import data as d
+from dashboard import external_data as ed
 
 st.set_page_config(page_title="Match Detail", layout="wide")
 d.highlight_objective_stats_nav()
@@ -11,6 +14,8 @@ pv = d.load_predicted_votes()
 mp = d.load_match_probabilities()
 core = d.load_core_2026()
 watchlist = d.load_defender_watchlist()
+obj_votes = d.load_objective_votes()
+wheelo_ml = ed.load_wheelo_match_level()
 
 meta_sorted = meta.sort_values(["round", "match_id"])
 options = meta_sorted.apply(lambda r: f"R{r['round']}: {r['result_label']}", axis=1).tolist()
@@ -47,13 +52,71 @@ for i, (_, r) in enumerate(match_pv.iterrows()):
         st.metric(f"{int(r['predicted_votes'])} votes", r["player_name"], r["team_id"].replace("_", " ").title())
 
 st.divider()
-st.subheader("Probability Distribution -- Leading Players")
+st.subheader("Probability Distribution -- Leading Players (Production)")
 match_mp = mp[mp["match_id"] == match_id].sort_values("expected_votes", ascending=False).head(10)
 st.bar_chart(match_mp.set_index("player_name")[["p3", "p2", "p1"]], height=320)
 st.dataframe(
     match_mp[["player_name", "team_id", "p3", "p2", "p1", "p0", "expected_votes"]]
     .rename(columns={"player_name": "Player", "team_id": "Team", "p3": "P(3)", "p2": "P(2)", "p1": "P(1)", "p0": "P(0)", "expected_votes": "Expected Votes"})
     .style.format({"P(3)": "{:.0%}", "P(2)": "{:.0%}", "P(1)": "{:.0%}", "P(0)": "{:.0%}", "Expected Votes": "{:.2f}"}),
+    use_container_width=True, hide_index=True,
+)
+
+st.divider()
+st.subheader("Production vs. Objective vs. Wheelo -- This Match")
+st.caption(
+    "All three models kept visibly separate -- never blended into one score. "
+    "Wheelo has no P2/P1 data, so only its match Votes/EV and P(3) are shown, never a fabricated P(any)."
+)
+_prod = mp[mp["match_id"] == match_id][["player_id", "player_name", "team_id", "p3", "p2", "p1", "expected_votes"]].copy()
+_prod["pid_norm"] = _prod["player_id"].apply(bo._normalise_player_id)
+_prod = _prod.rename(columns={"p3": "production_p3", "p2": "production_p2", "p1": "production_p1", "expected_votes": "production_ev"})
+
+_obj = obj_votes[obj_votes["match_id"] == match_id][["player_id", "p3", "p2", "p1", "expected_votes"]].copy()
+_obj["pid_norm"] = _obj["player_id"].apply(bo._normalise_player_id)
+_obj = _obj.rename(columns={"p3": "objective_p3", "p2": "objective_p2", "p1": "objective_p1", "expected_votes": "objective_ev"})
+
+_wheelo = pd.DataFrame(columns=["pid_norm", "wheelo_match_ev", "wheelo_p3_pct"])
+if not wheelo_ml.empty:
+    _wheelo = wheelo_ml[(wheelo_ml["round"] == int(m["round"])) & (wheelo_ml["match_status"] == "resolved")][
+        ["player_id", "wheelo_ev", "wheelo_p3_pct"]
+    ].copy()
+    _wheelo["pid_norm"] = _wheelo["player_id"].apply(bo._normalise_player_id)
+    _wheelo = _wheelo.rename(columns={"wheelo_ev": "wheelo_match_ev"})
+
+combined = _prod[["pid_norm", "player_id", "player_name", "team_id", "production_p3", "production_p2", "production_p1", "production_ev"]].merge(
+    _obj[["pid_norm", "objective_p3", "objective_p2", "objective_p1", "objective_ev"]], on="pid_norm", how="outer",
+).merge(
+    _wheelo[["pid_norm", "wheelo_match_ev", "wheelo_p3_pct"]], on="pid_norm", how="left",
+)
+# Sort by COMBINED evidence (Production EV + Objective EV), not either model's
+# own value alone -- sorting by one model's raw number repeats a known
+# pitfall (see dashboard/finishing_order.py's identical rationale): it can
+# bury a player one model rates highly but the other doesn't, purely because
+# of tie/ordering artefacts in the dominant model.
+combined["combined_ev"] = combined["production_ev"].fillna(0) + combined["objective_ev"].fillna(0)
+combined = combined.sort_values("combined_ev", ascending=False).head(10)
+
+match_table = pd.DataFrame({
+    "Player": combined["player_name"],
+    "Team": combined["team_id"].apply(d._display_team),
+    "Prod EV": combined["production_ev"],
+    "Prod P3": combined["production_p3"],
+    "Prod P2": combined["production_p2"],
+    "Prod P1": combined["production_p1"],
+    "Obj EV": combined["objective_ev"],
+    "Obj P3": combined["objective_p3"],
+    "Obj P2": combined["objective_p2"],
+    "Obj P1": combined["objective_p1"],
+    "Wheelo Votes": combined["wheelo_match_ev"],
+    "Wheelo P3%": combined["wheelo_p3_pct"],
+})
+st.dataframe(
+    match_table.style.format({
+        "Prod EV": "{:.2f}", "Prod P3": "{:.0%}", "Prod P2": "{:.0%}", "Prod P1": "{:.0%}",
+        "Obj EV": "{:.2f}", "Obj P3": "{:.0%}", "Obj P2": "{:.0%}", "Obj P1": "{:.0%}",
+        "Wheelo Votes": "{:.2f}", "Wheelo P3%": "{:.1f}%",
+    }, na_rep="N/A"),
     use_container_width=True, hide_index=True,
 )
 
