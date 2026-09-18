@@ -119,3 +119,43 @@ def test_navigation_places_pages_correctly():
     assert "title=\"Production Model\"" in model_analysis_block
     assert "00_Overview.py" in model_analysis_block
     assert "00_Overview.py" not in main_block
+
+
+class TestDeploymentFallback:
+    """Regression test for a live crash: data/processed/mc_totals_2026.npy
+    and mc_totals_objective_2026.npy are gitignored local research artefacts
+    -- a fresh Streamlit Cloud clone never has them, so every Finishing Order
+    calculation raised FileNotFoundError there. Fixed with a compressed
+    (data/deployment/*.npz) fallback mirroring this project's established
+    local-with-deployment-fallback pattern."""
+
+    def test_deployment_npz_is_byte_identical_to_local_npy(self):
+        import numpy as np
+        local_prod = np.load(ROOT / "data/processed/mc_totals_2026.npy")
+        with np.load(ROOT / "data/deployment/mc_totals_2026.npz") as npz:
+            assert np.array_equal(local_prod, npz["totals"])
+        local_obj = np.load(ROOT / "data/processed/mc_totals_objective_2026.npy")
+        with np.load(ROOT / "data/deployment/mc_totals_objective_2026.npz") as npz:
+            assert np.array_equal(local_obj, npz["totals"])
+
+    def test_topn_and_exact_order_identical_under_simulated_cloud(self, monkeypatch, tmp_path):
+        import shutil
+        import dashboard.finishing_order as fo
+
+        before = fo.topn_table(5)[["player_id", "production_topn", "objective_topn"]]
+
+        processed_dir = ROOT / "data" / "processed"
+        moved = tmp_path / "processed_moved"
+        shutil.move(str(processed_dir), str(moved))
+        try:
+            fo.load_production_sim.clear()
+            fo.load_objective_sim.clear()
+            after = fo.topn_table(5)[["player_id", "production_topn", "objective_topn"]]
+        finally:
+            shutil.move(str(moved), str(processed_dir))
+            fo.load_production_sim.clear()
+            fo.load_objective_sim.clear()
+
+        merged = before.merge(after, on="player_id", suffixes=("_before", "_after"))
+        assert (merged["production_topn_before"] - merged["production_topn_after"]).abs().max() == 0
+        assert (merged["objective_topn_before"] - merged["objective_topn_after"]).abs().max() == 0

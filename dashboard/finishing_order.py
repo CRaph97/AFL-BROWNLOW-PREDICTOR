@@ -28,11 +28,31 @@ from src.models import order_scenarios as os_
 
 ROOT = Path(__file__).resolve().parent.parent
 PROCESSED = ROOT / "data" / "processed"
+DEPLOYMENT = ROOT / "data" / "deployment"
 REPORTS = ROOT / "reports"
 EXTERNAL_PROCESSED = ROOT / "data" / "external" / "processed"
 
 MIN_SUPPORTING_DRAWS = 10
 MAX_N = 20
+
+
+def _load_sim_array(local_filename: str, deployment_filename: str) -> np.ndarray:
+    """Local-with-deployment-fallback for a Monte Carlo draw array, mirroring
+    this project's established pattern (dashboard/data.py's `_resolve_path()`,
+    dashboard/betting_data.py's Markets-repo fallback). `data/processed/` is
+    gitignored (large local research artefacts, never meant to ship), so a
+    fresh Streamlit Cloud clone never has these files -- without a fallback,
+    every Finishing Order calculation raises FileNotFoundError there, which
+    is exactly the live bug this fixes. The deployment copy is a lossless
+    `np.savez_compressed` of the exact same int16 array (verified byte-for-
+    byte identical after round-tripping) -- never a re-derived, rounded, or
+    approximated value."""
+    local_path = PROCESSED / local_filename
+    if local_path.exists():
+        return np.load(local_path)
+    deployment_path = DEPLOYMENT / deployment_filename
+    with np.load(deployment_path) as npz:
+        return npz["totals"]
 
 
 def _normalise_player_id(x) -> str:
@@ -49,14 +69,14 @@ def _normalise_player_id(x) -> str:
 
 @st.cache_data
 def load_production_sim() -> tuple[np.ndarray, pd.DataFrame]:
-    totals = np.load(PROCESSED / "mc_totals_2026.npy")
+    totals = _load_sim_array("mc_totals_2026.npy", "mc_totals_2026.npz")
     players = pd.read_csv(REPORTS / "2026_mc_player_index.csv")
     return totals, players
 
 
 @st.cache_data
 def load_objective_sim() -> tuple[np.ndarray, pd.DataFrame]:
-    totals = np.load(PROCESSED / "mc_totals_objective_2026.npy")
+    totals = _load_sim_array("mc_totals_objective_2026.npy", "mc_totals_objective_2026.npz")
     players = pd.read_csv(REPORTS / "2026_objective_mc_player_index.csv")
     return totals, players
 
