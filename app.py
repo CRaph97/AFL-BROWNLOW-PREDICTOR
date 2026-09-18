@@ -38,9 +38,10 @@ import streamlit as st
 
 pages = {
     "MAIN": [
-        st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities", default=True),
         st.Page("pages/25_Technical_Summary.py", title="Technical Summary"),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
+        st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities", default=True),
+        st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/4_Brownlow_Night_Tracker.py", title="Brownlow Night Tracker"),
         st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
         # visibility="hidden" excludes it from the rendered nav menu while
@@ -69,7 +70,6 @@ pages = {
         st.Page("pages/2_Scenario_Comparison.py", title="Scenario Comparison"),
         st.Page("pages/3_Model_Disagreement.py", title="Model Disagreement"),
         st.Page("pages/5_Round_View.py", title="Round View"),
-        st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/7_Defender_Bias_Watchlist.py", title="Defender Bias Watchlist"),
         st.Page("pages/8_Projection_Concentration.py", title="Projection Concentration"),
         st.Page("pages/9_Uncertainty.py", title="Uncertainty"),
