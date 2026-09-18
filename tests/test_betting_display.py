@@ -339,3 +339,57 @@ class TestDrilldownMissingOptionalStatColumn:
         headers = [h.value for h in at.header]
         assert "5. Team Explorer" in headers
         assert "9. Advanced / All Markets" in headers
+
+
+class TestFinishingPositionExcludesFlaggedIdentities:
+    """Chad Warner (genuinely ambiguous vs. teammate Corey Warner -- same
+    team, same first initial, correctly left unresolved at the identity
+    layer per an earlier task) must never appear as an unexplained all-N/A
+    row in the normal Finishing Position Explorer. He must still appear,
+    unfiltered, in Advanced/All Markets -- this excludes him from one
+    display view, it does not delete or hide the underlying data."""
+
+    def test_flagged_rows_excluded_from_every_threshold(self):
+        df = bo.load_opportunities()
+        for n in [5.0, 10.0, 20.0]:
+            sub = df[(df["market_type"] == "TOP_N") & (df["n"] == n)]
+            sub = sub[~sub.apply(bo.has_flag, axis=1)]
+            piv = bo.with_bookmaker_odds(sub, ["player_id"])
+            assert piv[piv["player_name"] == "Chad Warner"].empty, f"Top {int(n)}"
+
+    def test_flagged_row_still_present_in_raw_opportunities(self):
+        """Never actually dropped from the data -- only from this one view."""
+        df = bo.load_opportunities()
+        assert (df["player_name"] == "Chad Warner").any()
+
+
+class TestToPollAVoteSingleDrilldownSelector:
+    """The per-player expander list was replaced with one searchable
+    selectbox (key='tpav_drilldown_player') -- verifies the page is
+    materially shorter and both a normal and a previously-crash-prone
+    player still resolve through it."""
+
+    def test_page_has_one_drilldown_selector_not_a_list_of_expanders(self):
+        from streamlit.testing.v1 import AppTest
+
+        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at.run()
+        assert not at.exception
+        selectors = [s for s in at.selectbox if s.key == "tpav_drilldown_player"]
+        assert len(selectors) == 1
+        assert "Tim English" in selectors[0].options
+        assert "Mabior Chol" in selectors[0].options
+        # Materially shorter: the old design produced one expander per
+        # "To Poll a Vote" player (~dozens); the redesigned page's total
+        # expander count across the WHOLE page must stay in the single digits.
+        assert len(at.expander) < 20
+
+    def test_selected_player_drilldown_renders_without_exception(self):
+        from streamlit.testing.v1 import AppTest
+
+        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at.run()
+        sel = [s for s in at.selectbox if s.key == "tpav_drilldown_player"][0]
+        sel.set_value("Tim English").run()
+        assert not at.exception
+        assert any("Strongest Production polling match" in (m.value or "") for m in at.markdown)

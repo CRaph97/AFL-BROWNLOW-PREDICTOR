@@ -144,6 +144,15 @@ else:
     else:
         n_val = float(choice.split(" ")[1])
         sub = opportunities[(opportunities["market_type"] == "TOP_N") & (opportunities["n"] == n_val)]
+    # A row flagged IDENTITY_AMBIGUOUS (e.g. Chad Warner vs. his genuinely
+    # ambiguous teammate Corey Warner -- same team, same first initial,
+    # correctly left unresolved rather than guessed at the identity layer)
+    # has real bookmaker odds but no model probabilities, and must not appear
+    # here as an unexplained all-N/A row. It's never dropped from the data --
+    # only excluded from this normal-use view; it still appears, unfiltered,
+    # in "9. Advanced / All Markets" below.
+    if not sub.empty:
+        sub = sub[~sub.apply(bo.has_flag, axis=1)]
     only_positive = st.toggle("Only show positive edge", value=False)
     piv = bo.with_bookmaker_odds(sub, ["player_id"])
     if not piv.empty:
@@ -276,22 +285,24 @@ else:
     st.dataframe(show, use_container_width=True, hide_index=True, height=500)
 
     st.caption(
-        "Manual cross-check: expand a player below to see their top 5 real matches most likely "
+        "Manual cross-check: pick a player below to see their top 5 real matches most likely "
         "to produce at least one vote, using only existing match-level data. This is evidence "
         "display only -- it never changes the season betting probability shown above."
     )
-    for _, prow in piv.iterrows():
-        with st.expander(f"Why this bet? / Where could the vote come from? -- {prow['player_name']}"):
-            # This drill-down is optional evidence display, not core page
-            # content -- a failure here (e.g. an environment whose bundled
-            # CORE data is missing an optional stat column) must never take
-            # down the rest of the page. Deliberately scoped to just this
-            # block: a genuine bug elsewhere on the page must still raise
-            # normally, not be silently swallowed by a page-wide handler.
-            try:
-                _render_polling_drilldown(prow)
-            except Exception:
-                st.caption("Some match-level stats are unavailable in the deployed dataset.")
+    if not piv.empty:
+        drilldown_names = sorted(piv["player_name"].dropna().unique())
+        drilldown_choice = st.selectbox("Check likely polling rounds", drilldown_names, key="tpav_drilldown_player")
+        sel_row = piv[piv["player_name"] == drilldown_choice].iloc[0]
+        # This drill-down is optional evidence display, not core page content
+        # -- a failure here (e.g. an environment whose bundled CORE data is
+        # missing an optional stat column) must never take down the rest of
+        # the page. Deliberately scoped to just this block: a genuine bug
+        # elsewhere on the page must still raise normally, not be silently
+        # swallowed by a page-wide handler.
+        try:
+            _render_polling_drilldown(sel_row)
+        except Exception:
+            st.caption("Some match-level stats are unavailable in the deployed dataset.")
 
 st.divider()
 
