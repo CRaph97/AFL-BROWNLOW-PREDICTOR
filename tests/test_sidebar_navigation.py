@@ -84,10 +84,14 @@ def test_technical_summary_page_renders_and_is_placed_after_overview_in_main():
         "7. Weightings / Feature Importance",
     ]
 
+    # NOTE: this originally asserted Technical Summary comes after Overview
+    # in MAIN. A later task moved "Overview" (retitled "Production Model")
+    # out of MAIN into MODEL ANALYSIS entirely, obsoleting that specific
+    # relative-position check -- Technical Summary being present in MAIN at
+    # all is the part of this test's contract that still applies.
     router_src = (ROOT / "app.py").read_text()
     main_start = router_src.index('"MAIN": [')
     main_end = router_src.index("],", main_start)
     main_block = router_src[main_start:main_end]
-    overview_pos = main_block.index('st.Page("pages/00_Overview.py"')
-    summary_pos = main_block.index('st.Page("pages/25_Technical_Summary.py"')
-    assert summary_pos > overview_pos, "Technical Summary must come after Overview in MAIN"
+    assert 'st.Page("pages/25_Technical_Summary.py"' in main_block
+    assert "pages/00_Overview.py" not in main_block, "Overview/Production Model must no longer be in MAIN"
