@@ -172,6 +172,86 @@ st.divider()
 # ==========================================================================
 # 3. TO POLL A VOTE
 # ==========================================================================
+def _render_polling_drilldown(prow) -> None:
+    """Render one player's "why this bet?" match-level evidence panel.
+
+    This is optional evidence display, not core page content -- defined as
+    its own function (called inside a try/except below) so that a failure
+    here (e.g. a deployed environment whose bundled CORE data is missing an
+    optional stat column) degrades to a graceful message for that one player
+    only, and can never prevent the rest of the page -- including every
+    section below "To Poll a Vote" -- from rendering.
+    """
+    drilldown = bo.match_level_drilldown(prow["player_id"])
+    if drilldown.empty:
+        st.caption("No match-level data resolved for this player.")
+        return
+    summary = bo.drilldown_summary(drilldown)
+    if "production" in summary:
+        r, opp, p = summary["production"]
+        st.markdown(f"- **Strongest Production polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
+    if "objective" in summary:
+        r, opp, p = summary["objective"]
+        st.markdown(f"- **Strongest Objective polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
+    if "wheelo" in summary:
+        r, opp, p = summary["wheelo"]
+        st.markdown(f"- **Strongest Wheelo-supported match:** Round {int(r)} vs {opp} (P3-equivalent {p:.1f}%)")
+    if "models_agree" in summary:
+        st.markdown(f"- **Production and Objective point at the same game:** {'Yes' if summary['models_agree'] else 'No'}")
+
+    top5 = drilldown.head(5).copy()
+    top5["Production P(any)"] = (top5["production_p3"] + top5["production_p2"] + top5["production_p1"]).apply(bo.format_pct)
+    top5["Objective P(any)"] = (top5["objective_p3"] + top5["objective_p2"] + top5["objective_p1"]).apply(bo.format_pct)
+    drill_table = pd.DataFrame({
+        "Round": top5["round"], "Opponent": top5["opponent_display"], "Result": top5["result_label"],
+        "Production P3": top5["production_p3"].apply(bo.format_pct),
+        "Production P2": top5["production_p2"].apply(bo.format_pct),
+        "Production P1": top5["production_p1"].apply(bo.format_pct),
+        "Production P(any)": top5["Production P(any)"],
+        "Production EV": top5["production_ev"].round(3),
+        "Objective P3": top5["objective_p3"].apply(bo.format_pct),
+        "Objective P2": top5["objective_p2"].apply(bo.format_pct),
+        "Objective P1": top5["objective_p1"].apply(bo.format_pct),
+        "Objective P(any)": top5["Objective P(any)"],
+        "Objective EV": top5["objective_ev"].round(3),
+        "Wheelo pred. votes": top5["wheelo_match_ev"],
+        "Wheelo P3 (%)": top5["wheelo_p3_pct"],
+    })
+    st.dataframe(drill_table, use_container_width=True, hide_index=True)
+    st.caption(
+        "Wheelo has no P2/P1 data -- \"P(any)\" is never estimated for Wheelo, only shown "
+        "for Production/Objective, computed as P3+P2+P1 from their own real match probabilities."
+    )
+
+    # Only show key-stat columns that are genuinely present (non-missing for
+    # every one of these 5 matches) -- a column match_level_drilldown() had to
+    # fill with NA because it's absent from this environment's CORE table is
+    # omitted here entirely, rather than shown as a column of blanks.
+    optional_stat_cols = [
+        ("disposals", "Disposals"), ("contested_possessions", "Contested poss."),
+        ("clearances", "Clearances"), ("tackles", "Tackles"), ("goals", "Goals"),
+        ("inside_50s", "Inside 50s"), ("hitouts", "Hitouts"),
+        ("metres_gained", "Metres gained"), ("score_involvements", "Score involvements"),
+    ]
+    key_stats = pd.DataFrame({"Round": top5["round"], "Opponent": top5["opponent_display"]})
+    any_missing = False
+    for col, label in optional_stat_cols:
+        if col in top5.columns and top5[col].notna().any():
+            key_stats[label] = top5[col]
+        else:
+            any_missing = True
+    if "disposals_team_share" in top5.columns and top5["disposals_team_share"].notna().any():
+        key_stats["Team disposal share"] = top5["disposals_team_share"].apply(
+            lambda x: f"{x * 100:.1f}%" if pd.notna(x) else "N/A"
+        )
+    else:
+        any_missing = True
+    st.caption("Existing match stats (key evidence, where recorded):")
+    st.dataframe(key_stats, use_container_width=True, hide_index=True)
+    if any_missing:
+        st.caption("Some match-level stats are unavailable in the deployed dataset.")
+
+
 st.header("3. To Poll a Vote")
 tpav = opportunities[opportunities["market_type"] == "TO_POLL_A_VOTE"]
 if tpav.empty:
@@ -202,57 +282,16 @@ else:
     )
     for _, prow in piv.iterrows():
         with st.expander(f"Why this bet? / Where could the vote come from? -- {prow['player_name']}"):
-            drilldown = bo.match_level_drilldown(prow["player_id"])
-            if drilldown.empty:
-                st.caption("No match-level data resolved for this player.")
-                continue
-            summary = bo.drilldown_summary(drilldown)
-            if "production" in summary:
-                r, opp, p = summary["production"]
-                st.markdown(f"- **Strongest Production polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
-            if "objective" in summary:
-                r, opp, p = summary["objective"]
-                st.markdown(f"- **Strongest Objective polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
-            if "wheelo" in summary:
-                r, opp, p = summary["wheelo"]
-                st.markdown(f"- **Strongest Wheelo-supported match:** Round {int(r)} vs {opp} (P3-equivalent {p:.1f}%)")
-            if "models_agree" in summary:
-                st.markdown(f"- **Production and Objective point at the same game:** {'Yes' if summary['models_agree'] else 'No'}")
-
-            top5 = drilldown.head(5).copy()
-            top5["Production P(any)"] = (top5["production_p3"] + top5["production_p2"] + top5["production_p1"]).apply(bo.format_pct)
-            top5["Objective P(any)"] = (top5["objective_p3"] + top5["objective_p2"] + top5["objective_p1"]).apply(bo.format_pct)
-            drill_table = pd.DataFrame({
-                "Round": top5["round"], "Opponent": top5["opponent_display"], "Result": top5["result_label"],
-                "Production P3": top5["production_p3"].apply(bo.format_pct),
-                "Production P2": top5["production_p2"].apply(bo.format_pct),
-                "Production P1": top5["production_p1"].apply(bo.format_pct),
-                "Production P(any)": top5["Production P(any)"],
-                "Production EV": top5["production_ev"].round(3),
-                "Objective P3": top5["objective_p3"].apply(bo.format_pct),
-                "Objective P2": top5["objective_p2"].apply(bo.format_pct),
-                "Objective P1": top5["objective_p1"].apply(bo.format_pct),
-                "Objective P(any)": top5["Objective P(any)"],
-                "Objective EV": top5["objective_ev"].round(3),
-                "Wheelo pred. votes": top5["wheelo_match_ev"],
-                "Wheelo P3 (%)": top5["wheelo_p3_pct"],
-            })
-            st.dataframe(drill_table, use_container_width=True, hide_index=True)
-            st.caption(
-                "Wheelo has no P2/P1 data -- \"P(any)\" is never estimated for Wheelo, only shown "
-                "for Production/Objective, computed as P3+P2+P1 from their own real match probabilities."
-            )
-
-            key_stats = pd.DataFrame({
-                "Round": top5["round"], "Opponent": top5["opponent_display"],
-                "Disposals": top5["disposals"], "Contested poss.": top5["contested_possessions"],
-                "Clearances": top5["clearances"], "Tackles": top5["tackles"], "Goals": top5["goals"],
-                "Inside 50s": top5["inside_50s"], "Hitouts": top5["hitouts"],
-                "Metres gained": top5.get("metres_gained"), "Score involvements": top5.get("score_involvements"),
-                "Team disposal share": top5.get("disposals_team_share").apply(lambda x: f"{x * 100:.1f}%" if pd.notna(x) else "N/A") if "disposals_team_share" in top5.columns else None,
-            })
-            st.caption("Existing match stats (key evidence, where recorded):")
-            st.dataframe(key_stats, use_container_width=True, hide_index=True)
+            # This drill-down is optional evidence display, not core page
+            # content -- a failure here (e.g. an environment whose bundled
+            # CORE data is missing an optional stat column) must never take
+            # down the rest of the page. Deliberately scoped to just this
+            # block: a genuine bug elsewhere on the page must still raise
+            # normally, not be silently swallowed by a page-wide handler.
+            try:
+                _render_polling_drilldown(prow)
+            except Exception:
+                st.caption("Some match-level stats are unavailable in the deployed dataset.")
 
 st.divider()
 

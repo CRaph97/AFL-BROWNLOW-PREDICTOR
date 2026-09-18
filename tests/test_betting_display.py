@@ -290,3 +290,52 @@ class TestTeamTotalsAndDrilldown:
         # Every row's Production P(any) must equal P3+P2+P1 exactly.
         p_any = drilldown["production_p3"] + drilldown["production_p2"] + drilldown["production_p1"]
         assert (p_any - drilldown["production_p_any"]).abs().max() < 1e-9
+
+
+class TestDrilldownMissingOptionalStatColumn:
+    """Regression test for a live crash: the deployment-bundled CORE parquet
+    (data/deployment/model_core_2026_dashboard.parquet, built before this
+    drill-down feature existed) is missing 'hitouts' -- confirmed directly:
+    it carries only a subset of CORE's real columns. match_level_drilldown()
+    used to select `["match_id"] + _KEY_STAT_COLS` unconditionally, which
+    raised a bare KeyError the instant it ran against that file, crashing the
+    "To Poll a Vote" section and every section below it on Streamlit Cloud."""
+
+    def test_missing_optional_column_does_not_raise(self, monkeypatch):
+        from dashboard import data as d_mod
+
+        real_core = d_mod.load_core_2026()
+        crippled = real_core.drop(columns=["hitouts"])
+        monkeypatch.setattr(bo.d, "load_core_2026", lambda: crippled)
+
+        tim = pd.read_csv(ROOT / "reports" / "2026_leaderboard.csv")
+        row = tim[tim["player_name"] == "Tim English"]
+        if row.empty:
+            pytest.skip("Tim English not present in this environment's leaderboard")
+        pid = row.iloc[0]["player_id"]
+
+        drilldown = bo.match_level_drilldown(pid)  # must not raise KeyError
+        assert not drilldown.empty
+        assert "hitouts" in drilldown.columns
+        assert drilldown["hitouts"].isna().all(), "missing column should degrade to NA, not a stale/fabricated value"
+        # An unaffected key stat must still be real and populated.
+        assert drilldown["disposals"].notna().any()
+
+    def test_page_renders_and_degrades_gracefully_with_missing_column(self, monkeypatch):
+        """End-to-end: run the REAL page (via AppTest) with a CORE table
+        missing 'hitouts', and confirm the whole page still renders --
+        including every section below "To Poll a Vote" -- with the graceful
+        message shown for the affected player, not a page-crashing exception."""
+        from streamlit.testing.v1 import AppTest
+        from dashboard import data as d_mod
+
+        real_core = d_mod.load_core_2026()
+        crippled = real_core.drop(columns=["hitouts"])
+        monkeypatch.setattr(d_mod, "load_core_2026", lambda: crippled)
+
+        at = AppTest.from_file(str(ROOT / "pages" / "23_Brownlow_Betting_Opportunities.py"), default_timeout=60)
+        at.run()
+        assert not at.exception
+        headers = [h.value for h in at.header]
+        assert "5. Team Explorer" in headers
+        assert "9. Advanced / All Markets" in headers

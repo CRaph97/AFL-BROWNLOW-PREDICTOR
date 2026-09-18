@@ -474,8 +474,16 @@ def match_level_drilldown(player_id) -> pd.DataFrame:
     # silently match nothing).
     core = d.load_core_2026()
     pid_num = pd.to_numeric(pd.Series([pid]), errors="coerce").iloc[0]
-    core_row = core[core["player_id"] == pid_num][["match_id"] + _KEY_STAT_COLS]
+    # Only select key-stat columns that actually exist in this environment's
+    # CORE table -- the deployed (bundled, column-slimmed) dashboard parquet
+    # doesn't necessarily carry every stat the full local one does, and a
+    # missing OPTIONAL stat must degrade to "not shown" rather than crash the
+    # whole drill-down (and, transitively, the rest of the page below it).
+    available_stats = [c for c in _KEY_STAT_COLS if c in core.columns]
+    core_row = core[core["player_id"] == pid_num][["match_id"] + available_stats]
     merged = merged.merge(core_row, on="match_id", how="left")
+    for missing in set(_KEY_STAT_COLS) - set(available_stats):
+        merged[missing] = pd.NA
 
     extra = _advanced_2026_extra_stats()
     extra_row = extra[extra["player_id"] == pid][["match_id", "metres_gained", "score_involvements"]]
