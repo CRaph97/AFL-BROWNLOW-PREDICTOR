@@ -40,6 +40,7 @@ pages = {
     "MAIN": [
         st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities", default=True),
         st.Page("pages/00_Overview.py", title="Overview"),
+        st.Page("pages/25_Technical_Summary.py", title="Technical Summary"),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
         st.Page("pages/4_Brownlow_Night_Tracker.py", title="Brownlow Night Tracker"),
         # visibility="hidden" excludes it from the rendered nav menu while

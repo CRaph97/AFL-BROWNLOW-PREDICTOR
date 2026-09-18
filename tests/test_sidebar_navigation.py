@@ -71,3 +71,23 @@ def test_hidden_page_excluded_from_navigation_pages_dict_visible_defaults():
     assert 'visibility="hidden"' in router_src
     assert 'st.Page("pages/23_Brownlow_Betting_Opportunities.py"' in router_src
     assert "default=True" in router_src
+
+
+def test_technical_summary_page_renders_and_is_placed_after_overview_in_main():
+    at = AppTest.from_file(str(ROOT / "pages" / "25_Technical_Summary.py"), default_timeout=60)
+    at.run()
+    assert not at.exception
+    headers = [h.value for h in at.header]
+    assert headers == [
+        "1. How the Modelling Works", "2. Production Model", "3. Objective Stats Model",
+        "4. External / Wheelo", "5. Model Comparison", "6. Validation / Integrity",
+        "7. Weightings / Feature Importance",
+    ]
+
+    router_src = (ROOT / "app.py").read_text()
+    main_start = router_src.index('"MAIN": [')
+    main_end = router_src.index("],", main_start)
+    main_block = router_src[main_start:main_end]
+    overview_pos = main_block.index('st.Page("pages/00_Overview.py"')
+    summary_pos = main_block.index('st.Page("pages/25_Technical_Summary.py"')
+    assert summary_pos > overview_pos, "Technical Summary must come after Overview in MAIN"
