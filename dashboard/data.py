@@ -64,42 +64,93 @@ Z_SCORE_STATS = [
 
 
 def highlight_objective_stats_nav() -> None:
-    """Give the "Objective Stats Model" sidebar nav item a persistent green
-    tint, on every page (not just while it's the active page).
+    """Give each sidebar nav SECTION (MAIN / MODEL ANALYSIS / EXTERNAL
+    VALIDATION / ADVANCED) its own subtle accent colour, applied on every
+    page (not just while a given page is active) -- name kept for zero-touch
+    compatibility with its 27 existing call sites; this now styles the whole
+    section-grouped nav, not just one page's link, and the single-page green
+    "Objective Stats Model" highlight it used to render has been removed.
 
     Streamlit's automatic multipage sidebar nav is re-rendered by the
     framework on every page run, and any <style> tag injected by a page
     script is torn down when navigating to a different page's script -- so
     this must be called once near the top of every page (including app.py)
-    for the highlight to stay visible while browsing other pages, not just
-    while this file's targeted selector matches. The selector matches on the
-    nav link's href (derived by Streamlit from the filename
-    pages/13_Objective_Stats_Model.py -> "/Objective_Stats_Model"), not on
-    visible text or DOM position, so it doesn't depend on nav order and
-    won't match any other item.
+    for the styling to persist while browsing other pages.
+
+    IMPORTANT, found via headless-browser (Playwright) investigation, not
+    assumed: this app's sidebar nav DOM is not always grouped the same way.
+    Landing on the root page shows the expected 4-section grouped structure
+    (one wrapper per section, headers included). But navigating directly to
+    a specific page's URL (e.g. opening /Objective_Stats_Model fresh, the
+    common case for a bookmark or a refresh) can render a completely FLAT,
+    ungrouped list of all pages instead -- with no section-header elements at
+    all, in old filename-numeric order, and even including the page that's
+    marked visibility="hidden" in app.py's DOM (though still not visibly
+    shown, per its own hidden state). A position-based selector
+    (`ul > div:nth-of-type(N)`) is therefore NOT reliable across every real
+    entry path into this app, so it is deliberately NOT used here -- this is
+    a genuine multipage-routing/rendering quirk worth a dedicated look
+    separately; it is out of scope for a styling-only change to fix.
+
+    What IS reliable in every render observed: each link's `href` always
+    ends with that page's real URL path segment. So every page is matched
+    individually by an exact, "/"-anchored suffix (never a bare substring --
+    e.g. "/Overview" would otherwise also match "/External_Overview", and
+    "/Betting_Opportunities" would otherwise also match
+    "/Brownlow_Betting_Opportunities"; anchoring on the leading "/" rules out
+    both). Section headers are still coloured too, best-effort, via the same
+    positional selector that worked when headers ARE present -- if they
+    aren't rendered in a given load (per the quirk above), that rule simply
+    matches nothing, which is a harmless no-op, never an error.
     """
-    st.markdown(
-        """
-        <style>
-        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"] {
-            background-color: #1f6f43;
-            border-radius: 8px;
-        }
-        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"]:hover {
-            background-color: #175934;
-        }
-        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"] span {
-            color: #f5f7fa !important;
-        }
-        /* Keep the active/selected state visually distinct (a brighter green)
-           rather than letting the persistent tint make it look unselected. */
-        [data-testid="stSidebarNavLink"][href*="Objective_Stats_Model"][aria-current="page"] {
-            background-color: #2f8f57;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    accents = {
+        "MAIN": "#3b6fa0",  # navy/blue
+        "MODEL_ANALYSIS": "#7c5cbf",  # purple
+        "EXTERNAL": "#b8860b",  # amber/gold
+        "ADVANCED": "#64748b",  # slate/grey
+    }
+    # Must mirror app.py's page->section membership exactly (checked against
+    # its current MAIN/MODEL ANALYSIS/EXTERNAL VALIDATION/ADVANCED lists).
+    section_pages = {
+        "MAIN": ["/", "Technical_Summary", "Guide_And_FAQs", "Finishing_Order",
+                 "Brownlow_Betting_Opportunities", "To_Poll_A_Vote", "Match_Detail",
+                 "Brownlow_Night_Tracker"],
+        "MODEL_ANALYSIS": ["Overview", "Objective_Stats_Model", "Model_Agreement",
+                            "Order_Scenarios", "Player_H2H", "Multi_Player_Comparison",
+                            "Team_Player_Rankings"],
+        "EXTERNAL": ["External_Overview", "External_Player_Comparison",
+                     "External_Winning_Order", "External_Leader_After_Round"],
+        "ADVANCED": ["Player_Detail", "Scenario_Comparison", "Model_Disagreement",
+                     "Round_View", "Defender_Bias_Watchlist", "Projection_Concentration",
+                     "Uncertainty", "Round_By_Round_Leaderboard", "Team_Breakdown"],
+    }
+    rules = []
+    for section, colour in accents.items():
+        selectors = ", ".join(
+            f'[data-testid="stSidebarNavLink"][href$="/"]' if p == "/"
+            else f'[data-testid="stSidebarNavLink"][href$="/{p}"]'
+            for p in section_pages[section]
+        )
+        rules.append(f"""
+        {selectors} {{ border-radius: 8px; }}
+        """)
+        for p in section_pages[section]:
+            sel = '[href$="/"]' if p == "/" else f'[href$="/{p}"]'
+            rules.append(f"""
+            [data-testid="stSidebarNavLink"]{sel}:hover {{ background-color: {colour}14; }}
+            [data-testid="stSidebarNavLink"]{sel}[aria-current="page"] {{ background-color: {colour}2E; }}
+            """)
+        # Best-effort section-header colouring (see docstring: only applies
+        # when the grouped DOM structure is actually present).
+        idx = list(accents).index(section) + 1
+        rules.append(f"""
+        [data-testid="stSidebarNav"] ul > div:nth-of-type({idx}) [data-testid="stNavSectionHeader"] {{
+            color: {colour};
+            border-left: 3px solid {colour};
+            padding-left: 8px;
+        }}
+        """)
+    st.markdown(f"<style>{''.join(rules)}</style>", unsafe_allow_html=True)
 
 
 def gradient_style(s: pd.Series, rgb: tuple[int, int, int] = (74, 144, 217)) -> list:
