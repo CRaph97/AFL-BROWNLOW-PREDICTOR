@@ -54,13 +54,14 @@ PROCESSED_DIR = ROOT / "data" / "betting" / "processed"
 
 OPPORTUNITY_COLUMNS = [
     "selection_id", "source", "market_type", "market_name", "selection",
-    "player_id", "player_name", "team_id", "odds", "implied_probability",
+    "player_id", "player_name", "team_id", "line", "side", "n", "position", "threshold",
+    "odds", "implied_probability",
     "production_probability", "objective_probability",
     "production_edge_pp", "objective_edge_pp", "production_ev", "objective_ev",
     "internal_gap_pp", "conservative_internal_probability",
     "wheelo_ev", "wheelo_rank", "wheelo_support",
     "external_consensus_ev", "external_source_count", "external_support",
-    "confidence", "data_quality_flags",
+    "confidence", "classification_rationale", "data_quality_flags",
 ]
 
 COMBINATION_COLUMNS = [
@@ -83,7 +84,12 @@ def step_4_normalize(statuses: list[dict]) -> pd.DataFrame:
 
 
 def _resolve_team_id(team_string: str | None, canonical_teams: set[str]) -> str | None:
-    if not team_string:
+    # `not team_string` doesn't catch a NaN float (bool(nan) is True) -- rows
+    # with genuinely no team string (e.g. an UNMODELLED market with neither a
+    # resolvable player nor team, now correctly routed here since the
+    # player_name-leakage fix stopped miscategorising them as player rows)
+    # need an explicit type/na check, not just truthiness.
+    if team_string is None or (isinstance(team_string, float) and pd.isna(team_string)) or not team_string:
         return None
     tid = scraping._team_from_string(team_string)
     return tid if tid in canonical_teams else None
@@ -325,7 +331,7 @@ def step_8_attach_external_evidence(priced: pd.DataFrame) -> pd.DataFrame:
     return merged
 
 
-def _classify_row(row: pd.Series) -> tuple[str, str]:
+def _classify_row(row: pd.Series) -> tuple[str, str, str]:
     flags = row.get("data_quality_flags")
     settlement_flag = None
     if isinstance(flags, str) and any(
@@ -350,17 +356,19 @@ def _classify_row(row: pd.Series) -> tuple[str, str]:
         wheelo_support,
         settlement_flag,
     )
-    return result.confidence, wheelo_support
+    return result.confidence, wheelo_support, result.rationale
 
 
 def step_8b_classify(priced: pd.DataFrame) -> pd.DataFrame:
     if priced.empty:
         priced["confidence"] = pd.Series(dtype="object")
         priced["wheelo_support"] = pd.Series(dtype="object")
+        priced["classification_rationale"] = pd.Series(dtype="object")
         return priced
     results = priced.apply(_classify_row, axis=1, result_type="expand")
     priced["confidence"] = results[0]
     priced["wheelo_support"] = results[1]
+    priced["classification_rationale"] = results[2]
     priced["external_support"] = "INSUFFICIENT_DATA"  # ESPN/Betfair are context-only; no quantitative gate here
     return priced
 
@@ -369,8 +377,8 @@ def step_9_compare_bookmaker_prices(priced: pd.DataFrame) -> pd.DataFrame:
     """Matches equivalent Neds/PointsBet selections: same market_type, same
     resolved player_id (or team_id for team markets), same line, same side.
     Never merges non-equivalent markets."""
-    cols = ["selection", "market_type", "neds_odds", "pointsbet_odds", "best_odds",
-            "best_bookmaker", "price_improvement_pct"]
+    cols = ["selection", "market_type", "player_name", "team_id", "line", "side", "n", "position", "threshold",
+            "neds_odds", "pointsbet_odds", "best_odds", "best_bookmaker", "price_improvement_pct"]
     if priced.empty:
         return pd.DataFrame(columns=cols)
 
@@ -395,7 +403,16 @@ def step_9_compare_bookmaker_prices(priced: pd.DataFrame) -> pd.DataFrame:
         worst = min(neds_row["odds"], pb_row["odds"])
         improvement = (best_odds - worst) / worst * 100.0 if worst else None
         rows.append({
+            # "selection" alone is ambiguous for O/U markets (it's just
+            # "Over"/"Under" -- the team/line/player it applies to live in
+            # separate columns, carried through below so the display layer
+            # can build an unambiguous label rather than showing two
+            # identical-looking "Over"/"Under" rows for different lines/teams.
             "selection": neds_row["selection"], "market_type": neds_row["market_type"],
+            "player_name": neds_row.get("player_name"),
+            "team_id": neds_row.get("team_id"), "line": neds_row.get("line"),
+            "side": neds_row.get("side"), "n": neds_row.get("n"),
+            "position": neds_row.get("position"), "threshold": neds_row.get("threshold"),
             "neds_odds": neds_row["odds"], "pointsbet_odds": pb_row["odds"],
             "best_odds": best_odds, "best_bookmaker": best_book,
             "price_improvement_pct": improvement,
@@ -532,8 +549,23 @@ def step_12_write_processed(opportunities: pd.DataFrame, combinations_df: pd.Dat
     (PROCESSED_DIR / "refresh_summary.json").write_text(json.dumps(summary, indent=2, default=str))
 
 
-def main() -> None:
-    statuses = step_1_2_3_scrape()
+RAW_DIR = ROOT / "data" / "betting" / "raw"
+
+
+def _statuses_from_cached_raw() -> list[dict]:
+    """Reconstruct the scrape-status list from already-saved *.status.json
+    snapshots, for a display-only reprocessing pass that must not touch the
+    network (e.g. after fixing a normalisation/display bug -- there is no
+    reason to re-scrape just to regenerate the same underlying data with a
+    corrected label)."""
+    statuses = []
+    for f in sorted(RAW_DIR.glob("*.status.json")):
+        statuses.append(json.loads(f.read_text()))
+    return statuses
+
+
+def main(use_cached_raw: bool = False) -> None:
+    statuses = _statuses_from_cached_raw() if use_cached_raw else step_1_2_3_scrape()
     markets = step_4_normalize(statuses)
     resolved = step_5_resolve_identities(markets)
     priced = step_6_7_price(resolved)
@@ -550,4 +582,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(use_cached_raw="--use-cached-raw" in sys.argv)

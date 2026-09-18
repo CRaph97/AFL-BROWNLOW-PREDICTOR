@@ -357,8 +357,18 @@ def parse_neds(body: dict) -> pd.DataFrame:
 
             raw_name = entrant["name"]
             player_name, team = _split_neds_entrant(raw_name)
+            if market_type == "UNMODELLED":
+                # UNMODELLED entrant names are frequently NOT a player (e.g. a
+                # "Winning Margin" bucket like "1 to 2 votes", or a "Round of
+                # Declared Winner" outcome like "Round 17"). Assigning these to
+                # player_name leaked non-player text into any UI that lists
+                # "all player_name values" (e.g. a player selector) -- a real
+                # display/identity bug, not a pricing one, since UNMODELLED
+                # rows are never priced regardless of player_name. selection
+                # (raw_name) is preserved unchanged for audit/display.
+                player_name, team = None, None
             side = None
-            if player_name.lower() in ("over", "under"):
+            if player_name is not None and player_name.lower() in ("over", "under"):
                 side = player_name.lower()
                 player_name = None  # this row's "selection" is the O/U side, not a player
                 subj_player, subj_team = _extract_ou_subject(market_name, market_type)
@@ -388,7 +398,10 @@ def parse_pointsbet(body: dict, source: str) -> pd.DataFrame:
             raw_name = outcome.get("name", "")
             odds = outcome.get("price")
             side = None
-            player_name = raw_name
+            player_name = raw_name if market_type != "UNMODELLED" else None
+            # See the matching comment in parse_neds(): an UNMODELLED entrant
+            # name is frequently not a player at all (a margin bucket, a round
+            # label, etc.) -- never assign it to player_name.
             team = _team_from_string(market_name) if market_type == "TEAM_VOTES_OU" else None
 
             ou = _ODDS_ODD.match(raw_name)
