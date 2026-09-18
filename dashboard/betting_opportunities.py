@@ -25,9 +25,30 @@ import pandas as pd
 import streamlit as st
 
 from dashboard import data as d
+from dashboard import external_data as ed
 
 ROOT = Path(__file__).resolve().parent.parent
 PROCESSED = ROOT / "data" / "betting" / "processed"
+REPORTS = ROOT / "reports"
+ADVANCED_2026_PARQUET = ROOT / "data" / "processed" / "model_advanced_2026.parquet"
+
+
+def _normalise_player_id(x) -> str:
+    """Canonical string form of a player_id, robust to the mixed dtypes this
+    project's player_id columns actually carry: float64 (e.g. 12537.0, from
+    load_opportunities()'s upstream merges introducing NaNs and upcasting the
+    column), int64 (e.g. match_probabilities), and str (e.g. objective_votes,
+    which also carries non-numeric synthetic ids like "NOID2026_team_name"
+    from the placeholder-id fix). A numeric value normalises to its plain
+    integer string ("12537.0" -> "12537"); a non-numeric string passes
+    through unchanged. Without this, `str(player_id)` on a float64 value
+    produces "12537.0", which never matches the "12537" stored elsewhere --
+    silently returning zero rows rather than raising, which is exactly the
+    bug this function exists to prevent from recurring."""
+    try:
+        return str(int(float(x)))
+    except (TypeError, ValueError):
+        return str(x)
 
 
 @st.cache_data
@@ -269,6 +290,10 @@ def prepare_display(df: pd.DataFrame) -> pd.DataFrame:
     out["has_flag"] = out["data_quality_flags"].apply(has_flag)
     out["confidence_badge"] = out["confidence"].apply(confidence_badge)
     out["conservative_edge_pp"] = (out["conservative_internal_probability"] - out["implied_probability"]) * 100.0
+    if "wheelo_support" in out.columns:
+        out["wheelo_support_label"] = out["wheelo_support"].apply(friendly_support_label)
+    if "external_support" in out.columns:
+        out["external_support_label"] = out["external_support"].apply(friendly_support_label)
     return out
 
 
@@ -306,6 +331,32 @@ def format_odds(x) -> str:
     return "N/A" if pd.isna(x) else f"{x:.2f}"
 
 
+# --------------------------------------------------------------------------
+# Friendly labels for Wheelo / external support constants
+# --------------------------------------------------------------------------
+_SUPPORT_LABELS = {
+    "STRONG_WHEELO_SUPPORT": "Strong Wheelo support",
+    "PARTIAL_WHEELO_SUPPORT": "Partial Wheelo support",
+    "WHEELO_NEUTRAL": "Wheelo neutral",
+    "WHEELO_DISAGREES": "Wheelo disagrees",
+    "INSUFFICIENT_WHEELO_DATA": "Insufficient Wheelo data",
+    "BROADER_EXTERNAL_SUPPORT": "Broader external support",
+    "MIXED_EXTERNAL": "Mixed external evidence",
+    "BROADER_EXTERNAL_DISAGREEMENT": "Broader external disagreement",
+    "INSUFFICIENT_DATA": "Insufficient external data",
+}
+
+
+def friendly_support_label(raw: str) -> str:
+    """Maps a raw CONSTANT_CASE support/evidence label (Wheelo or broader
+    external) to a human sentence. Never renders a raw constant -- returns
+    the input unchanged only if it isn't one of the known labels (so a
+    genuinely new/unexpected value is still visible rather than swallowed)."""
+    if not isinstance(raw, str) or not raw:
+        return "N/A"
+    return _SUPPORT_LABELS.get(raw, raw)
+
+
 def with_bookmaker_odds(df: pd.DataFrame, group_cols: list[str]) -> pd.DataFrame:
     """Collapses per-source rows (neds / pointsbet_1 / pointsbet_2) that
     describe the SAME selection (identified by group_cols) into one row with
@@ -336,3 +387,130 @@ def with_bookmaker_odds(df: pd.DataFrame, group_cols: list[str]) -> pd.DataFrame
                      "best_odds": best_odds, "best_bookmaker": best_book})
         rows.append(base)
     return pd.DataFrame(rows)
+
+
+# --------------------------------------------------------------------------
+# "To Poll a Vote" manual cross-check drill-down (evidence display only).
+#
+# Every value here is READ from an existing, already-computed file --
+# Production's/Objective's own per-match P3/P2/P1 files, Wheelo's own
+# per-match EV/P3-equivalent, and CORE/ADVANCED's own recorded box-score
+# stats. Nothing here is a new modelling feature, and nothing here feeds
+# back into the season betting probability, classification, or edge shown
+# elsewhere on the page -- it exists only to let a reader manually sanity-
+# check "why would this player poll a vote" against real match evidence.
+# --------------------------------------------------------------------------
+_KEY_STAT_COLS = [
+    "disposals", "contested_possessions", "clearances", "goals",
+    "inside_50s", "tackles", "hitouts",
+]
+
+
+@st.cache_data
+def _advanced_2026_extra_stats() -> pd.DataFrame:
+    """metres_gained / score_involvements aren't in CORE (they're footywire/
+    ADVANCED-only stats) -- read directly from the existing, already-built
+    2026 ADVANCED parquet rather than computing anything new. Returns an
+    empty frame (rather than raising) if the file isn't present in this
+    environment, so the drill-down degrades to "not available" instead of
+    crashing."""
+    if not ADVANCED_2026_PARQUET.exists():
+        return pd.DataFrame(columns=["match_id", "player_id", "metres_gained", "score_involvements"])
+    adv = pd.read_parquet(ADVANCED_2026_PARQUET, columns=["match_id", "player_id", "metres_gained", "score_involvements"])
+    adv["player_id"] = adv["player_id"].astype(str)
+    return adv
+
+
+def match_level_drilldown(player_id) -> pd.DataFrame:
+    """Per-match evidence for one player: Round, Opponent, Result/margin,
+    Production P3/P2/P1/P(any)/EV, Objective P3/P2/P1/P(any)/EV, Wheelo
+    predicted match votes + P3-equivalent (never a synthesised Wheelo
+    P(any) -- Wheelo has no P2/P1 data), plus existing key stats. Sorted by
+    Production P(any vote) descending (ties broken by Objective P(any)) --
+    the strongest-evidence-first ordering documented in the page. Returns
+    one row per real match this player appeared in; callers take .head(5)
+    for the "top 5" display."""
+    pid = _normalise_player_id(player_id)
+
+    prod = d.load_match_probabilities()
+    prod = prod[prod["player_id"].apply(_normalise_player_id) == pid].copy()
+    prod["production_p_any"] = prod["p3"] + prod["p2"] + prod["p1"]
+    prod = prod.rename(columns={"p3": "production_p3", "p2": "production_p2", "p1": "production_p1",
+                                  "expected_votes": "production_ev"})
+    meta = d.match_meta_table()[["match_id", "team_a", "team_b", "margin", "result_label"]]
+    prod = prod.merge(meta, on="match_id", how="left")
+    prod["opponent_id"] = prod.apply(lambda r: r["team_b"] if r["team_a"] == r["team_id"] else r["team_a"], axis=1)
+
+    obj = pd.read_csv(REPORTS / "2026_objective_votes.csv")
+    obj = obj[obj["player_id"].apply(_normalise_player_id) == pid].copy()
+    obj["objective_p_any"] = obj["p3"] + obj["p2"] + obj["p1"]
+    obj = obj.rename(columns={"p3": "objective_p3", "p2": "objective_p2", "p1": "objective_p1",
+                                "expected_votes": "objective_ev"})
+
+    merged = prod.merge(
+        obj[["match_id", "objective_p3", "objective_p2", "objective_p1", "objective_p_any", "objective_ev"]],
+        on="match_id", how="left",
+    )
+
+    wheelo_ml = ed.load_wheelo_match_level() if hasattr(ed, "load_wheelo_match_level") else pd.DataFrame()
+    if not wheelo_ml.empty:
+        w = wheelo_ml[(wheelo_ml["player_id"].apply(_normalise_player_id) == pid) & (wheelo_ml["match_status"] == "resolved")]
+        merged = merged.merge(
+            w[["round", "wheelo_ev", "wheelo_p3_pct"]].rename(
+                columns={"wheelo_ev": "wheelo_match_ev", "wheelo_p3_pct": "wheelo_p3_pct"}
+            ),
+            on="round", how="left",
+        )
+    else:
+        merged["wheelo_match_ev"] = pd.NA
+        merged["wheelo_p3_pct"] = pd.NA
+
+    # load_core_2026() coerces player_id to numeric (documented there: the raw
+    # parquet stores it as string, but a NOID placeholder becomes NaN and a
+    # real id becomes a float) -- so pid (a plain digit string here, since the
+    # betting pipeline only ever calls this with a real, resolved Production
+    # player_id, never a NOID placeholder) must be compared numerically, not
+    # via `.astype(str)` (which would produce "12537.0", not "12537", and
+    # silently match nothing).
+    core = d.load_core_2026()
+    pid_num = pd.to_numeric(pd.Series([pid]), errors="coerce").iloc[0]
+    core_row = core[core["player_id"] == pid_num][["match_id"] + _KEY_STAT_COLS]
+    merged = merged.merge(core_row, on="match_id", how="left")
+
+    extra = _advanced_2026_extra_stats()
+    extra_row = extra[extra["player_id"] == pid][["match_id", "metres_gained", "score_involvements"]]
+    merged = merged.merge(extra_row, on="match_id", how="left")
+
+    # Teammate-competition indicator: reuses the existing team_disposal_share
+    # column already computed in CORE (this player's share of the team's
+    # total disposals that match) -- no new feature, just surfaced.
+    tm = core[core["player_id"] == pid_num][["match_id", "disposals_team_share"]] \
+        if "disposals_team_share" in core.columns else pd.DataFrame(columns=["match_id", "disposals_team_share"])
+    merged = merged.merge(tm, on="match_id", how="left")
+
+    merged["opponent_display"] = merged["opponent_id"].map(d._display_team)
+
+    return merged.sort_values(
+        ["production_p_any", "objective_p_any"], ascending=[False, False]
+    ).reset_index(drop=True)
+
+
+def drilldown_summary(drilldown: pd.DataFrame) -> dict:
+    """The three 'strongest match' headline facts plus whether the models
+    point at the same game -- pure derivation from match_level_drilldown()'s
+    output, no new data."""
+    if drilldown.empty:
+        return {}
+    out = {}
+    if drilldown["production_p_any"].notna().any():
+        r = drilldown.loc[drilldown["production_p_any"].idxmax()]
+        out["production"] = (r["round"], r["opponent_display"], r["production_p_any"])
+    if drilldown["objective_p_any"].notna().any():
+        r = drilldown.loc[drilldown["objective_p_any"].idxmax()]
+        out["objective"] = (r["round"], r["opponent_display"], r["objective_p_any"])
+    if "wheelo_p3_pct" in drilldown.columns and drilldown["wheelo_p3_pct"].notna().any():
+        r = drilldown.loc[drilldown["wheelo_p3_pct"].idxmax()]
+        out["wheelo"] = (r["round"], r["opponent_display"], r["wheelo_p3_pct"])
+    if "production" in out and "objective" in out:
+        out["models_agree"] = out["production"][:2] == out["objective"][:2]
+    return out
