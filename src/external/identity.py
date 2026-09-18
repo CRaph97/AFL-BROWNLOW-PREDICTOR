@@ -113,7 +113,18 @@ def resolve_external_players(
     player_id (NaN if unresolved), match_status ("resolved" / "unresolved" /
     "ambiguous"). Never guesses: a canonical key with more than one candidate
     player_id for the same team is left unresolved (ambiguous), never forced
-    to whichever appears first."""
+    to whichever appears first.
+
+    Team-less fallback: some sources genuinely do not supply a team for a
+    given row (confirmed for PointsBet's player-level Brownlow markets --
+    every outcome's own "teamId" field is an empty string in PointsBet's raw
+    API response itself, not a gap in this project's parser). Requiring team
+    agreement there would leave every such row permanently unresolved even
+    when the player's name is completely unambiguous. When `row[team_col]` is
+    missing, this falls back to matching on (surname_key, first_initial)
+    ALONE, but only resolves when that combination is unique across the
+    ENTIRE real 2026 player set (league-wide, not just one team) -- if more
+    than one real player shares it, the row is "ambiguous", never guessed."""
     if canonical is None:
         canonical = load_canonical_players()
 
@@ -136,12 +147,33 @@ def resolve_external_players(
         ["surname_key", "first_initial", "team_id"]
     )["player_id"]
 
+    # League-wide (team-agnostic) equivalent of the above, for the team-less
+    # fallback path only.
+    name_initial_counts = canonical.groupby(["surname_key", "first_initial"])["player_id"].nunique()
+    unique_name_initial_keys = set(name_initial_counts[name_initial_counts == 1].index)
+    name_initial_lookup = canonical.drop_duplicates(subset=["surname_key", "first_initial"]).set_index(
+        ["surname_key", "first_initial"]
+    )["player_id"]
+
+    def _has_team(v) -> bool:
+        return isinstance(v, str) and v.strip() != ""
+
     def _match(row):
-        key = (row["surname_key"], row["first_initial"], row[team_col])
-        if key in ambiguous_keys:
+        team_value = row[team_col]
+        if _has_team(team_value):
+            key = (row["surname_key"], row["first_initial"], team_value)
+            if key in ambiguous_keys:
+                return pd.NA, "ambiguous"
+            if key in lookup.index:
+                return lookup.loc[key], "resolved"
+            return pd.NA, "unresolved"
+        # No team supplied by this source for this row -- team-agnostic
+        # fallback, resolved only if genuinely unique league-wide.
+        ni_key = (row["surname_key"], row["first_initial"])
+        if ni_key in unique_name_initial_keys:
+            return name_initial_lookup.loc[ni_key], "resolved"
+        if ni_key in name_initial_lookup.index:
             return pd.NA, "ambiguous"
-        if key in lookup.index:
-            return lookup.loc[key], "resolved"
         return pd.NA, "unresolved"
 
     matches = ext.apply(_match, axis=1, result_type="expand")

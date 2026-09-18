@@ -1,5 +1,5 @@
 {
-  "refresh_completed_at": "2026-09-18T07:49:18.864745+00:00",
+  "refresh_completed_at": "2026-09-18T08:46:28.468246+00:00",
   "source_statuses": [
     {
       "source": "neds",
@@ -52,7 +52,7 @@
   },
   "markets_scraped": 122,
   "markets_modelled": 667,
-  "high_confidence_count": 14,
-  "medium_confidence_count": 46,
-  "speculative_count": 66
+  "high_confidence_count": 24,
+  "medium_confidence_count": 80,
+  "speculative_count": 119
 }

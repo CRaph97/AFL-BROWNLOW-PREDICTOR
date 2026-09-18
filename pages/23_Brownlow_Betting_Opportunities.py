@@ -89,7 +89,7 @@ else:
         "bet": "Selection", "best_bookmaker": "Best bookmaker", "best_odds": "Best odds",
         "implied_probability": "Implied %", "production_probability": "Production %",
         "objective_probability": "Objective %", "conservative_edge_pp": "Model gap (pp)",
-        "wheelo_support": "Wheelo evidence", "confidence_badge": "Confidence",
+        "wheelo_support_label": "Wheelo evidence", "confidence_badge": "Confidence",
     }
     # Each opportunity row already IS one bookmaker's price (source-specific),
     # so "best odds" for a single row is just that row's own odds -- the
@@ -116,10 +116,10 @@ else:
             cc2.metric("Objective EV", bo.format_ev(row.get("objective_ev")))
             cc3.metric("Implied probability", bo.format_pct(row.get("implied_probability")))
             if pd.notna(row.get("wheelo_ev")):
-                st.markdown(f"- **Wheelo:** EV {row['wheelo_ev']:.2f}, rank {int(row['wheelo_rank']) if pd.notna(row.get('wheelo_rank')) else '?'} -- {row.get('wheelo_support')}")
+                st.markdown(f"- **Wheelo:** EV {row['wheelo_ev']:.2f}, rank {int(row['wheelo_rank']) if pd.notna(row.get('wheelo_rank')) else '?'} -- {row.get('wheelo_support_label')}")
             else:
                 st.markdown("- **Wheelo:** insufficient data for this selection")
-            st.markdown(f"- **External context:** {row.get('external_support', 'n/a')}")
+            st.markdown(f"- **External context:** {row.get('external_support_label', 'N/A')}")
             st.markdown(f"- **Settlement notes:** {row.get('data_quality_flags') or 'none'}")
 
     st.caption(f"Showing {n_shown} of {len(qualifying)} qualifying opportunities.")
@@ -190,10 +190,69 @@ else:
         "Implied %": piv["implied_probability"].apply(bo.format_pct),
         "Production %": piv["production_probability"].apply(bo.format_pct),
         "Objective %": piv["objective_probability"].apply(bo.format_pct),
-        "Wheelo support": piv["wheelo_support"],
+        "Wheelo support": piv["wheelo_support_label"],
         "Confidence": piv["confidence_badge"],
     })
     st.dataframe(show, use_container_width=True, hide_index=True, height=500)
+
+    st.caption(
+        "Manual cross-check: expand a player below to see their top 5 real matches most likely "
+        "to produce at least one vote, using only existing match-level data. This is evidence "
+        "display only -- it never changes the season betting probability shown above."
+    )
+    for _, prow in piv.iterrows():
+        with st.expander(f"Why this bet? / Where could the vote come from? -- {prow['player_name']}"):
+            drilldown = bo.match_level_drilldown(prow["player_id"])
+            if drilldown.empty:
+                st.caption("No match-level data resolved for this player.")
+                continue
+            summary = bo.drilldown_summary(drilldown)
+            if "production" in summary:
+                r, opp, p = summary["production"]
+                st.markdown(f"- **Strongest Production polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
+            if "objective" in summary:
+                r, opp, p = summary["objective"]
+                st.markdown(f"- **Strongest Objective polling match:** Round {int(r)} vs {opp} (P(any vote) {p * 100:.1f}%)")
+            if "wheelo" in summary:
+                r, opp, p = summary["wheelo"]
+                st.markdown(f"- **Strongest Wheelo-supported match:** Round {int(r)} vs {opp} (P3-equivalent {p:.1f}%)")
+            if "models_agree" in summary:
+                st.markdown(f"- **Production and Objective point at the same game:** {'Yes' if summary['models_agree'] else 'No'}")
+
+            top5 = drilldown.head(5).copy()
+            top5["Production P(any)"] = (top5["production_p3"] + top5["production_p2"] + top5["production_p1"]).apply(bo.format_pct)
+            top5["Objective P(any)"] = (top5["objective_p3"] + top5["objective_p2"] + top5["objective_p1"]).apply(bo.format_pct)
+            drill_table = pd.DataFrame({
+                "Round": top5["round"], "Opponent": top5["opponent_display"], "Result": top5["result_label"],
+                "Production P3": top5["production_p3"].apply(bo.format_pct),
+                "Production P2": top5["production_p2"].apply(bo.format_pct),
+                "Production P1": top5["production_p1"].apply(bo.format_pct),
+                "Production P(any)": top5["Production P(any)"],
+                "Production EV": top5["production_ev"].round(3),
+                "Objective P3": top5["objective_p3"].apply(bo.format_pct),
+                "Objective P2": top5["objective_p2"].apply(bo.format_pct),
+                "Objective P1": top5["objective_p1"].apply(bo.format_pct),
+                "Objective P(any)": top5["Objective P(any)"],
+                "Objective EV": top5["objective_ev"].round(3),
+                "Wheelo pred. votes": top5["wheelo_match_ev"],
+                "Wheelo P3 (%)": top5["wheelo_p3_pct"],
+            })
+            st.dataframe(drill_table, use_container_width=True, hide_index=True)
+            st.caption(
+                "Wheelo has no P2/P1 data -- \"P(any)\" is never estimated for Wheelo, only shown "
+                "for Production/Objective, computed as P3+P2+P1 from their own real match probabilities."
+            )
+
+            key_stats = pd.DataFrame({
+                "Round": top5["round"], "Opponent": top5["opponent_display"],
+                "Disposals": top5["disposals"], "Contested poss.": top5["contested_possessions"],
+                "Clearances": top5["clearances"], "Tackles": top5["tackles"], "Goals": top5["goals"],
+                "Inside 50s": top5["inside_50s"], "Hitouts": top5["hitouts"],
+                "Metres gained": top5.get("metres_gained"), "Score involvements": top5.get("score_involvements"),
+                "Team disposal share": top5.get("disposals_team_share").apply(lambda x: f"{x * 100:.1f}%" if pd.notna(x) else "N/A") if "disposals_team_share" in top5.columns else None,
+            })
+            st.caption("Existing match stats (key evidence, where recorded):")
+            st.dataframe(key_stats, use_container_width=True, hide_index=True)
 
 st.divider()
 
@@ -236,9 +295,14 @@ merged4["player_name"] = merged4["player_name"].fillna(merged4["player_id"].map(
 merged4["consensus_cum"] = merged4[["production_cum", "objective_cum", "wheelo_cum"]].mean(axis=1, skipna=True)
 merged4["consensus_rank"] = merged4["consensus_cum"].rank(ascending=False, method="min")
 ranks = merged4[["production_rank", "objective_rank", "wheelo_rank"]]
-merged4["disagreement"] = ranks.max(axis=1) - ranks.min(axis=1)
+merged4["Rank spread"] = ranks.max(axis=1) - ranks.min(axis=1)
 
 display4 = merged4.sort_values("consensus_rank", na_position="last").head(top_n_round)
+st.caption(
+    "**Rank spread** = the gap between the highest and lowest rank a player holds across "
+    "Production, Objective, and Wheelo -- a small spread means the three sources broadly "
+    "agree on where this player sits; a large spread means they disagree."
+)
 st.dataframe(display4, use_container_width=True, hide_index=True, height=450)
 
 st.caption(f"Cumulative trajectory -- top {min(top_n_round, 10)} by consensus")
@@ -262,15 +326,30 @@ st.header("5. Team Explorer")
 teams = d.team_list()
 team_choice = st.selectbox("Select team", teams, format_func=d._display_team)
 
-team_breakdown_df = d.team_breakdown(team_choice)
-team_prod_total = team_breakdown_df["production_ev"].sum() if "production_ev" in team_breakdown_df.columns else None
-team_obj_total = team_breakdown_df["objective_ev"].sum() if "objective_ev" in team_breakdown_df.columns else None
-team_wheelo_total = external_overview.loc[external_overview["team_id"] == team_choice, "wheelo_ev"].sum()
+# Team totals are the exact sum of this team's players' EVs from the
+# canonical dual-model comparison (d.dual_model_team_rankings), NOT from
+# team_breakdown() -- that function returns reports/2026_leaderboard.csv's
+# own columns (FINAL_ENSEMBLE), which has neither a "production_ev" nor an
+# "objective_ev" column, so the previous N/A was a wrong-column-name bug, not
+# genuinely missing data. .sum() skips NaN by default, so a player excluded
+# from one model (e.g. Objective's Round-1 exclusions) is correctly omitted
+# from that model's total without needing special-casing here.
+rankings = d.dual_model_team_rankings(team_choice)
+team_prod_total = rankings["production_ev"].sum()
+team_obj_total = rankings["objective_ev"].sum()
+# Verified: this equals sum(FINAL_ENSEMBLE) for the same team directly from
+# the leaderboard (same underlying rows, different join) -- see
+# tests/test_betting_display.py::test_team_totals_reconcile_exactly.
+wheelo_team_rows = external_overview[external_overview["team_id"] == team_choice]
+team_wheelo_total = wheelo_team_rows["wheelo_ev"].sum() if not wheelo_team_rows.empty else float("nan")
+bookmaker_line_rows = opportunities[(opportunities["market_type"] == "TEAM_VOTES_OU") & (opportunities["team_id"] == team_choice)]
+bookmaker_line = f"{bo._fmt_line(bookmaker_line_rows.iloc[0]['line'])} votes" if not bookmaker_line_rows.empty else "N/A"
 
-tc1, tc2, tc3 = st.columns(3)
-tc1.metric("Production team total EV", f"{team_prod_total:.1f}" if team_prod_total is not None else "N/A")
-tc2.metric("Objective team total EV", f"{team_obj_total:.1f}" if team_obj_total is not None else "N/A")
+tc1, tc2, tc3, tc4 = st.columns(4)
+tc1.metric("Production team total EV", f"{team_prod_total:.1f}")
+tc2.metric("Objective team total EV", f"{team_obj_total:.1f}")
 tc3.metric("Wheelo team total EV", f"{team_wheelo_total:.1f}" if pd.notna(team_wheelo_total) else "N/A")
+tc4.metric("Bookmaker team total line", bookmaker_line)
 
 team_markets = opportunities[(opportunities["market_type"] == "TEAM_VOTES_OU") & (opportunities["team_id"] == team_choice)]
 if not team_markets.empty:
@@ -285,13 +364,19 @@ else:
     st.caption("No bookmaker team-total market currently available for this team.")
 
 st.subheader("Team player leaderboard (both models)")
-rankings = d.dual_model_team_rankings(team_choice)
-wheelo_team = external_overview[external_overview["team_id"] == team_choice][["player_id", "wheelo_ev", "wheelo_rank"]]
+wheelo_team = external_overview[external_overview["team_id"] == team_choice][["player_id", "wheelo_ev"]].copy()
 wheelo_team["player_id"] = wheelo_team["player_id"].astype(str)
+# Wheelo's own wheelo_rank (src/external/wheelo_source.py) is a LEAGUE-WIDE
+# rank -- mixing it into a team-relative table alongside production_team_rank/
+# objective_team_rank (genuinely team-relative) would be misleading, so a real
+# team-relative Wheelo rank is computed here instead, from the same team's
+# Wheelo EVs, the same way production_team_rank/objective_team_rank already are.
+wheelo_team["wheelo_team_rank"] = wheelo_team["wheelo_ev"].rank(ascending=False, method="min")
 rankings["player_id"] = rankings["player_id"].astype(str)
 rankings = rankings.merge(wheelo_team, on="player_id", how="left")
 st.dataframe(
-    rankings[["player_name", "production_ev", "production_team_rank", "objective_ev", "objective_team_rank", "wheelo_ev", "wheelo_rank"]]
+    rankings[["player_name", "production_ev", "production_team_rank", "objective_ev", "objective_team_rank", "wheelo_ev", "wheelo_team_rank"]]
+    .rename(columns={"wheelo_team_rank": "wheelo_rank (team-relative)"})
     .sort_values("production_team_rank"),
     use_container_width=True, hide_index=True, height=400,
 )
@@ -407,7 +492,7 @@ else:
             "PointsBet odds": piv["pointsbet_odds"].apply(bo.format_odds), "Best odds": piv["best_odds"].apply(bo.format_odds),
             "Production %": piv["production_probability"].apply(bo.format_pct),
             "Objective %": piv["objective_probability"].apply(bo.format_pct),
-            "Wheelo support": piv["wheelo_support"], "Confidence": piv["confidence_badge"],
+            "Wheelo support": piv["wheelo_support_label"], "Confidence": piv["confidence_badge"],
         }), use_container_width=True, hide_index=True)
 
 st.divider()
@@ -437,10 +522,10 @@ else:
         st.subheader(label)
         for _, row in subset.iterrows():
             legs = [l.strip() for l in str(row["legs"]).split(" + ") if l.strip()]
-            wheelo_per_leg = [w.strip() for w in str(row.get("wheelo_support_per_leg", "")).split(";")]
+            wheelo_per_leg = [bo.friendly_support_label(w.strip()) for w in str(row.get("wheelo_support_per_leg", "")).split(";")]
             with st.container(border=True):
                 for i, leg in enumerate(legs):
-                    wl = wheelo_per_leg[i] if i < len(wheelo_per_leg) else "n/a"
+                    wl = wheelo_per_leg[i] if i < len(wheelo_per_leg) else "N/A"
                     st.markdown(f"**Leg {i + 1}:** {leg}  — *Wheelo: {wl}*")
                 st.markdown(f"**Bookmaker:** {row['bookmaker']}")
                 cc1, cc2, cc3 = st.columns(3)
