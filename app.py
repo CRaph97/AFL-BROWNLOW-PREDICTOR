@@ -40,10 +40,10 @@ pages = {
     "MAIN": [
         st.Page("pages/25_Technical_Summary.py", title="Technical Summary"),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
+        st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
         st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities", default=True),
         st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/4_Brownlow_Night_Tracker.py", title="Brownlow Night Tracker"),
-        st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
         # visibility="hidden" excludes it from the rendered nav menu while
         # keeping the page fully intact and reachable by direct URL (see
         # module docstring). Placed in MAIN's list, not a separate section
