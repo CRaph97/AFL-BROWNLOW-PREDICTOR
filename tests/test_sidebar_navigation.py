@@ -16,13 +16,13 @@ from streamlit.testing.v1 import AppTest
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def test_router_loads_and_defaults_to_betting_opportunities():
+def test_router_loads_and_defaults_to_technical_summary():
     at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=60)
     at.run()
     assert not at.exception
     assert at.header, "default page rendered no headers at all"
-    assert at.header[0].value == "1. Top Opportunities", (
-        "default landing page is not Brownlow Betting Opportunities"
+    assert at.header[0].value == "1. How the Modelling Works", (
+        "default landing page is not Technical Summary"
     )
 
 

@@ -19,12 +19,13 @@ View less" truncation of the WHOLE menu, not per-section collapse. Set to
 True here so nothing is hidden behind that click, since a materially large
 "View more" list would defeat the point of grouping pages for readability.
 
-"Brownlow Betting Opportunities" (pages/23_...) is the default landing page
-(default=True below). The original Sportsbet-via-Markets-repo Betting
-Opportunities page (pages/12_Betting_Opportunities.py) is superseded by it
-for normal use: visibility="hidden" removes it from the visible nav menu
-while leaving its file and code completely unmodified and still reachable by
-direct URL, per Streamlit's own documented behaviour for that parameter.
+"Technical Summary" (pages/25_...) is the default landing page (default=True
+below). The original Sportsbet-via-Markets-repo Betting Opportunities page
+(pages/12_Betting_Opportunities.py) is superseded by the newer "Brownlow
+Betting Opportunities" page for normal use: visibility="hidden" removes it
+from the visible nav menu while leaving its file and code completely
+unmodified and still reachable by direct URL, per Streamlit's own documented
+behaviour for that parameter.
 
 pages/1_Player_Detail.py wasn't named in any of the 4 requested groups --
 placed under ADVANCED (closest in kind to Match Detail) so it stays
@@ -38,10 +39,10 @@ import streamlit as st
 
 pages = {
     "MAIN": [
-        st.Page("pages/25_Technical_Summary.py", title="Technical Summary"),
+        st.Page("pages/25_Technical_Summary.py", title="Technical Summary", default=True),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
         st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
-        st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities", default=True),
+        st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities"),
         st.Page("pages/27_To_Poll_A_Vote.py", title="To Poll a Vote"),
         st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/4_Brownlow_Night_Tracker.py", title="Brownlow Night Tracker"),
