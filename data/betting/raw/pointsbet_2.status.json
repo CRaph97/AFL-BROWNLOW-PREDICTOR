@@ -1,0 +1,13 @@
+{
+  "source": "pointsbet_2",
+  "url": "https://pointsbet.com.au/sports/aussie-rules/AFL-Futures/2889213",
+  "retrieved_at": "2026-09-18T01:19:51.742513+00:00",
+  "parser_version": "1.0.0-shell-detection",
+  "http_status": 200,
+  "bytes_downloaded": 13050,
+  "contains_market_data": false,
+  "status": "NO_MARKET_DATA_IN_RESPONSE",
+  "n_markets_found": 0,
+  "n_selections_found": 0,
+  "detail": "response is a client-side app shell with no server-rendered market data (page-specific content, including all odds/selections, loads via a client-side API call this task does not attempt to reverse-engineer or render, per the brief's no-anti-bot-bypass/no-stealth constraint)"
+}

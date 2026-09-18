@@ -1,0 +1,57 @@
+{
+  "refresh_completed_at": "2026-09-18T01:19:51.868052+00:00",
+  "source_statuses": [
+    {
+      "source": "neds",
+      "url": "https://www.neds.com.au/sports/australian-rules/brownlow/afl-brownlow-2026/6f3764b6-46d4-4dfe-8124-1804ea7af74f",
+      "retrieved_at": "2026-09-18T01:19:51.395595+00:00",
+      "parser_version": "1.0.0-shell-detection",
+      "http_status": 200,
+      "bytes_downloaded": 112811,
+      "contains_market_data": false,
+      "status": "NO_MARKET_DATA_IN_RESPONSE",
+      "n_markets_found": 0,
+      "n_selections_found": 0,
+      "detail": "response is a client-side app shell with no server-rendered market data (page-specific content, including all odds/selections, loads via a client-side API call this task does not attempt to reverse-engineer or render, per the brief's no-anti-bot-bypass/no-stealth constraint)"
+    },
+    {
+      "source": "pointsbet_1",
+      "url": "https://pointsbet.com.au/sports/aussie-rules/AFL-Futures/2442638",
+      "retrieved_at": "2026-09-18T01:19:51.640969+00:00",
+      "parser_version": "1.0.0-shell-detection",
+      "http_status": 200,
+      "bytes_downloaded": 13050,
+      "contains_market_data": false,
+      "status": "NO_MARKET_DATA_IN_RESPONSE",
+      "n_markets_found": 0,
+      "n_selections_found": 0,
+      "detail": "response is a client-side app shell with no server-rendered market data (page-specific content, including all odds/selections, loads via a client-side API call this task does not attempt to reverse-engineer or render, per the brief's no-anti-bot-bypass/no-stealth constraint)"
+    },
+    {
+      "source": "pointsbet_2",
+      "url": "https://pointsbet.com.au/sports/aussie-rules/AFL-Futures/2889213",
+      "retrieved_at": "2026-09-18T01:19:51.742513+00:00",
+      "parser_version": "1.0.0-shell-detection",
+      "http_status": 200,
+      "bytes_downloaded": 13050,
+      "contains_market_data": false,
+      "status": "NO_MARKET_DATA_IN_RESPONSE",
+      "n_markets_found": 0,
+      "n_selections_found": 0,
+      "detail": "response is a client-side app shell with no server-rendered market data (page-specific content, including all odds/selections, loads via a client-side API call this task does not attempt to reverse-engineer or render, per the brief's no-anti-bot-bypass/no-stealth constraint)"
+    }
+  ],
+  "validation": {
+    "probabilities_in_unit_interval": true,
+    "odds_greater_than_one": true,
+    "no_duplicate_selection_id": true,
+    "no_zero_for_missing_data": true,
+    "n_opportunities": 0,
+    "n_combinations": 0
+  },
+  "markets_scraped": 0,
+  "markets_modelled": 0,
+  "high_confidence_count": 0,
+  "medium_confidence_count": 0,
+  "speculative_count": 0
+}
