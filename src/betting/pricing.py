@@ -51,8 +51,26 @@ class PricingResult:
     n_sims: int
 
 
+_RANK_CACHE: dict[int, np.ndarray] = {}
+
+
 def _rank_cache(sims: SimulationSet) -> np.ndarray:
-    return ranks_from_totals(sims.totals)
+    """Genuinely caches the (n_sims, n_players) rank matrix, keyed by the
+    identity of sims.totals. Despite the name, this previously recomputed a
+    full double-argsort over every player on EVERY call with no memoisation
+    at all -- harmless for a handful of calls (tests, a few manual prices),
+    but a real, discovered performance bug once a betting-refresh run prices
+    hundreds of WINNER/TOP_N/EXACT_POSITION selections in one pass (each one
+    a separate price_selection() call): it stalled a real pipeline run for
+    8+ minutes before being caught. SimulationSet's own docstring guarantees
+    its arrays are never mutated after being loaded, so caching by the
+    totals array's object id is safe for the lifetime of a single process."""
+    key = id(sims.totals)
+    cached = _RANK_CACHE.get(key)
+    if cached is None:
+        cached = ranks_from_totals(sims.totals)
+        _RANK_CACHE[key] = cached
+    return cached
 
 
 def price_winner(sims: SimulationSet, player_id: str) -> PricingResult:

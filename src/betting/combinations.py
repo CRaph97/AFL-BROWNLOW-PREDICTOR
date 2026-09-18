@@ -121,8 +121,15 @@ def price_combination(legs: list[Leg], production_sims: SimulationSet,
 
 def outcome_top_n(player_id: str, n: int) -> callable:
     def _fn(sims: SimulationSet) -> np.ndarray:
-        from src.models.order_scenarios import ranks_from_totals
-        ranks = ranks_from_totals(sims.totals)
+        # Uses src.betting.pricing's genuinely-memoised rank cache rather
+        # than calling order_scenarios.ranks_from_totals() directly, which
+        # recomputes a full (n_sims, n_players) double-argsort with NO
+        # caching on every call. A combination search calls this per leg,
+        # per candidate combination (potentially thousands of times for a
+        # handful of legs) -- the uncached version stalled a real refresh
+        # run for several minutes before being caught here.
+        from src.betting.pricing import _rank_cache
+        ranks = _rank_cache(sims)
         return ranks[:, sims.col(player_id)] <= n
     return _fn
 
@@ -137,17 +144,35 @@ def outcome_x_plus_votes(player_id: str, threshold: int) -> callable:
     return _fn
 
 
+def outcome_team_votes_ou(team_players: tuple[str, ...], line: float, side: str) -> callable:
+    def _fn(sims: SimulationSet) -> np.ndarray:
+        cols = [sims.col(p) for p in team_players]
+        team_totals = sims.totals[:, cols].sum(axis=1).astype(float)
+        return team_totals > line if side == "over" else team_totals < line
+    return _fn
+
+
 def build_leg(label: str, player_id: str, kind: str, **kwargs) -> Leg:
-    """Convenience constructor for the common single-player leg kinds used
-    by the Suggested Combinations UI -- `kind` in {"winner", "top_n",
-    "x_plus_votes"}."""
+    """Convenience constructor for the common leg kinds used by the
+    Suggested Combinations UI -- `kind` in {"winner", "top_n",
+    "x_plus_votes", "team_votes_ou"}. For "team_votes_ou", `player_id` is
+    ignored and `kwargs["team_players"]` (a tuple of every player_id on the
+    team) is used instead -- the leg's correlation/conflict checks then
+    correctly span every one of those columns, not a single player's."""
     if kind == "winner":
         fn = outcome_winner(player_id)
+        leg_player_ids = (player_id,)
     elif kind == "top_n":
         fn = outcome_top_n(player_id, kwargs["n"])
+        leg_player_ids = (player_id,)
     elif kind == "x_plus_votes":
         fn = outcome_x_plus_votes(player_id, kwargs["threshold"])
+        leg_player_ids = (player_id,)
+    elif kind == "team_votes_ou":
+        team_players = tuple(kwargs["team_players"])
+        fn = outcome_team_votes_ou(team_players, kwargs["line"], kwargs["side"])
+        leg_player_ids = team_players
     else:
         raise ValueError(f"unknown leg kind '{kind}'")
-    return Leg(label=label, player_ids=(player_id,), outcome_fn=fn,
+    return Leg(label=label, player_ids=leg_player_ids, outcome_fn=fn,
                confidence=kwargs.get("confidence", ""), wheelo_support=kwargs.get("wheelo_support", ""))

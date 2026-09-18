@@ -52,11 +52,20 @@ def test_scraping_never_reports_fabricated_market_counts():
             assert s["n_selections_found"] == 0
 
 
-def test_parse_markets_returns_correct_schema_when_empty():
+def test_parse_all_from_snapshots_returns_correct_schema_when_no_raw_json_present(tmp_path, monkeypatch):
+    """scraping.py was rewritten to use real Playwright browser automation +
+    captured network JSON (see its module docstring) rather than static-HTML
+    parsing -- this test now exercises that real code path's empty case
+    (no raw snapshot files on disk yet) rather than the retired
+    static-HTML `parse_markets()` function, which no longer exists."""
     from src.betting import scraping
-    df = scraping.parse_markets("<html>some js shell</html>", "neds")
-    assert list(df.columns) == ["source", "market_type", "market_name", "selection",
-                                 "player_name", "team", "odds", "line"]
+    monkeypatch.setattr(scraping, "RAW_DIR", tmp_path)
+    df = scraping.parse_all_from_snapshots()
+    assert list(df.columns) == [
+        "source", "market_type", "market_name", "selection", "player_name", "team",
+        "odds", "line", "side", "n", "position", "threshold", "selection_id",
+        "settlement_comments",
+    ]
     assert df.empty
 
 

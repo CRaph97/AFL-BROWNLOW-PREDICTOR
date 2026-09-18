@@ -1,13 +1,13 @@
 {
   "source": "neds",
   "url": "https://www.neds.com.au/sports/australian-rules/brownlow/afl-brownlow-2026/6f3764b6-46d4-4dfe-8124-1804ea7af74f",
-  "retrieved_at": "2026-09-18T01:19:51.395595+00:00",
-  "parser_version": "1.0.0-shell-detection",
+  "retrieved_at": "2026-09-18T06:15:07.637060+00:00",
+  "parser_version": "2.0.0-real-browser-network-capture",
   "http_status": 200,
-  "bytes_downloaded": 112811,
-  "contains_market_data": false,
-  "status": "NO_MARKET_DATA_IN_RESPONSE",
-  "n_markets_found": 0,
-  "n_selections_found": 0,
-  "detail": "response is a client-side app shell with no server-rendered market data (page-specific content, including all odds/selections, loads via a client-side API call this task does not attempt to reverse-engineer or render, per the brief's no-anti-bot-bypass/no-stealth constraint)"
+  "bytes_downloaded": 202287,
+  "contains_market_data": true,
+  "status": "OK",
+  "n_markets_found": 58,
+  "n_selections_found": 421,
+  "detail": "real market data captured from the page's own EventCard network response"
 }
