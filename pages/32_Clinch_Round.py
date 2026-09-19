@@ -176,8 +176,7 @@ def _round_row(replay: dict, round_: int, label: str) -> dict:
     challenger_row = players.iloc[challenger_i]
 
     frac_clinched = float((replay["clinched_by_round"][round_]).mean())
-    cwp = cr.conditional_win_prob_by_round(replay, leader_row["player_id"])
-    proj_prob = cwp.get(round_, float("nan"))
+    proj_prob = cr.conditional_win_prob_at_round(replay, leader_row["player_id"], round_)
 
     return {
         "Source": label,

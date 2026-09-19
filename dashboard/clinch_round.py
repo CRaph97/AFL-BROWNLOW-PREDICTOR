@@ -233,7 +233,13 @@ def _replay(
     }
 
 
-@st.cache_data
+# cache_resource (not cache_data): the returned dict carries a ~250MB
+# final_cumulative array; cache_data deep-copies its return value on EVERY
+# cache hit (not just the first computation) to guard against mutation --
+# measured at ~0.4s per access, the dominant cost of every rerun/slider move.
+# cache_resource returns the same shared object with no copy, which is safe
+# here since nothing downstream ever mutates these arrays in place.
+@st.cache_resource
 def replay_production() -> dict:
     # common_scenario_utilities_2026.parquet is small (~270KB) and genuinely
     # required (it IS the real per-match utility input the replay draws
@@ -267,7 +273,8 @@ def replay_production() -> dict:
     )
 
 
-@st.cache_data
+# See replay_production() for why cache_resource, not cache_data.
+@st.cache_resource
 def replay_objective() -> dict:
     scores = pd.read_csv(REPORTS / "2026_objective_match_scores.csv")
     return _replay(
@@ -300,6 +307,25 @@ def conditional_win_prob_by_round(replay: dict, target_player_id) -> pd.Series:
         n_leader = is_leader.sum()
         out[r] = float((is_leader & is_final_winner).sum() / n_leader) if n_leader > 0 else np.nan
     return pd.Series(out)
+
+
+def conditional_win_prob_at_round(replay: dict, target_player_id, round_: int) -> float:
+    """Single-round value of conditional_win_prob_by_round(), computing only
+    the requested round instead of the full per-round Series -- the Round
+    Explorer only ever needs the currently-selected round, so looping over
+    every round just to discard 24 of the 25 results was pure waste. Same
+    formula, same result as conditional_win_prob_by_round(replay, pid)[round_]."""
+    players = replay["players"]
+    match = players.index[players["player_id"] == target_player_id]
+    if len(match) == 0:
+        return float("nan")
+    target_idx = match[0]
+    is_leader = replay["leader_idx_by_round"][round_] == target_idx
+    n_leader = is_leader.sum()
+    if n_leader == 0:
+        return float("nan")
+    is_final_winner = replay["final_winner_idx"] == target_idx
+    return float((is_leader & is_final_winner).sum() / n_leader)
 
 
 def earliest_round_reaching(prob_by_round: pd.Series, threshold: float) -> int | None:
