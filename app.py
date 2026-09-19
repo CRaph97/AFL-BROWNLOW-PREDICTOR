@@ -7,8 +7,15 @@ st.navigation() -- the pages/ directory's filename-based auto-discovery is
 then ignored entirely -- so Guide & FAQs' content was relocated, unchanged,
 to pages/24_Guide_And_FAQs.py.
 
-Sidebar structure: grouped into MAIN / MODEL ANALYSIS / EXTERNAL VALIDATION /
-ADVANCED sections.
+Sidebar structure: grouped into MAIN (the polished cross-model product --
+Production/Objective/Wheelo side by side) / MODEL ANALYSIS (single-model and
+diagnostic pages, kept for post-Brownlow evaluation and future retraining) /
+EXTERNAL VALIDATION sections. A former "ADVANCED" group was retired once
+every one of its pages was either promoted into MODEL ANALYSIS (Scenario
+Comparison, Model Disagreement, Uncertainty, Defender Bias Watchlist,
+Projection Concentration -- same files, unaltered content, only nav
+placement changed) or superseded by a newer cross-model MAIN page and hidden
+(see the hidden-pages block below).
 
 CUSTOM SIDEBAR, not Streamlit's automatic multipage menu -- built from
 st.sidebar.expander() + st.page_link() instead, because native st.navigation
@@ -44,9 +51,13 @@ Betting Opportunities" page for normal use -- its own visibility="hidden"
 keeps it out of the rendered sidebar while its file and code remain
 completely unmodified and it stays reachable by direct URL.
 
-pages/1_Player_Detail.py wasn't named in any of the 4 requested groups --
-placed under ADVANCED (closest in kind to Match Detail) so it stays
-reachable, per "every existing page must remain accessible somewhere".
+pages/1_Player_Detail.py, pages/5_Round_View.py, pages/10_Round_By_Round_Leaderboard.py,
+pages/11_Team_Breakdown.py, pages/16_Player_H2H.py, pages/17_Multi_Player_Comparison.py,
+and pages/18_Team_Player_Rankings.py are all superseded by newer cross-model
+MAIN pages (Player Search, Match Detail/Round-by-Round, Round-by-Round,
+Teams, Player Comparison/Teams respectively) -- each kept registered and
+routable via visibility="hidden", per "do not delete legacy pages/code, only
+remove from visible navigation".
 
 Every other existing page keeps its original filename -- st.navigation
 references pages by path, not by relying on the pages/ directory's numeric-
@@ -63,41 +74,55 @@ pages = {
         st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
         st.Page("pages/28_Player_Search.py", title="Player Search"),
         st.Page("pages/29_Player_Comparison.py", title="Player Comparison"),
+        st.Page("pages/30_Teams.py", title="Teams"),
+        st.Page("pages/31_Round_By_Round.py", title="Round-by-Round"),
         st.Page("pages/27_To_Poll_A_Vote.py", title="To Poll a Vote"),
         st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities"),
         st.Page("pages/4_Brownlow_Night_Tracker.py", title="Brownlow Night Tracker"),
-        # visibility="hidden" keeps it out of the rendered sidebar (see the
-        # module docstring) while its file and code remain fully unmodified
-        # and it stays reachable by direct URL. Kept in MAIN's list, not a
-        # separate section dict key, so no empty "HIDDEN" group can render.
+        # visibility="hidden" keeps every page below out of the rendered
+        # sidebar (see the module docstring) while each file/code stays
+        # fully unmodified and reachable by direct URL / st.switch_page.
+        # Kept in MAIN's list (the established location for hidden entries),
+        # not a separate section dict key, so no empty "HIDDEN" group can
+        # render. Superseded by newer cross-model pages: Player H2H/Multi
+        # Player Comparison/Team Player Rankings -> Player Comparison/Teams;
+        # Player Detail -> Player Search; Round View -> Match Detail/Round-
+        # by-Round; the old Team Breakdown -> Teams; the old Round By Round
+        # Leaderboard -> Round-by-Round.
         st.Page("pages/12_Betting_Opportunities.py", title="Betting Opportunities", visibility="hidden"),
+        st.Page("pages/16_Player_H2H.py", title="Player H2H", visibility="hidden"),
+        st.Page("pages/17_Multi_Player_Comparison.py", title="Multi Player Comparison", visibility="hidden"),
+        st.Page("pages/18_Team_Player_Rankings.py", title="Team Player Rankings", visibility="hidden"),
+        st.Page("pages/1_Player_Detail.py", title="Player Detail", visibility="hidden"),
+        st.Page("pages/5_Round_View.py", title="Round View", visibility="hidden"),
+        st.Page("pages/11_Team_Breakdown.py", title="Team Breakdown", visibility="hidden"),
+        st.Page("pages/10_Round_By_Round_Leaderboard.py", title="Round By Round Leaderboard", visibility="hidden"),
     ],
     "MODEL ANALYSIS": [
         st.Page("pages/00_Overview.py", title="Production Model"),
         st.Page("pages/13_Objective_Stats_Model.py", title="Objective Stats Model"),
         st.Page("pages/15_Model_Agreement.py", title="Model Agreement"),
+        # Order Scenarios is kept visible, not hidden: it enumerates the top
+        # 10 MOST PROBABLE full exact orderings for fixed depths (5/7/10) --
+        # a genuinely different question from Finishing Order's "Exact Order
+        # Builder", which only checks the probability of ONE user-specified
+        # hypothesis. Finishing Order does not reproduce that enumeration/
+        # ranking feature, so this does not fully overlap and stays.
         st.Page("pages/14_Order_Scenarios.py", title="Order Scenarios"),
-        st.Page("pages/16_Player_H2H.py", title="Player H2H"),
-        st.Page("pages/17_Multi_Player_Comparison.py", title="Multi Player Comparison"),
-        st.Page("pages/18_Team_Player_Rankings.py", title="Team Player Rankings"),
+        # Moved here from the retired "ADVANCED" group -- same pages, same
+        # files, unaltered content, only their nav group membership changed.
+        st.Page("pages/2_Scenario_Comparison.py", title="Scenario Comparison"),
+        st.Page("pages/3_Model_Disagreement.py", title="Model Disagreement"),
+        st.Page("pages/9_Uncertainty.py", title="Uncertainty"),
+        st.Page("pages/7_Defender_Bias_Watchlist.py", title="Defender Bias Watchlist"),
+        st.Page("pages/8_Projection_Concentration.py", title="Projection Concentration"),
     ],
     "EXTERNAL VALIDATION": [
         st.Page("pages/19_External_Overview.py", title="External Overview"),
         st.Page("pages/20_External_Player_Comparison.py", title="External Player Comparison"),
         st.Page("pages/21_External_Winning_Order.py", title="External Winning Order"),
         st.Page("pages/22_External_Leader_After_Round.py", title="External Leader After Round"),
-    ],
-    "ADVANCED": [
-        st.Page("pages/1_Player_Detail.py", title="Player Detail"),
-        st.Page("pages/2_Scenario_Comparison.py", title="Scenario Comparison"),
-        st.Page("pages/3_Model_Disagreement.py", title="Model Disagreement"),
-        st.Page("pages/5_Round_View.py", title="Round View"),
-        st.Page("pages/7_Defender_Bias_Watchlist.py", title="Defender Bias Watchlist"),
-        st.Page("pages/8_Projection_Concentration.py", title="Projection Concentration"),
-        st.Page("pages/9_Uncertainty.py", title="Uncertainty"),
-        st.Page("pages/10_Round_By_Round_Leaderboard.py", title="Round By Round Leaderboard"),
-        st.Page("pages/11_Team_Breakdown.py", title="Team Breakdown"),
     ],
 }
 
@@ -111,7 +136,6 @@ SECTION_DEFAULT_EXPANDED = {
     "MAIN": True,
     "MODEL ANALYSIS": False,
     "EXTERNAL VALIDATION": False,
-    "ADVANCED": False,
 }
 
 # One global stylesheet, injected exactly once here -- not per page. Every
