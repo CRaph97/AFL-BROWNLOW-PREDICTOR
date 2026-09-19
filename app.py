@@ -76,6 +76,7 @@ pages = {
         st.Page("pages/29_Player_Comparison.py", title="Player Comparison"),
         st.Page("pages/30_Teams.py", title="Teams"),
         st.Page("pages/31_Round_By_Round.py", title="Round-by-Round"),
+        st.Page("pages/32_Clinch_Round.py", title="Clinch Round"),
         st.Page("pages/27_To_Poll_A_Vote.py", title="To Poll a Vote"),
         st.Page("pages/6_Match_Detail.py", title="Match Detail"),
         st.Page("pages/23_Brownlow_Betting_Opportunities.py", title="Brownlow Betting Opportunities"),
