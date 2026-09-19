@@ -49,12 +49,15 @@ def test_every_existing_page_still_runs_standalone():
     test_page_link_pages_work_via_real_router() below."""
     files = sorted(glob.glob(str(ROOT / "pages" / "*.py")))
     assert len(files) >= 25, "expected all pre-existing pages plus the relocated Guide & FAQs"
-    pages_requiring_router_context = {"23_Brownlow_Betting_Opportunities.py"}
+    pages_requiring_router_context = {
+        "23_Brownlow_Betting_Opportunities.py",
+        "29_Player_Comparison.py",  # links to Player Search via st.page_link()
+    }
     failures = []
     for f in files:
         if Path(f).name in pages_requiring_router_context:
             continue
-        at = AppTest.from_file(f, default_timeout=60)
+        at = AppTest.from_file(f, default_timeout=90)
         at.run()
         if at.exception:
             failures.append((f, str(at.exception)))

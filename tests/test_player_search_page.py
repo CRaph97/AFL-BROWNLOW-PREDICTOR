@@ -173,7 +173,11 @@ class TestPlayerSearchPage:
         assert 'st.Page("pages/28_Player_Search.py"' in main_block
         titles = [line.split('title="')[1].split('"')[0] for line in main_block.splitlines() if 'title="' in line]
         assert titles.index("Player Search") == titles.index("Finishing Order") + 1
-        assert titles.index("To Poll a Vote") == titles.index("Player Search") + 1
+        # Player Comparison was later inserted directly after Player Search
+        # (pages/29_Player_Comparison.py) -- To Poll a Vote now follows that,
+        # not Player Search directly.
+        assert titles.index("Player Comparison") == titles.index("Player Search") + 1
+        assert titles.index("To Poll a Vote") == titles.index("Player Comparison") + 1
 
 
 def test_no_model_data_or_simulation_files_changed():
