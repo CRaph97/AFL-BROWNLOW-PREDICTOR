@@ -75,6 +75,43 @@ class TestBitIdenticalReplay:
         assert diff.stdout.strip() == ""
 
 
+class TestDeploymentFallback:
+    """Regression test for a live crash: data/processed/common_scenario_utilities_2026.parquet
+    is a gitignored local research artefact -- a fresh Streamlit Cloud clone
+    never has it, so replay_production() raised FileNotFoundError there.
+    Fixed with a data/deployment/ fallback mirroring this project's
+    established local-with-deployment-fallback pattern (dashboard.data._resolve_path)."""
+
+    def test_deployment_copy_is_byte_identical_to_local_file(self):
+        local = (ROOT / "data" / "processed" / "common_scenario_utilities_2026.parquet").read_bytes()
+        deployed = (ROOT / "data" / "deployment" / "common_scenario_utilities_2026.parquet").read_bytes()
+        assert local == deployed
+
+    def test_replay_production_still_works_when_local_copy_is_missing(self, tmp_path):
+        """Simulates deployment conditions: hides the local, gitignored
+        common_scenario_utilities_2026.parquet and confirms replay_production()
+        falls back to data/deployment/ and produces the identical replay,
+        instead of raising FileNotFoundError."""
+        import shutil
+
+        local_path = ROOT / "data" / "processed" / "common_scenario_utilities_2026.parquet"
+        moved = tmp_path / "common_scenario_utilities_2026.parquet"
+        shutil.move(str(local_path), str(moved))
+        try:
+            cr.replay_production.clear()
+            result = cr.replay_production()
+        finally:
+            shutil.move(str(moved), str(local_path))
+            cr.replay_production.clear()
+
+        existing = np.load(ROOT / "data" / "processed" / "mc_totals_2026.npy")
+        idx = pd.read_csv(ROOT / "reports" / "2026_mc_player_index.csv")
+        idx["player_id"] = idx["player_id"].astype(str)
+        col_of = {pid: i for i, pid in enumerate(idx["player_id"])}
+        reorder = np.array([col_of[pid] for pid in result["players"]["player_id"]])
+        assert np.array_equal(result["final_cumulative"], existing[:, reorder])
+
+
 class TestClinchMathematics:
     def test_clinch_status_is_monotonic_once_achieved(self, prod):
         """Proves the module docstring's claim: once clinched=True at round

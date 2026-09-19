@@ -214,11 +214,27 @@ def _replay(
 
 @st.cache_data
 def replay_production() -> dict:
-    common_u = pd.read_parquet(PROCESSED / "common_scenario_utilities_2026.parquet")
-    all_scenarios = pd.read_parquet(PROCESSED / "all_2026_scenarios_and_ensemble.parquet")
-    names = all_scenarios[all_scenarios["scenario"] == "FINAL_ENSEMBLE"][
-        ["match_id", "player_id", "player_name", "team_id"]].drop_duplicates()
-    ensemble = common_u.merge(names, on=["match_id", "player_id"], how="left")
+    # common_scenario_utilities_2026.parquet is small (~270KB) and genuinely
+    # required (it IS the real per-match utility input the replay draws
+    # from) -- data/processed/ is gitignored, so a fresh Streamlit Cloud
+    # clone never has it; falls back to the bundled deployment copy via this
+    # project's established local-with-deployment-fallback pattern.
+    common_u = pd.read_parquet(d._resolve_path(
+        PROCESSED / "common_scenario_utilities_2026.parquet",
+        "common_scenario_utilities_2026.parquet",
+    ))
+    # Player name/team lookup: previously read the full 4.3MB
+    # all_2026_scenarios_and_ensemble.parquet (also gitignored) just to pull
+    # out player_id -> (player_name, team_id) -- reports/2026_mc_player_index.csv
+    # (already git-tracked, ~18KB) contains the exact same 577 (player_id,
+    # player_name, team_id) triples (verified: zero mismatches against the
+    # parquet's own FINAL_ENSEMBLE rows), so this avoids a second deployment
+    # dependency entirely rather than bundling another large file.
+    names = pd.read_csv(REPORTS / "2026_mc_player_index.csv")
+    names["player_id"] = names["player_id"].astype(str)
+    common_u = common_u.copy()
+    common_u["player_id"] = common_u["player_id"].astype(str)
+    ensemble = common_u.merge(names, on="player_id", how="left")
     return _replay(
         ensemble,
         utility_cols=["utility_raw_A", "utility_raw_B", "utility_raw_C"],
