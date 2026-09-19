@@ -64,93 +64,85 @@ Z_SCORE_STATS = [
 
 
 def highlight_objective_stats_nav() -> None:
-    """Give each sidebar nav SECTION (MAIN / MODEL ANALYSIS / EXTERNAL
-    VALIDATION / ADVANCED) its own subtle accent colour, applied on every
-    page (not just while a given page is active) -- name kept for zero-touch
-    compatibility with its 27 existing call sites; this now styles the whole
-    section-grouped nav, not just one page's link, and the single-page green
-    "Objective Stats Model" highlight it used to render has been removed.
+    """Intentional no-op -- kept only for zero-touch compatibility with its
+    27 existing per-page call sites (page contents are out of scope for nav
+    styling changes).
 
-    Streamlit's automatic multipage sidebar nav is re-rendered by the
-    framework on every page run, and any <style> tag injected by a page
-    script is torn down when navigating to a different page's script -- so
-    this must be called once near the top of every page (including app.py)
-    for the styling to persist while browsing other pages.
-
-    IMPORTANT, found via headless-browser (Playwright) investigation, not
-    assumed: this app's sidebar nav DOM is not always grouped the same way.
-    Landing on the root page shows the expected 4-section grouped structure
-    (one wrapper per section, headers included). But navigating directly to
-    a specific page's URL (e.g. opening /Objective_Stats_Model fresh, the
-    common case for a bookmark or a refresh) can render a completely FLAT,
-    ungrouped list of all pages instead -- with no section-header elements at
-    all, in old filename-numeric order, and even including the page that's
-    marked visibility="hidden" in app.py's DOM (though still not visibly
-    shown, per its own hidden state). A position-based selector
-    (`ul > div:nth-of-type(N)`) is therefore NOT reliable across every real
-    entry path into this app, so it is deliberately NOT used here -- this is
-    a genuine multipage-routing/rendering quirk worth a dedicated look
-    separately; it is out of scope for a styling-only change to fix.
-
-    What IS reliable in every render observed: each link's `href` always
-    ends with that page's real URL path segment. So every page is matched
-    individually by an exact, "/"-anchored suffix (never a bare substring --
-    e.g. "/Overview" would otherwise also match "/External_Overview", and
-    "/Betting_Opportunities" would otherwise also match
-    "/Brownlow_Betting_Opportunities"; anchoring on the leading "/" rules out
-    both). Section headers are still coloured too, best-effort, via the same
-    positional selector that worked when headers ARE present -- if they
-    aren't rendered in a given load (per the quirk above), that rule simply
-    matches nothing, which is a harmless no-op, never an error.
+    This used to inject sidebar-colouring CSS targeting Streamlit's
+    AUTOMATIC multipage menu (stSidebarNavLink / stNavSectionHeader). app.py
+    now replaces that automatic menu entirely with a custom sidebar built
+    from st.sidebar.expander()/st.page_link() (the automatic menu is hidden
+    via st.navigation(..., position="hidden"), since it cannot natively
+    collapse per-section in sidebar mode -- verified against this Streamlit
+    version's real behaviour). The custom sidebar's own colouring is
+    injected exactly once from app.py itself, before current_page.run(), so
+    injecting a second, now-pointless stylesheet here on every one of the 27
+    pages would be pure waste (its target elements no longer exist in the
+    DOM at all) -- see app.py's module docstring for the actual, current
+    mechanism.
     """
-    accents = {
-        "MAIN": "#3b6fa0",  # navy/blue
-        "MODEL_ANALYSIS": "#7c5cbf",  # purple
-        "EXTERNAL": "#b8860b",  # amber/gold
-        "ADVANCED": "#64748b",  # slate/grey
-    }
-    # Must mirror app.py's page->section membership exactly (checked against
-    # its current MAIN/MODEL ANALYSIS/EXTERNAL VALIDATION/ADVANCED lists).
-    section_pages = {
-        "MAIN": ["/", "Technical_Summary", "Guide_And_FAQs", "Finishing_Order",
-                 "Brownlow_Betting_Opportunities", "To_Poll_A_Vote", "Match_Detail",
-                 "Brownlow_Night_Tracker"],
-        "MODEL_ANALYSIS": ["Overview", "Objective_Stats_Model", "Model_Agreement",
-                            "Order_Scenarios", "Player_H2H", "Multi_Player_Comparison",
-                            "Team_Player_Rankings"],
-        "EXTERNAL": ["External_Overview", "External_Player_Comparison",
-                     "External_Winning_Order", "External_Leader_After_Round"],
-        "ADVANCED": ["Player_Detail", "Scenario_Comparison", "Model_Disagreement",
-                     "Round_View", "Defender_Bias_Watchlist", "Projection_Concentration",
-                     "Uncertainty", "Round_By_Round_Leaderboard", "Team_Breakdown"],
-    }
+    return
+
+
+SIDEBAR_SECTION_ACCENTS = {
+    "MAIN": "#3b6fa0",  # navy/blue
+    "MODEL ANALYSIS": "#7c5cbf",  # purple
+    "EXTERNAL VALIDATION": "#b8860b",  # amber/gold
+    "ADVANCED": "#64748b",  # slate/grey
+}
+
+
+def nav_slug(text: str) -> str:
+    """CSS-class-safe fragment of a section/page name, e.g. "MODEL ANALYSIS"
+    -> "MODEL_ANALYSIS". Used both to build st.container/st.expander `key=`
+    values in app.py's custom sidebar and to build the matching CSS
+    selectors below -- kept as one shared function so the two can never
+    silently drift apart."""
+    return re.sub(r"[^A-Za-z0-9]+", "_", text).strip("_")
+
+
+def sidebar_nav_css(section_accents: dict[str, str] = SIDEBAR_SECTION_ACCENTS) -> str:
+    """The sidebar's per-section accent stylesheet, as a raw CSS string
+    (wrap in <style> tags and st.markdown(..., unsafe_allow_html=True) to
+    actually apply it -- kept as a pure, Streamlit-context-free function so
+    it's directly unit-testable).
+
+    Targets app.py's custom sidebar (st.sidebar.expander()/st.page_link(),
+    NOT Streamlit's automatic multipage menu, which app.py hides entirely
+    via position="hidden" -- see its module docstring for why: automatic
+    sidebar-mode nav groups cannot natively collapse per-section).
+    st.container(key=...)/st.expander(key=...) apply a stable, predictable
+    "st-key-<key>" CSS class (confirmed live with a headless browser), so
+    every selector here is a generic, section-only wildcard match on that
+    class -- it needs no per-page enumeration or href list at all (unlike
+    this module's earlier, retired approach targeting the automatic menu,
+    which had to hardcode every page's href to avoid substring collisions
+    like "/Overview" also matching "/External_Overview" -- that whole bug
+    class no longer exists here structurally, since nothing matches on href).
+    app.py encodes exactly one active page's link key per section as
+    "navlink_<SECTION>_active_<page>" (Python-side object-identity check
+    against st.navigation()'s own return value, since st.page_link() --
+    unlike the automatic menu -- does not set aria-current itself); every
+    other link in that section is "navlink_<SECTION>_<page>".
+    """
     rules = []
-    for section, colour in accents.items():
-        selectors = ", ".join(
-            f'[data-testid="stSidebarNavLink"][href$="/"]' if p == "/"
-            else f'[data-testid="stSidebarNavLink"][href$="/{p}"]'
-            for p in section_pages[section]
-        )
+    for section, colour in section_accents.items():
+        section_slug = nav_slug(section)
         rules.append(f"""
-        {selectors} {{ border-radius: 8px; }}
-        """)
-        for p in section_pages[section]:
-            sel = '[href$="/"]' if p == "/" else f'[href$="/{p}"]'
-            rules.append(f"""
-            [data-testid="stSidebarNavLink"]{sel}:hover {{ background-color: {colour}14; }}
-            [data-testid="stSidebarNavLink"]{sel}[aria-current="page"] {{ background-color: {colour}2E; }}
-            """)
-        # Best-effort section-header colouring (see docstring: only applies
-        # when the grouped DOM structure is actually present).
-        idx = list(accents).index(section) + 1
-        rules.append(f"""
-        [data-testid="stSidebarNav"] ul > div:nth-of-type({idx}) [data-testid="stNavSectionHeader"] {{
+        [data-testid="stSidebar"] div[class*="st-key-navgroup_{section_slug}"] summary {{
             color: {colour};
-            border-left: 3px solid {colour};
-            padding-left: 8px;
+        }}
+        [data-testid="stSidebar"] div[class*="st-key-navlink_{section_slug}_"] {{
+            border-radius: 8px;
+        }}
+        [data-testid="stSidebar"] div[class*="st-key-navlink_{section_slug}_"]:hover {{
+            background-color: {colour}14;
+        }}
+        [data-testid="stSidebar"] div[class*="st-key-navlink_{section_slug}_active_"] {{
+            background-color: {colour}2E;
         }}
         """)
-    st.markdown(f"<style>{''.join(rules)}</style>", unsafe_allow_html=True)
+    return "".join(rules)
 
 
 def gradient_style(s: pd.Series, rgb: tuple[int, int, int] = (74, 144, 217)) -> list:
