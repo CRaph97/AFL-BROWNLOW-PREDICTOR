@@ -119,18 +119,37 @@ def _replay(
     """Shared replay engine for both Production (3-scenario mixture) and
     Objective (single utility) -- mirrors simulate_season() in the two real
     run_*montecarlo.py scripts exactly, bucketing each match's increment by
-    its REAL round instead of only accumulating into one final total."""
+    its REAL round instead of only accumulating into one final total.
+
+    MEMORY: matches must be visited in `groupby("match_id")`'s lexicographic
+    order for RNG-draw reproducibility (see module docstring), but that order
+    scatters rounds arbitrarily (round 2's matches can be drawn after round
+    19's) -- so a naive per-round (n_sims x n_players) bucket must keep EVERY
+    round's bucket alive simultaneously (measured: ~4.3GB peak RSS for
+    Production, enough to be killed by Streamlit Cloud's memory ceiling with
+    no Python traceback, just a generic "Oh no"). Fixed with a two-pass split:
+    pass 1 preserves the exact RNG call sequence/order but stores only each
+    match's compact (n_sims,) winner-index triple (int16, no player
+    dimension) instead of a dense per-round player-width array; pass 2 (pure
+    integer addition, no RNG, so order-independent) folds those triples into
+    ONE reused (n_sims x n_players) array in real round order, computing the
+    same per-round summary stats as before. Mathematically identical --
+    addition is commutative/associative and no dtype narrower than the
+    original was introduced for anything retained -- verified bit-identical
+    against the pre-existing mc_totals*.npy arrays in
+    tests/test_clinch_round_page.py::TestBitIdenticalReplay."""
     rng = np.random.default_rng(seed)
     matches = match_scores_source.groupby("match_id")  # same default (sorted/lexicographic) order as the real scripts
-    n_matches = match_scores_source["match_id"].nunique()
 
     all_players = match_scores_source[["player_id", "player_name", "team_id"]].drop_duplicates().reset_index(drop=True)
     player_index = {pid: i for i, pid in enumerate(all_players["player_id"])}
     n_players = len(all_players)
 
     max_round = max(_round_from_match_id(mid) for mid in match_scores_source["match_id"].unique())
-    round_bucket = {r: np.zeros((n_sims, n_players), dtype=np.int16) for r in range(max_round + 1)}
 
+    # Pass 1: RNG-order-preserving. Only (n_sims,) index triples per match are
+    # kept -- no (n_sims x n_players) allocation here at all.
+    by_round: dict[int, list[tuple[np.ndarray, np.ndarray, np.ndarray]]] = {r: [] for r in range(max_round + 1)}
     for match_id, g in matches:
         real_round = _round_from_match_id(match_id)
         idx = np.array([player_index[p] for p in g["player_id"]])
@@ -153,10 +172,7 @@ def _replay(
         top3_sorted = np.take_along_axis(top3_local, order, axis=1)
 
         w3, w2, w1 = idx[top3_sorted[:, 0]], idx[top3_sorted[:, 1]], idx[top3_sorted[:, 2]]
-        bucket = round_bucket[real_round]
-        bucket[np.arange(n_sims), w3] += 3
-        bucket[np.arange(n_sims), w2] += 2
-        bucket[np.arange(n_sims), w1] += 1
+        by_round[real_round].append((w3.astype(np.int16), w2.astype(np.int16), w1.astype(np.int16)))
 
     remaining_lookup = team_remaining_matches()
 
@@ -169,9 +185,14 @@ def _replay(
     # per-simulation clinch/probability statistics above.
     mean_cumulative_by_round = np.zeros((max_round + 1, n_players), dtype=np.float64)
 
+    # Pass 2: pure arithmetic, real round order, one (n_sims x n_players)
+    # array reused throughout instead of one per round.
     for r in range(max_round + 1):
-        cumulative += round_bucket[r]
-        del round_bucket[r]  # free the ~115MB bucket as soon as it's folded in
+        sim_arange = np.arange(n_sims)
+        for w3, w2, w1 in by_round.pop(r):
+            cumulative[sim_arange, w3] += 3
+            cumulative[sim_arange, w2] += 2
+            cumulative[sim_arange, w1] += 1
 
         remaining_vec = _player_remaining_vector(all_players, remaining_lookup, r)
         leader_idx = cumulative.argmax(axis=1)
