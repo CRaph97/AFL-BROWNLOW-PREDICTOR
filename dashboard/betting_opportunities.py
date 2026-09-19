@@ -273,18 +273,57 @@ _EVIDENCE_RANK = {c: i for i, c in enumerate(QUALIFYING_CONFIDENCE)}
 # old label text misleadingly read as an outcome-probability claim ("High
 # Confidence" sounds like "this will probably happen", not "the price looks
 # mispriced"). No threshold or probability value changed by this rename.
+#
+# Renamed again ("Value Signal" -> "Bet Value") alongside the introduction of
+# a genuinely separate "Likelihood" concept below -- the two were previously
+# easy to conflate (both shown as a single vague "Confidence"/"Value Signal"
+# badge next to a probability-looking number). Bet Value and Likelihood are
+# computed from completely independent inputs: Bet Value never uses
+# conservative_internal_probability's raw value, only whether it exceeds the
+# bookmaker's implied probability by enough (an edge, not the probability
+# itself); Likelihood never uses odds or the Bet Value classification. No
+# threshold or probability value changed by either rename.
 CONFIDENCE_BADGES = {
-    "HIGH_CONFIDENCE_WHEELO_CONFIRMED": "\U0001F7E2 Strong Value Signal + Wheelo Support",
-    "HIGH_CONFIDENCE_WHEELO_NEUTRAL": "\U0001F7E2 Strong Value Signal",
-    "MEDIUM_CONFIDENCE": "\U0001F7E1 Moderate Value Signal",
-    "HIGH_RISK_HIGH_REWARD": "\U0001F7E0 Speculative Value",
+    "HIGH_CONFIDENCE_WHEELO_CONFIRMED": "\U0001F7E2 Strong Bet Value + Wheelo Support",
+    "HIGH_CONFIDENCE_WHEELO_NEUTRAL": "\U0001F7E2 Strong Bet Value",
+    "MEDIUM_CONFIDENCE": "\U0001F7E1 Moderate Bet Value",
+    "HIGH_RISK_HIGH_REWARD": "\U0001F7E0 Speculative Bet Value",
     "MODEL_DISAGREEMENT": "⚪ Model Disagreement",
     "NO_VALUE": "⚪ No Value",
 }
 
 VALUE_SIGNAL_CAPTION = (
-    "Value Signal describes model agreement about the price, not the probability the bet will win."
+    "¹ Bet Value reflects how favourable the bookmaker price appears relative to the modelled "
+    "probabilities, while also considering agreement between models and Wheelo support. It is not "
+    "the probability of winning and is not a recommendation to bet."
 )
+
+LIKELIHOOD_CAPTION = (
+    "² Likelihood is the conservative modelled chance of the event occurring, using the lower "
+    "of the Production and Objective probabilities where both are available. It is an estimate, "
+    "not a guarantee."
+)
+
+# Bands apply ONLY to conservative_internal_probability (min(Production,
+# Objective) when both exist, else whichever one exists) -- never bookmaker
+# odds, never the Bet Value classification, never blended with Wheelo.
+_LIKELIHOOD_BANDS = [
+    (0.80, "Very High"),
+    (0.65, "High"),
+    (0.45, "Moderate"),
+    (0.25, "Low"),
+    (0.0, "Very Low"),
+]
+
+
+def likelihood_label(probability) -> str:
+    """"<Band> — XX.X%" for a conservative_internal_probability value,
+    e.g. "High — 70.1%". Returns "N/A" for a missing probability rather
+    than fabricating a band."""
+    if pd.isna(probability):
+        return "N/A"
+    band = next(label for threshold, label in _LIKELIHOOD_BANDS if probability >= threshold)
+    return f"{band} — {probability * 100:.1f}%"
 
 
 def confidence_badge(confidence: str) -> str:
@@ -302,6 +341,7 @@ def prepare_display(df: pd.DataFrame) -> pd.DataFrame:
     out["is_incomplete"] = out.apply(is_display_incomplete, axis=1)
     out["has_flag"] = out["data_quality_flags"].apply(has_flag)
     out["confidence_badge"] = out["confidence"].apply(confidence_badge)
+    out["likelihood_display"] = out["conservative_internal_probability"].apply(likelihood_label)
     out["conservative_edge_pp"] = (out["conservative_internal_probability"] - out["implied_probability"]) * 100.0
     if "wheelo_support" in out.columns:
         out["wheelo_support_label"] = out["wheelo_support"].apply(friendly_support_label)

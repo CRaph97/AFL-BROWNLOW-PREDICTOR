@@ -38,17 +38,46 @@ class TestBettingLabelSemantics:
         for label in bo.CONFIDENCE_BADGES.values():
             assert "High Confidence" not in label
 
-    def test_adam_cerra_shows_strong_value_signal_not_high_confidence(self, opps):
+    def test_adam_cerra_shows_strong_bet_value_not_high_confidence(self, opps):
         cerra = opps[(opps["player_name"] == "Adam Cerra") & (opps["market_type"] == "TO_POLL_A_VOTE")]
         if cerra.empty:
             pytest.skip("Adam Cerra not present in this run's data")
         row = cerra.iloc[0]
         assert row["confidence"] == "HIGH_CONFIDENCE_WHEELO_CONFIRMED", "internal enum must NOT be renamed"
-        assert bo.confidence_badge(row["confidence"]) == "\U0001F7E2 Strong Value Signal + Wheelo Support"
+        assert bo.confidence_badge(row["confidence"]) == "\U0001F7E2 Strong Bet Value + Wheelo Support"
         # Real numbers unchanged by the label rename.
         assert row["implied_probability"] == pytest.approx(0.190476, abs=1e-4)
         assert row["production_probability"] == pytest.approx(0.3316, abs=1e-4)
         assert row["objective_probability"] == pytest.approx(0.30995, abs=1e-4)
+
+    def test_adam_cerra_likelihood_is_low(self, opps):
+        cerra = opps[(opps["player_name"] == "Adam Cerra") & (opps["market_type"] == "TO_POLL_A_VOTE")]
+        if cerra.empty:
+            pytest.skip("Adam Cerra not present in this run's data")
+        row = bo.prepare_display(cerra).iloc[0]
+        assert row["likelihood_display"] == "Low — 31.0%"
+
+    def test_jack_crisp_and_jordon_sweet_likelihood_bands(self, opps):
+        display = bo.prepare_display(opps[opps["market_type"] == "TO_POLL_A_VOTE"])
+        for name, expected in [("Jack Crisp", "High — 70.1%"), ("Jordon Sweet", "High — 77.3%")]:
+            rows = display[display["player_name"] == name]
+            if rows.empty:
+                pytest.skip(f"{name} not present in this run's data")
+            assert rows.iloc[0]["likelihood_display"] == expected
+
+    def test_bet_value_and_likelihood_are_independent(self, opps):
+        """Bet Value must never be derived from conservative_internal_probability's
+        raw value (only from its relationship to implied probability), and
+        Likelihood must never use odds or the Bet Value classification --
+        Jordon Sweet (High likelihood, Moderate Bet Value) proves they can
+        diverge."""
+        display = bo.prepare_display(opps[opps["market_type"] == "TO_POLL_A_VOTE"])
+        sweet = display[display["player_name"] == "Jordon Sweet"]
+        if sweet.empty:
+            pytest.skip("Jordon Sweet not present in this run's data")
+        row = sweet.iloc[0]
+        assert row["likelihood_display"].startswith("High")
+        assert "Moderate" in row["confidence_badge"]
 
     def test_minimum_probability_filter_excludes_cerra_at_50_includes_at_25(self, opps):
         tpav = opps[opps["market_type"] == "TO_POLL_A_VOTE"]

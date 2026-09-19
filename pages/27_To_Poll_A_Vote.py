@@ -29,6 +29,7 @@ st.caption(
     "simulations, with Wheelo as independent corroboration. Decision-support only."
 )
 st.caption(f"ℹ️ {bo.VALUE_SIGNAL_CAPTION}")
+st.caption(f"ℹ️ {bo.LIKELIHOOD_CAPTION}")
 
 raw_opportunities = bo.load_opportunities()
 if raw_opportunities.empty:
@@ -105,9 +106,9 @@ else:
     fc1, fc2 = st.columns([2, 1])
     search3 = fc1.text_input("Player search", key="tpav_search")
     min_prob_choice = fc2.selectbox(
-        "Minimum model probability", ["Any", "25%", "50%", "60%", "70%", "80%"], key="tpav_min_prob",
+        "Minimum Likelihood", ["Any", "25%", "50%", "60%", "70%", "80%"], key="tpav_min_prob",
         help="Filters on min(Production, Objective) season probability -- or whichever one exists "
-             "if only one model resolved this player. Separate from Value Signal.",
+             "if only one model resolved this player. Separate from Bet Value.",
     )
     piv = bo.with_bookmaker_odds(tpav, ["player_id"])
     if search3:
@@ -125,7 +126,8 @@ else:
         "Production %": piv["production_probability"].apply(bo.format_pct),
         "Objective %": piv["objective_probability"].apply(bo.format_pct),
         "Wheelo support": piv["wheelo_support_label"],
-        "Value Signal": piv["confidence_badge"],
+        "Likelihood²": piv["likelihood_display"],
+        "Bet Value¹": piv["confidence_badge"],
     })
     st.dataframe(show, use_container_width=True, hide_index=True, height=500)
 

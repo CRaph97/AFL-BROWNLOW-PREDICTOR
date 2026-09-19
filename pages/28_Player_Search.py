@@ -168,6 +168,9 @@ with st.expander("Available bookmaker markets", expanded=False):
                 "Odds": piv["best_odds"].apply(bo.format_odds),
                 "Production %": piv["production_probability"].apply(bo.format_pct),
                 "Objective %": piv["objective_probability"].apply(bo.format_pct),
-                "Value Signal": piv["confidence_badge"],
+                "Likelihood²": piv["likelihood_display"],
+                "Bet Value¹": piv["confidence_badge"],
             })
             st.dataframe(show, use_container_width=True, hide_index=True)
+            st.caption(f"ℹ️ {bo.VALUE_SIGNAL_CAPTION}")
+            st.caption(f"ℹ️ {bo.LIKELIHOOD_CAPTION}")
