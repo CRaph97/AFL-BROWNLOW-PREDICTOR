@@ -79,7 +79,7 @@ kept in the output). The AFL provider id (`CD_I…`) is kept on every row so the
 auditable, and it is 1:1 with canonical `player_id` across all rows.
 
 **Unresolved (flagged, not guessed):** Jack Ross (Richmond, `CD_I1006133`; votes in Rounds 8
-and 22, 2 rows, 2 total votes). The frozen 2026 CORE build never resolved an afltables id for
+and 22, 2 rows, 3 total votes). The frozen 2026 CORE build never resolved an afltables id for
 him — every canonical row is a `NOID2026_*` placeholder — so there is no stable id to map to.
 He is on the explicit `KNOWN_UNRESOLVED_AFL_PLAYERS` allowlist in the builder; any *new*
 unresolved player fails the build.
@@ -97,7 +97,7 @@ unresolved player fails the build.
 | DOM per-cell and total values = API | 0 mismatches |
 | Round coverage / Opening Round = round 0 | rounds 0–24, 15 Opening Round vote rows |
 | Identity 1:1 and unique on leaderboard | yes |
-| Unresolved rows only on documented allowlist | 2 rows (Jack Ross) |
+| Unresolved rows only on documented allowlist | 2 rows, 3 votes (Jack Ross) |
 | Frozen prediction files unchanged (SHA-256 before/after) | 13 files unchanged |
 | Cross-check vs published results (ABC News / AFL.com.au, 2026-09-21) | Daicos 47 (record, 13 × 3), Smith 36, Bontempelli 34 — all match |
 

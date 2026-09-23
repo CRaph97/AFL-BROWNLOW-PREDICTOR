@@ -71,6 +71,7 @@ pages = {
     "MAIN": [
         st.Page("pages/25_Technical_Summary.py", title="Technical Summary", default=True),
         st.Page("pages/24_Guide_And_FAQs.py", title="Guide & FAQs"),
+        st.Page("pages/33_2026_Evaluation.py", title="2026 Evaluation"),
         st.Page("pages/26_Finishing_Order.py", title="Finishing Order"),
         st.Page("pages/28_Player_Search.py", title="Player Search"),
         st.Page("pages/29_Player_Comparison.py", title="Player Comparison"),

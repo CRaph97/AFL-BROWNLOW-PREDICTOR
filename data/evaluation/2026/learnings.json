@@ -1,0 +1,74 @@
+[
+ {
+  "title": "Season-total accuracy (common universe)",
+  "finding": "Wheelo had the lowest season-total MAE on the 576 players covered by all three sources; Production MAE 0.76 / RMSE 1.48 / Spearman 0.755, Objective MAE 0.99 / RMSE 1.95 / Spearman 0.726, Wheelo MAE 0.71 / RMSE 1.48 / Spearman 0.765.",
+  "evidence": "scorecard.csv (universe = common)",
+  "n": 576
+ },
+ {
+  "title": "Match-level 3-vote identification",
+  "finding": "Wheelo named the actual 3-vote player most often: Objective 50.2% (exact 3-2-1 5.8%, 3-voter inside top-3 83.1%), Production 70.0% (exact 3-2-1 18.4%, 3-voter inside top-3 94.2%), Wheelo 72.5% (exact 3-2-1 18.4%, 3-voter inside top-3 92.8%).",
+  "evidence": "match_scorecard.csv",
+  "n": 207
+ },
+ {
+  "title": "Match P3 probability quality",
+  "finding": "Lowest mean P3 log loss: Wheelo (0.864); Objective 1.460, Production 0.898, Wheelo 0.864. Brier P3: Objective 0.0137, Production 0.0101, Wheelo 0.0091.",
+  "evidence": "match_scorecard.csv (log loss only where the actual 3-voter was in the model roster)",
+  "n": 206
+ },
+ {
+  "title": "Defender blind spot (known Phase 4 finding)",
+  "finding": "Hit rate on the actual 3-vote player by the 3-voter's lagged role. Objective: midfielder 3-voters found 55% (n=134), medium defenders 43% (n=14); Production: midfielder 3-voters found 71% (n=134), medium defenders 79% (n=14); Wheelo: midfielder 3-voters found 75% (n=134), medium defenders 86% (n=14). Defender samples are small; treat as directional.",
+  "evidence": "match_bias.csv",
+  "n": 444
+ },
+ {
+  "title": "When Production and Objective strongly disagreed",
+  "finding": "In the 5+-vote disagreement bin (n=24), Production was closer 17 times vs Objective 7 (MAE 2.67 vs 4.97). Disagreement predicted error: mean of the better model's abs error rose from 0.37 (0-2 bin) to 1.72.",
+  "evidence": "disagreement_summary.csv",
+  "n": 24
+ },
+ {
+  "title": "Did Wheelo break ties usefully?",
+  "finding": "Where Production and Objective differed and Wheelo sat closer to one of them, the model Wheelo sided with was the closer one 75% of the time (n=576); in the 5+ vote disagreement bin 75% (n=24). Wheelo's own season MAE on the common universe is the lowest of the three, so it carried independent signal rather than echoing either model.",
+  "evidence": "disagreement_summary.csv",
+  "n": 576
+ },
+ {
+  "title": "Role bias (season totals, relevant players)",
+  "finding": "Most under-predicted role/model: MEDIUM_FORWARD by Objective (mean error -1.70, n=33); most over-predicted: RUCK by Objective (mean error +2.49, n=20).",
+  "evidence": "season_bias.csv",
+  "n": 641
+ },
+ {
+  "title": "Calibration of match P3",
+  "finding": "ECE (lower is better): Objective 0.005, Production 0.005, Wheelo 0.004; the worst-calibrated series is Market: Team votes O/U / Objective (ECE 0.386).",
+  "evidence": "calibration_summary.csv",
+  "n": 8547
+ },
+ {
+  "title": "Bookmaker markets: where model pricing held up",
+  "finding": "Flat 1-unit ROI across every priced selection by market type -- best X_PLUS_VOTES (+25.7%, n=107), worst WINNER (-96.9%, n=65). Retrospective analytical metric only; backing every selection is not a strategy.",
+  "evidence": "betting_summary.csv",
+  "n": 637
+ },
+ {
+  "title": "Did the Bet Value tiers rank outcomes?",
+  "finding": "Hit rate / ROI by tier: Strong Bet Value + Wheelo Support 23% / +13.5% (n=22); Strong Bet Value 0% / -100.0% (n=2); Moderate Bet Value 42% / +9.7% (n=80); Speculative Bet Value 44% / -9.0% (n=119); Model Disagreement 40% / -5.7% (n=128); No Value 30% / -46.0% (n=302).",
+  "evidence": "betting_summary.csv (grouping = bet_value)",
+  "n": 653
+ },
+ {
+  "title": "Likelihood bands vs realised hit rate",
+  "finding": "Very High: hit 83% vs avg model prob 88% / implied 86% (n=24); High: hit 72% vs avg model prob 73% / implied 68% (n=47); Moderate: hit 58% vs avg model prob 55% / implied 65% (n=67); Low: hit 50% vs avg model prob 34% / implied 50% (n=109); Very Low: hit 21% vs avg model prob 6% / implied 25% (n=406).",
+  "evidence": "betting_summary.csv (grouping = likelihood_band)",
+  "n": 653
+ },
+ {
+  "title": "Model agreement and Wheelo support in the markets",
+  "finding": "Agreement: both see value hit 38% / ROI +8.4% (n=104); neither sees value hit 30% / ROI -46.7% (n=296); one model missing hit 50% / ROI -11.8% (n=6); only one sees value hit 42% / ROI -7.2% (n=247). Wheelo: INSUFFICIENT_WHEELO_DATA hit 50% / ROI -6.7% (n=70); PARTIAL_WHEELO_SUPPORT hit 44% / ROI +8.1% (n=136); STRONG_WHEELO_SUPPORT hit 38% / ROI -20.7% (n=117); WHEELO_DISAGREES hit 29% / ROI -39.4% (n=330).",
+  "evidence": "betting_summary.csv",
+  "n": 653
+ }
+]

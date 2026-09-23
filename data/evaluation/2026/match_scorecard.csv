@@ -1,0 +1,4 @@
+model,n_matches,n_actual_3_missing_from_roster,hit_3_rate,actual_3_in_top2_rate,actual_3_in_top3_rate,exact_321_rate,unordered_top3_rate,mean_vote_getters_in_pred_top3,mean_ev_mae_per_roster_player,mean_ev_abs_error_per_match,mean_log_loss_p3,n_log_loss,mean_brier_p3,mean_p3_of_actual_3
+Objective,207,0,0.5024,0.7295,0.8309,0.058,0.1932,1.894,0.1163,5.306,1.4595,207,0.01367,0.4352
+Production,207,1,0.7005,0.8647,0.942,0.1836,0.3671,2.261,0.1022,4.214,0.8984,206,0.01014,0.5236
+Wheelo,207,0,0.7246,0.8551,0.9275,0.1836,0.3527,2.232,0.085,3.866,0.8636,207,0.00909,0.5361

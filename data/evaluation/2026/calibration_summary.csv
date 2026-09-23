@@ -1,0 +1,35 @@
+series,model,n,ece,brier,base_rate,mean_predicted
+Match P3 (3 votes),Objective,9440,0.0054,0.01368,0.0219,0.0219
+Match P2 (2 votes),Objective,9440,0.0058,0.01803,0.0218,0.0218
+Match P1 (1 vote),Objective,9440,0.0043,0.01905,0.0218,0.0217
+Match any vote (P3+P2+P1),Objective,9440,0.0093,0.03218,0.0656,0.0654
+Match P3 (3 votes),Production,8547,0.0053,0.0101,0.0241,0.0242
+Match P2 (2 votes),Production,8547,0.006,0.01686,0.024,0.0242
+Match P1 (1 vote),Production,8547,0.005,0.01939,0.0236,0.0242
+Match any vote (P3+P2+P1),Production,8547,0.0145,0.02381,0.0717,0.0726
+Match P3 (3 votes),Wheelo,9411,0.0044,0.00909,0.022,0.0219
+Market: To Poll a Vote,Production,127,0.1489,0.24446,0.3858,0.4592
+Market: To Poll a Vote,Objective,129,0.1308,0.24274,0.3876,0.4546
+Market: To Poll a Vote,Bookmaker implied,129,0.1411,0.25785,0.3876,0.525
+Market: Player votes O/U,Production,38,0.2949,0.34864,0.5,0.5
+Market: Player votes O/U,Objective,38,0.3376,0.34441,0.5,0.5
+Market: Player votes O/U,Bookmaker implied,38,0.0348,0.25121,0.5,0.5348
+Market: X+ votes,Production,107,0.178,0.20147,0.514,0.3383
+Market: X+ votes,Objective,107,0.1541,0.2107,0.514,0.4165
+Market: X+ votes,Bookmaker implied,107,0.0776,0.15455,0.514,0.4443
+Market: Top N finish,Production,180,0.0674,0.08543,0.25,0.246
+Market: Top N finish,Objective,180,0.0849,0.10832,0.25,0.2469
+Market: Top N finish,Bookmaker implied,180,0.0665,0.08263,0.25,0.2782
+Market: Team votes O/U,Production,66,0.3331,0.34513,0.5,0.5
+Market: Team votes O/U,Objective,70,0.3855,0.36307,0.5,0.5
+Market: Team votes O/U,Bookmaker implied,70,0.0347,0.24969,0.5,0.5347
+Market: Player H2H,Production,46,0.1923,0.22715,0.5,0.4617
+Market: Player H2H,Objective,46,0.2972,0.31465,0.5,0.4723
+Market: Player H2H,Bookmaker implied,46,0.1508,0.22599,0.5,0.5352
+Market: all settled binary markets,Production,645,0.086,0.17912,0.3519,0.3333
+Market: all settled binary markets,Objective,651,0.1278,0.19572,0.3533,0.3476
+Market: all settled binary markets,Bookmaker implied,651,0.0455,0.15859,0.3533,0.3862
+Season P(top 10),Production,577,0.0065,0.00424,0.0173,0.0173
+Season P(top 3),Production,577,0.0025,0.00101,0.0052,0.0052
+Season P(top 10),Objective,663,0.0083,0.00644,0.0151,0.0151
+Season P(top 3),Objective,663,0.0019,0.00046,0.0045,0.0045

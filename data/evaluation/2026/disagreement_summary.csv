@@ -1,0 +1,5 @@
+gap_bin_votes,n_players,n_with_actual_votes,production_closer,objective_closer,ties,production_mae,objective_mae,mean_min_abs_error,mean_max_abs_error,mean_consensus_abs_error,wheelo_tiebreaks,wheelo_tiebreak_correct,wheelo_tiebreak_rate
+0-2,499,106,240,259,0,0.503,0.537,0.371,0.669,0.49,498,377,0.757
+2-5,55,50,37,18,0,2.219,3.366,1.442,4.143,2.304,54,35,0.648
+5+,24,24,17,7,0,2.674,4.968,1.717,5.925,2.14,24,18,0.75
+all,578,180,294,284,0,0.757,0.99,0.529,1.218,0.731,576,430,0.747

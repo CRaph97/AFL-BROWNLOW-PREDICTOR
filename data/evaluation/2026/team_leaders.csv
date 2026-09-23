@@ -1,0 +1,19 @@
+team_id,actual_leader,actual_leader_votes,actual_tie,team_actual_votes,production_predicted_leader,production_predicted_ev,production_hit,production_team_ev_total,objective_predicted_leader,objective_predicted_ev,objective_hit,objective_team_ev_total,wheelo_predicted_leader,wheelo_predicted_ev,wheelo_hit,wheelo_team_ev_total
+adelaide,Izak Rankine,25,False,82,Izak Rankine,20.84,True,84.7,Izak Rankine,21.26,True,77.5,Jordan Dawson,23.53,False,82.6
+brisbane_lions,Will Ashcroft,27,False,86,Will Ashcroft,24.78,True,90.7,Lachie Neale,26.05,False,76.5,Will Ashcroft,25.08,True,88.1
+carlton,Patrick Cripps,27,False,76,Patrick Cripps,23.92,True,68.9,Patrick Cripps,27.53,True,68.5,Patrick Cripps,26.74,True,72.1
+collingwood,Nick Daicos,47,False,75,Nick Daicos,47.12,True,81.2,Nick Daicos,38.68,True,76.5,Nick Daicos,46.08,True,80.0
+essendon,Zach Merrett,9,False,24,Zach Merrett,9.23,True,27.6,Zach Merrett,8.43,True,39.5,Zach Merrett,6.09,True,25.6
+fremantle,Luke Jackson,19,False,100,Caleb Serong,14.51,False,98.0,Luke Jackson,22.59,True,89.7,Andrew Brayshaw,16.12,False,99.9
+geelong,Bailey Smith,36,False,87,Bailey Smith,35.37,True,91.4,Bailey Smith,30.9,True,77.7,Bailey Smith,32.6,True,90.0
+gold_coast,Christian Petracca / Noah Anderson,15,True,68,Noah Anderson,12.28,True,61.2,Christian Petracca,16.14,True,63.4,Matt Rowell,13.65,False,64.7
+greater_western_sydney,Clayton Oliver,23,False,63,Clayton Oliver,13.98,True,61.5,Clayton Oliver,21.38,True,63.2,Finn Callaghan,10.79,False,59.4
+hawthorn,Jai Newcombe,21,False,86,Jai Newcombe,18.55,True,84.1,Jai Newcombe,24.04,True,73.0,Jai Newcombe,24.02,True,86.2
+melbourne,Max Gawn,28,False,86,Max Gawn,19.02,True,83.3,Max Gawn,22.93,True,79.2,Max Gawn,19.55,True,84.4
+north_melbourne,Harry Sheezel,27,False,67,Harry Sheezel,22.63,True,67.9,Luke Davies-Uniacke,20.55,False,72.9,Harry Sheezel,21.76,True,67.6
+port_adelaide,Zak Butters,26,False,61,Zak Butters,19.78,True,55.4,Zak Butters,20.52,True,68.9,Jason Horne-Francis,19.83,False,55.0
+richmond,Tim Taranto,10,False,15,Tim Taranto,7.63,True,16.6,Tim Taranto,12.81,True,25.5,Tim Taranto,9.28,True,14.8
+st_kilda,Nasiah Wanganeen-Milera,21,False,71,Nasiah Wanganeen-Milera,20.05,True,70.2,Max Hall,18.01,False,79.8,Nasiah Wanganeen-Milera,22.35,True,69.6
+sydney,Isaac Heeney,26,False,102,Isaac Heeney,23.4,True,103.5,Isaac Heeney,27.54,True,92.1,Isaac Heeney,21.36,True,99.9
+west_coast,Harley Reid,15,False,31,Harley Reid,11.53,True,25.7,Harley Reid,17.67,True,39.1,Harley Reid,14.4,True,25.9
+western_bulldogs,Marcus Bontempelli,34,False,62,Marcus Bontempelli,25.82,True,70.1,Marcus Bontempelli,31.99,True,73.2,Marcus Bontempelli,29.43,True,68.2

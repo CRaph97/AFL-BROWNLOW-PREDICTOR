@@ -1,0 +1,341 @@
+series,model,bin,n,mean_predicted,actual_frequency,gap_pp
+Match P3 (3 votes),Objective,0-10%,9011,0.0039,0.0058,0.18
+Match P3 (3 votes),Objective,10-20%,149,0.1432,0.1946,5.14
+Match P3 (3 votes),Objective,20-30%,65,0.2441,0.2615,1.75
+Match P3 (3 votes),Objective,30-40%,48,0.3472,0.2292,-11.81
+Match P3 (3 votes),Objective,40-50%,30,0.4415,0.3,-14.15
+Match P3 (3 votes),Objective,50-60%,23,0.55,0.3913,-15.87
+Match P3 (3 votes),Objective,60-70%,31,0.6453,0.4194,-22.59
+Match P3 (3 votes),Objective,70-80%,31,0.7492,0.7419,-0.73
+Match P3 (3 votes),Objective,80-90%,16,0.8509,0.875,2.41
+Match P3 (3 votes),Objective,90-100%,36,0.9575,0.8333,-12.42
+Match P2 (2 votes),Objective,0-10%,8811,0.0059,0.0085,0.26
+Match P2 (2 votes),Objective,10-20%,268,0.1435,0.1567,1.32
+Match P2 (2 votes),Objective,20-30%,217,0.2528,0.1659,-8.69
+Match P2 (2 votes),Objective,30-40%,88,0.3402,0.2955,-4.48
+Match P2 (2 votes),Objective,40-50%,26,0.4467,0.3846,-6.21
+Match P2 (2 votes),Objective,50-60%,15,0.5436,0.4,-14.36
+Match P2 (2 votes),Objective,60-70%,9,0.6642,0.6667,0.25
+Match P2 (2 votes),Objective,70-80%,4,0.7637,1.0,23.63
+Match P2 (2 votes),Objective,80-90%,2,0.8206,0.5,-32.06
+Match P2 (2 votes),Objective,90-100%,0,,,
+Match P1 (1 vote),Objective,0-10%,8730,0.0077,0.0101,0.24
+Match P1 (1 vote),Objective,10-20%,436,0.1468,0.1376,-0.92
+Match P1 (1 vote),Objective,20-30%,221,0.2456,0.1855,-6.01
+Match P1 (1 vote),Objective,30-40%,36,0.3342,0.3056,-2.87
+Match P1 (1 vote),Objective,40-50%,12,0.4342,0.3333,-10.08
+Match P1 (1 vote),Objective,50-60%,5,0.5215,0.4,-12.15
+Match P1 (1 vote),Objective,60-70%,0,,,
+Match P1 (1 vote),Objective,70-80%,0,,,
+Match P1 (1 vote),Objective,80-90%,0,,,
+Match P1 (1 vote),Objective,90-100%,0,,,
+Match any vote (P3+P2+P1),Objective,0-10%,8269,0.0086,0.0111,0.25
+Match any vote (P3+P2+P1),Objective,10-20%,337,0.1405,0.1929,5.24
+Match any vote (P3+P2+P1),Objective,20-30%,167,0.2456,0.2335,-1.21
+Match any vote (P3+P2+P1),Objective,30-40%,125,0.3441,0.384,3.99
+Match any vote (P3+P2+P1),Objective,40-50%,73,0.4479,0.4658,1.79
+Match any vote (P3+P2+P1),Objective,50-60%,71,0.5518,0.5352,-1.66
+Match any vote (P3+P2+P1),Objective,60-70%,68,0.6497,0.5294,-12.02
+Match any vote (P3+P2+P1),Objective,70-80%,64,0.7508,0.7188,-3.21
+Match any vote (P3+P2+P1),Objective,80-90%,63,0.8517,0.6349,-21.68
+Match any vote (P3+P2+P1),Objective,90-100%,203,0.9716,0.8916,-8.0
+Match P3 (3 votes),Production,0-10%,8098,0.0046,0.002,-0.26
+Match P3 (3 votes),Production,10-20%,159,0.1434,0.1321,-1.13
+Match P3 (3 votes),Production,20-30%,83,0.2449,0.2771,3.22
+Match P3 (3 votes),Production,30-40%,39,0.342,0.3846,4.26
+Match P3 (3 votes),Production,40-50%,36,0.4382,0.5,6.18
+Match P3 (3 votes),Production,50-60%,27,0.5485,0.7407,19.22
+Match P3 (3 votes),Production,60-70%,30,0.6506,0.8333,18.28
+Match P3 (3 votes),Production,70-80%,28,0.7407,0.8214,8.07
+Match P3 (3 votes),Production,80-90%,23,0.8576,0.913,5.55
+Match P3 (3 votes),Production,90-100%,24,0.9448,1.0,5.52
+Match P2 (2 votes),Production,0-10%,7908,0.0069,0.0035,-0.34
+Match P2 (2 votes),Production,10-20%,269,0.1447,0.1896,4.49
+Match P2 (2 votes),Production,20-30%,261,0.251,0.272,2.1
+Match P2 (2 votes),Production,30-40%,52,0.3404,0.3462,0.58
+Match P2 (2 votes),Production,40-50%,31,0.4407,0.4839,4.32
+Match P2 (2 votes),Production,50-60%,12,0.5306,0.6667,13.61
+Match P2 (2 votes),Production,60-70%,4,0.6436,1.0,35.64
+Match P2 (2 votes),Production,70-80%,8,0.7342,1.0,26.58
+Match P2 (2 votes),Production,80-90%,1,0.836,1.0,16.4
+Match P2 (2 votes),Production,90-100%,1,0.919,1.0,8.1
+Match P1 (1 vote),Production,0-10%,7836,0.0093,0.0066,-0.27
+Match P1 (1 vote),Production,10-20%,447,0.1486,0.1857,3.71
+Match P1 (1 vote),Production,20-30%,233,0.238,0.2361,-0.2
+Match P1 (1 vote),Production,30-40%,21,0.3374,0.381,4.35
+Match P1 (1 vote),Production,40-50%,7,0.4347,0.1429,-29.18
+Match P1 (1 vote),Production,50-60%,2,0.5386,1.0,46.14
+Match P1 (1 vote),Production,60-70%,1,0.6817,1.0,31.83
+Match P1 (1 vote),Production,70-80%,0,,,
+Match P1 (1 vote),Production,80-90%,0,,,
+Match P1 (1 vote),Production,90-100%,0,,,
+Match any vote (P3+P2+P1),Production,0-10%,7380,0.0113,0.0038,-0.75
+Match any vote (P3+P2+P1),Production,10-20%,340,0.1421,0.1118,-3.04
+Match any vote (P3+P2+P1),Production,20-30%,160,0.2437,0.3312,8.76
+Match any vote (P3+P2+P1),Production,30-40%,127,0.3504,0.4803,12.99
+Match any vote (P3+P2+P1),Production,40-50%,83,0.4505,0.494,4.35
+Match any vote (P3+P2+P1),Production,50-60%,75,0.5532,0.6133,6.02
+Match any vote (P3+P2+P1),Production,60-70%,68,0.6473,0.7794,13.21
+Match any vote (P3+P2+P1),Production,70-80%,76,0.7542,0.8289,7.48
+Match any vote (P3+P2+P1),Production,80-90%,57,0.8528,0.9123,5.95
+Match any vote (P3+P2+P1),Production,90-100%,181,0.9764,0.9834,0.7
+Match P3 (3 votes),Wheelo,0-10%,8914,0.0026,0.0017,-0.09
+Match P3 (3 votes),Wheelo,10-20%,165,0.1452,0.0848,-6.04
+Match P3 (3 votes),Wheelo,20-30%,103,0.2472,0.2621,1.5
+Match P3 (3 votes),Wheelo,30-40%,61,0.3387,0.2951,-4.36
+Match P3 (3 votes),Wheelo,40-50%,40,0.4459,0.575,12.91
+Match P3 (3 votes),Wheelo,50-60%,25,0.5416,0.6,5.84
+Match P3 (3 votes),Wheelo,60-70%,29,0.6556,0.8276,17.2
+Match P3 (3 votes),Wheelo,70-80%,29,0.753,0.8966,14.35
+Match P3 (3 votes),Wheelo,80-90%,16,0.8506,1.0,14.94
+Match P3 (3 votes),Wheelo,90-100%,29,0.9557,1.0,4.43
+Market: To Poll a Vote,Production,0-10%,7,0.0535,0.4286,37.51
+Market: To Poll a Vote,Production,10-20%,10,0.1593,0.3,14.07
+Market: To Poll a Vote,Production,20-30%,16,0.2507,0.1875,-6.32
+Market: To Poll a Vote,Production,30-40%,22,0.3554,0.2727,-8.27
+Market: To Poll a Vote,Production,40-50%,19,0.4479,0.3158,-13.21
+Market: To Poll a Vote,Production,50-60%,19,0.5503,0.4211,-12.93
+Market: To Poll a Vote,Production,60-70%,8,0.6543,0.75,9.57
+Market: To Poll a Vote,Production,70-80%,17,0.7386,0.4706,-26.8
+Market: To Poll a Vote,Production,80-90%,7,0.8391,0.7143,-12.48
+Market: To Poll a Vote,Production,90-100%,2,0.9434,0.5,-44.34
+Market: To Poll a Vote,Objective,0-10%,16,0.066,0.1875,12.15
+Market: To Poll a Vote,Objective,10-20%,15,0.1546,0.2667,11.21
+Market: To Poll a Vote,Objective,20-30%,12,0.2434,0.25,0.66
+Market: To Poll a Vote,Objective,30-40%,22,0.3481,0.2727,-7.53
+Market: To Poll a Vote,Objective,40-50%,8,0.4486,0.5,5.14
+Market: To Poll a Vote,Objective,50-60%,14,0.5452,0.4286,-11.66
+Market: To Poll a Vote,Objective,60-70%,11,0.6544,0.5455,-10.89
+Market: To Poll a Vote,Objective,70-80%,14,0.7432,0.5714,-17.17
+Market: To Poll a Vote,Objective,80-90%,4,0.8618,0.5,-36.18
+Market: To Poll a Vote,Objective,90-100%,13,0.9556,0.6154,-34.02
+Market: To Poll a Vote,Bookmaker implied,0-10%,0,,,
+Market: To Poll a Vote,Bookmaker implied,10-20%,8,0.167,0.125,-4.2
+Market: To Poll a Vote,Bookmaker implied,20-30%,21,0.245,0.2381,-0.69
+Market: To Poll a Vote,Bookmaker implied,30-40%,14,0.3429,0.3571,1.43
+Market: To Poll a Vote,Bookmaker implied,40-50%,14,0.4478,0.3571,-9.07
+Market: To Poll a Vote,Bookmaker implied,50-60%,22,0.5429,0.3182,-22.47
+Market: To Poll a Vote,Bookmaker implied,60-70%,19,0.6561,0.5789,-7.71
+Market: To Poll a Vote,Bookmaker implied,70-80%,8,0.7444,0.75,0.56
+Market: To Poll a Vote,Bookmaker implied,80-90%,18,0.8477,0.4444,-40.33
+Market: To Poll a Vote,Bookmaker implied,90-100%,5,0.9091,0.4,-50.91
+Market: Player votes O/U,Production,0-10%,3,0.0731,0.6667,59.35
+Market: Player votes O/U,Production,10-20%,5,0.1554,0.6,44.46
+Market: Player votes O/U,Production,20-30%,2,0.2437,0.5,25.63
+Market: Player votes O/U,Production,30-40%,5,0.3551,0.4,4.49
+Market: Player votes O/U,Production,40-50%,4,0.4655,0.25,-21.55
+Market: Player votes O/U,Production,50-60%,4,0.5345,0.75,21.55
+Market: Player votes O/U,Production,60-70%,5,0.6449,0.6,-4.49
+Market: Player votes O/U,Production,70-80%,2,0.7563,0.5,-25.63
+Market: Player votes O/U,Production,80-90%,5,0.8446,0.4,-44.46
+Market: Player votes O/U,Production,90-100%,3,0.9269,0.3333,-59.35
+Market: Player votes O/U,Objective,0-10%,6,0.0662,0.3333,26.71
+Market: Player votes O/U,Objective,10-20%,3,0.1606,0.6667,50.61
+Market: Player votes O/U,Objective,20-30%,5,0.2776,0.6,32.24
+Market: Player votes O/U,Objective,30-40%,2,0.3371,1.0,66.29
+Market: Player votes O/U,Objective,40-50%,3,0.4518,0.3333,-11.85
+Market: Player votes O/U,Objective,50-60%,3,0.5482,0.6667,11.84
+Market: Player votes O/U,Objective,60-70%,2,0.6629,0.0,-66.29
+Market: Player votes O/U,Objective,70-80%,5,0.7225,0.4,-32.25
+Market: Player votes O/U,Objective,80-90%,3,0.8394,0.3333,-50.61
+Market: Player votes O/U,Objective,90-100%,6,0.9338,0.6667,-26.71
+Market: Player votes O/U,Bookmaker implied,0-10%,0,,,
+Market: Player votes O/U,Bookmaker implied,10-20%,0,,,
+Market: Player votes O/U,Bookmaker implied,20-30%,0,,,
+Market: Player votes O/U,Bookmaker implied,30-40%,0,,,
+Market: Player votes O/U,Bookmaker implied,40-50%,0,,,
+Market: Player votes O/U,Bookmaker implied,50-60%,38,0.5348,0.5,-3.48
+Market: Player votes O/U,Bookmaker implied,60-70%,0,,,
+Market: Player votes O/U,Bookmaker implied,70-80%,0,,,
+Market: Player votes O/U,Bookmaker implied,80-90%,0,,,
+Market: Player votes O/U,Bookmaker implied,90-100%,0,,,
+Market: X+ votes,Production,0-10%,35,0.0452,0.1429,9.77
+Market: X+ votes,Production,10-20%,13,0.145,0.5385,39.34
+Market: X+ votes,Production,20-30%,7,0.2513,0.2857,3.45
+Market: X+ votes,Production,30-40%,12,0.3456,0.75,40.44
+Market: X+ votes,Production,40-50%,11,0.4536,0.4545,0.1
+Market: X+ votes,Production,50-60%,7,0.5495,1.0,45.05
+Market: X+ votes,Production,60-70%,5,0.6666,0.8,13.34
+Market: X+ votes,Production,70-80%,5,0.7674,1.0,23.26
+Market: X+ votes,Production,80-90%,7,0.8747,0.8571,-1.76
+Market: X+ votes,Production,90-100%,5,0.9393,1.0,6.07
+Market: X+ votes,Objective,0-10%,35,0.0219,0.2,17.81
+Market: X+ votes,Objective,10-20%,10,0.1399,0.6,46.01
+Market: X+ votes,Objective,20-30%,8,0.2574,0.375,11.76
+Market: X+ votes,Objective,30-40%,4,0.3406,0.25,-9.06
+Market: X+ votes,Objective,40-50%,5,0.4493,0.6,15.07
+Market: X+ votes,Objective,50-60%,6,0.5571,0.6667,10.96
+Market: X+ votes,Objective,60-70%,7,0.6496,0.5714,-7.82
+Market: X+ votes,Objective,70-80%,5,0.7447,0.8,5.53
+Market: X+ votes,Objective,80-90%,8,0.8383,0.75,-8.83
+Market: X+ votes,Objective,90-100%,19,0.9691,0.8947,-7.43
+Market: X+ votes,Bookmaker implied,0-10%,22,0.0614,0.0909,2.95
+Market: X+ votes,Bookmaker implied,10-20%,14,0.1504,0.2857,13.54
+Market: X+ votes,Bookmaker implied,20-30%,12,0.2526,0.3333,8.07
+Market: X+ votes,Bookmaker implied,30-40%,9,0.3381,0.4444,10.63
+Market: X+ votes,Bookmaker implied,40-50%,6,0.4597,0.5,4.03
+Market: X+ votes,Bookmaker implied,50-60%,6,0.5505,0.6667,11.62
+Market: X+ votes,Bookmaker implied,60-70%,7,0.6439,0.7143,7.04
+Market: X+ votes,Bookmaker implied,70-80%,8,0.7523,1.0,24.77
+Market: X+ votes,Bookmaker implied,80-90%,6,0.8628,0.8333,-2.94
+Market: X+ votes,Bookmaker implied,90-100%,17,0.9554,0.9412,-1.42
+Market: Top N finish,Production,0-10%,89,0.0266,0.0225,-0.41
+Market: Top N finish,Production,10-20%,17,0.139,0.0,-13.9
+Market: Top N finish,Production,20-30%,17,0.2473,0.3922,14.49
+Market: Top N finish,Production,30-40%,20,0.3547,0.4333,7.87
+Market: Top N finish,Production,40-50%,4,0.4343,0.0,-43.43
+Market: Top N finish,Production,50-60%,4,0.5066,0.6667,16.01
+Market: Top N finish,Production,60-70%,4,0.6635,1.0,33.65
+Market: Top N finish,Production,70-80%,8,0.7693,0.75,-1.93
+Market: Top N finish,Production,80-90%,6,0.8473,0.6667,-18.07
+Market: Top N finish,Production,90-100%,11,0.9627,1.0,3.73
+Market: Top N finish,Objective,0-10%,94,0.0158,0.0355,1.97
+Market: Top N finish,Objective,10-20%,16,0.1479,0.25,10.21
+Market: Top N finish,Objective,20-30%,20,0.2512,0.4,14.88
+Market: Top N finish,Objective,30-40%,4,0.3646,0.0,-36.46
+Market: Top N finish,Objective,40-50%,4,0.4831,0.0,-48.31
+Market: Top N finish,Objective,50-60%,7,0.5385,0.381,-15.75
+Market: Top N finish,Objective,60-70%,6,0.6314,0.6667,3.53
+Market: Top N finish,Objective,70-80%,10,0.7583,0.8,4.17
+Market: Top N finish,Objective,80-90%,8,0.8589,0.5,-35.89
+Market: Top N finish,Objective,90-100%,11,0.925,1.0,7.5
+Market: Top N finish,Bookmaker implied,0-10%,91,0.0381,0.0037,-3.44
+Market: Top N finish,Bookmaker implied,10-20%,17,0.1459,0.1961,5.01
+Market: Top N finish,Bookmaker implied,20-30%,14,0.2508,0.2143,-3.65
+Market: Top N finish,Bookmaker implied,30-40%,8,0.3411,0.5,15.89
+Market: Top N finish,Bookmaker implied,40-50%,4,0.4657,0.3333,-13.24
+Market: Top N finish,Bookmaker implied,50-60%,10,0.5395,0.6,6.05
+Market: Top N finish,Bookmaker implied,60-70%,8,0.6598,0.375,-28.48
+Market: Top N finish,Bookmaker implied,70-80%,4,0.7374,0.25,-48.74
+Market: Top N finish,Bookmaker implied,80-90%,6,0.8538,0.8333,-2.05
+Market: Top N finish,Bookmaker implied,90-100%,18,0.9601,1.0,3.99
+Market: Team votes O/U,Production,0-10%,0,,,
+Market: Team votes O/U,Production,10-20%,4,0.1337,0.5,36.63
+Market: Team votes O/U,Production,20-30%,8,0.25,0.625,37.49
+Market: Team votes O/U,Production,30-40%,11,0.3475,0.8182,47.07
+Market: Team votes O/U,Production,40-50%,10,0.4651,0.6,13.49
+Market: Team votes O/U,Production,50-60%,10,0.5349,0.4,-13.49
+Market: Team votes O/U,Production,60-70%,11,0.6525,0.1818,-47.07
+Market: Team votes O/U,Production,70-80%,8,0.7499,0.375,-37.49
+Market: Team votes O/U,Production,80-90%,4,0.8663,0.5,-36.63
+Market: Team votes O/U,Production,90-100%,0,,,
+Market: Team votes O/U,Objective,0-10%,24,0.0282,0.375,34.68
+Market: Team votes O/U,Objective,10-20%,3,0.1346,1.0,86.54
+Market: Team votes O/U,Objective,20-30%,4,0.2344,0.5,26.56
+Market: Team votes O/U,Objective,30-40%,2,0.3281,0.0,-32.81
+Market: Team votes O/U,Objective,40-50%,2,0.4278,0.0,-42.78
+Market: Team votes O/U,Objective,50-60%,2,0.5722,1.0,42.78
+Market: Team votes O/U,Objective,60-70%,2,0.6719,1.0,32.81
+Market: Team votes O/U,Objective,70-80%,4,0.7656,0.5,-26.56
+Market: Team votes O/U,Objective,80-90%,3,0.8654,0.0,-86.54
+Market: Team votes O/U,Objective,90-100%,24,0.9718,0.625,-34.68
+Market: Team votes O/U,Bookmaker implied,0-10%,0,,,
+Market: Team votes O/U,Bookmaker implied,10-20%,0,,,
+Market: Team votes O/U,Bookmaker implied,20-30%,0,,,
+Market: Team votes O/U,Bookmaker implied,30-40%,0,,,
+Market: Team votes O/U,Bookmaker implied,40-50%,1,0.4762,0.0,-47.62
+Market: Team votes O/U,Bookmaker implied,50-60%,69,0.5355,0.5072,-2.83
+Market: Team votes O/U,Bookmaker implied,60-70%,0,,,
+Market: Team votes O/U,Bookmaker implied,70-80%,0,,,
+Market: Team votes O/U,Bookmaker implied,80-90%,0,,,
+Market: Team votes O/U,Bookmaker implied,90-100%,0,,,
+Market: Player H2H,Production,0-10%,1,0.0984,0.0,-9.84
+Market: Player H2H,Production,10-20%,7,0.1378,0.4286,29.08
+Market: Player H2H,Production,20-30%,10,0.2536,0.3,4.64
+Market: Player H2H,Production,30-40%,2,0.3764,0.0,-37.64
+Market: Player H2H,Production,40-50%,4,0.4257,0.25,-17.57
+Market: Player H2H,Production,50-60%,6,0.5448,0.6667,12.19
+Market: Player H2H,Production,60-70%,5,0.6639,1.0,33.61
+Market: Player H2H,Production,70-80%,5,0.7213,0.8,7.87
+Market: Player H2H,Production,80-90%,6,0.8313,0.5,-33.13
+Market: Player H2H,Production,90-100%,0,,,
+Market: Player H2H,Objective,0-10%,10,0.0373,0.3,26.27
+Market: Player H2H,Objective,10-20%,5,0.141,0.6,45.9
+Market: Player H2H,Objective,20-30%,0,,,
+Market: Player H2H,Objective,30-40%,6,0.336,0.6667,33.07
+Market: Player H2H,Objective,40-50%,4,0.4571,0.5,4.29
+Market: Player H2H,Objective,50-60%,3,0.5346,0.6667,13.2
+Market: Player H2H,Objective,60-70%,3,0.6256,0.0,-62.56
+Market: Player H2H,Objective,70-80%,2,0.768,0.0,-76.8
+Market: Player H2H,Objective,80-90%,7,0.8435,0.5714,-27.21
+Market: Player H2H,Objective,90-100%,6,0.9802,0.8333,-14.68
+Market: Player H2H,Bookmaker implied,0-10%,0,,,
+Market: Player H2H,Bookmaker implied,10-20%,0,,,
+Market: Player H2H,Bookmaker implied,20-30%,0,,,
+Market: Player H2H,Bookmaker implied,30-40%,1,0.3922,0.0,-39.22
+Market: Player H2H,Bookmaker implied,40-50%,7,0.464,0.0,-46.4
+Market: Player H2H,Bookmaker implied,50-60%,31,0.5366,0.5161,-2.05
+Market: Player H2H,Bookmaker implied,60-70%,7,0.6201,1.0,37.99
+Market: Player H2H,Bookmaker implied,70-80%,0,,,
+Market: Player H2H,Bookmaker implied,80-90%,0,,,
+Market: Player H2H,Bookmaker implied,90-100%,0,,,
+Market: all settled binary markets,Production,0-10%,209,0.0235,0.0622,3.87
+Market: all settled binary markets,Production,10-20%,61,0.145,0.2951,15.01
+Market: all settled binary markets,Production,20-30%,60,0.25,0.3444,9.45
+Market: all settled binary markets,Production,30-40%,72,0.3529,0.4815,12.86
+Market: all settled binary markets,Production,40-50%,52,0.451,0.3654,-8.56
+Market: all settled binary markets,Production,50-60%,50,0.5417,0.5733,3.17
+Market: all settled binary markets,Production,60-70%,38,0.6564,0.6316,-2.48
+Market: all settled binary markets,Production,70-80%,45,0.7481,0.6,-14.81
+Market: all settled binary markets,Production,80-90%,35,0.8502,0.6286,-22.16
+Market: all settled binary markets,Production,90-100%,23,0.9537,0.8696,-8.41
+Market: all settled binary markets,Objective,0-10%,259,0.0197,0.1094,8.97
+Market: all settled binary markets,Objective,10-20%,57,0.1485,0.386,23.75
+Market: all settled binary markets,Objective,20-30%,49,0.2516,0.3878,13.62
+Market: all settled binary markets,Objective,30-40%,40,0.3456,0.325,-2.06
+Market: all settled binary markets,Objective,40-50%,26,0.4541,0.3846,-6.95
+Market: all settled binary markets,Objective,50-60%,35,0.5468,0.5333,-1.35
+Market: all settled binary markets,Objective,60-70%,31,0.6478,0.5161,-13.16
+Market: all settled binary markets,Objective,70-80%,40,0.748,0.6,-14.8
+Market: all settled binary markets,Objective,80-90%,35,0.8521,0.5429,-30.92
+Market: all settled binary markets,Objective,90-100%,79,0.9597,0.7595,-20.02
+Market: all settled binary markets,Bookmaker implied,0-10%,187,0.0303,0.0178,-1.25
+Market: all settled binary markets,Bookmaker implied,10-20%,42,0.1514,0.1984,4.7
+Market: all settled binary markets,Bookmaker implied,20-30%,49,0.2482,0.2449,-0.33
+Market: all settled binary markets,Bookmaker implied,30-40%,32,0.3426,0.4062,6.36
+Market: all settled binary markets,Bookmaker implied,40-50%,32,0.4567,0.2917,-16.51
+Market: all settled binary markets,Bookmaker implied,50-60%,176,0.5372,0.4943,-4.29
+Market: all settled binary markets,Bookmaker implied,60-70%,41,0.6486,0.6341,-1.44
+Market: all settled binary markets,Bookmaker implied,70-80%,20,0.7461,0.75,0.39
+Market: all settled binary markets,Bookmaker implied,80-90%,30,0.8519,0.6,-25.19
+Market: all settled binary markets,Bookmaker implied,90-100%,42,0.9533,0.9048,-4.86
+Season P(top 10),Production,0-10%,560,0.0004,0.0,-0.04
+Season P(top 10),Production,10-20%,1,0.1243,0.0,-12.43
+Season P(top 10),Production,20-30%,3,0.2294,0.0,-22.94
+Season P(top 10),Production,30-40%,3,0.3682,0.6667,29.85
+Season P(top 10),Production,40-50%,1,0.4579,0.0,-45.79
+Season P(top 10),Production,50-60%,1,0.5094,1.0,49.06
+Season P(top 10),Production,60-70%,1,0.6971,1.0,30.29
+Season P(top 10),Production,70-80%,3,0.7898,0.6667,-12.31
+Season P(top 10),Production,80-90%,1,0.8951,1.0,10.49
+Season P(top 10),Production,90-100%,3,0.976,1.0,2.4
+Season P(top 3),Production,0-10%,571,0.0005,0.0,-0.05
+Season P(top 3),Production,10-20%,3,0.1477,0.0,-14.77
+Season P(top 3),Production,20-30%,1,0.2958,1.0,70.42
+Season P(top 3),Production,30-40%,0,,,
+Season P(top 3),Production,40-50%,0,,,
+Season P(top 3),Production,50-60%,0,,,
+Season P(top 3),Production,60-70%,0,,,
+Season P(top 3),Production,70-80%,0,,,
+Season P(top 3),Production,80-90%,0,,,
+Season P(top 3),Production,90-100%,2,0.9916,1.0,0.84
+Season P(top 10),Objective,0-10%,645,0.0007,0.0,-0.07
+Season P(top 10),Objective,10-20%,2,0.1687,0.5,33.13
+Season P(top 10),Objective,20-30%,6,0.2558,0.5,24.42
+Season P(top 10),Objective,30-40%,1,0.3506,0.0,-35.06
+Season P(top 10),Objective,40-50%,1,0.4842,0.0,-48.42
+Season P(top 10),Objective,50-60%,1,0.5182,1.0,48.18
+Season P(top 10),Objective,60-70%,1,0.6482,0.0,-64.81
+Season P(top 10),Objective,70-80%,0,,,
+Season P(top 10),Objective,80-90%,1,0.8313,0.0,-83.12
+Season P(top 10),Objective,90-100%,5,0.9709,1.0,2.91
+Season P(top 3),Objective,0-10%,657,0.0002,0.0,-0.02
+Season P(top 3),Objective,10-20%,2,0.1444,0.0,-14.44
+Season P(top 3),Objective,20-30%,1,0.2138,0.0,-21.38
+Season P(top 3),Objective,30-40%,0,,,
+Season P(top 3),Objective,40-50%,0,,,
+Season P(top 3),Objective,50-60%,0,,,
+Season P(top 3),Objective,60-70%,1,0.6111,1.0,38.89
+Season P(top 3),Objective,70-80%,1,0.7487,1.0,25.13
+Season P(top 3),Objective,80-90%,0,,,
+Season P(top 3),Objective,90-100%,1,0.9958,1.0,0.42

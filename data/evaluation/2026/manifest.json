@@ -1,0 +1,59 @@
+{
+ "built_at": "2026-09-23T12:25:13.521960+00:00",
+ "count_date_utc": "2026-09-21T00:00:00+00:00",
+ "bookmaker_snapshots_retrieved_at": [
+  "2026-09-18T06:15:07.637060+00:00",
+  "2026-09-18T06:15:17.772574+00:00",
+  "2026-09-18T06:15:28.385758+00:00"
+ ],
+ "all_bookmaker_snapshots_pre_count": true,
+ "frozen_input_hashes": {
+  "reports/2026_leaderboard.csv": "c1acfb624914e743879d23e77204552bda5e60c2888e205ee06700c377cf9b8c",
+  "reports/2026_predicted_votes.csv": "1e20c44294349555bc98387aef345edb877baced481a0054d9da65f78a58924f",
+  "reports/2026_match_probabilities.csv": "154bb56239545cabad369e53dc26b73ff134087151c339047e6fd0fd9a6b12bb",
+  "reports/2026_simulation_summary.csv": "90e469e80b7bcb0bf842146e8a30509ca11a23c99e89b8b77aea4a802d9ed2fd",
+  "reports/2026_objective_leaderboard.csv": "3aeca6a1ba0c903dca60879d55a1a9bd28e752914c13bce05991865ba5c2c663",
+  "reports/2026_objective_votes.csv": "d40025d065e7c75f3741b13c8cdaf2d33d8e670de3d4f98c3f690fe8319bc522",
+  "reports/2026_objective_simulation_summary.csv": "263ca73b5de49a36496fef7230febc0ece09bbe34f39bc32437bf880a1bcceb1",
+  "reports/2026_order_scenarios.csv": "41349b060d19fb5ac026bd9c379c4bba16a41dfe1503179b895d53a3228594da",
+  "data/external/processed/wheelo_season.csv": "701015c6c3dcd1314e4e6839831888e39ac217a81f50c7b0071b4854b78b0420",
+  "data/external/processed/wheelo_match_level.csv": "7f7c286106b7dcb80fb3292c79ed2e651afc1c5ff006ab16142bc8a37a1128c4",
+  "data/external/processed/external_overview.csv": "2419393e8c6510fd7f74f64792cfa9071ac7363f13a63d48c90c497c9867b562",
+  "data/betting/processed/priced_opportunities.csv": "ed9903d296c2395cb856e79444b9d3be0251176c8b643762fde8023e693a97ce",
+  "data/betting/processed/refresh_summary.json": "9861848783cc8fa567c00b59d979e65b40c35386e7c790c5c026fca013486826",
+  "data/actual/2026_brownlow_match_votes.csv": "8651aa4917a2d28fd63750b017836505a87b1ee97b4a72af17dbd9eb5ced67ec",
+  "data/actual/2026_brownlow_leaderboard.csv": "642b25942af0ba800521ae8872a78764047bead9071b3ba46431c7fd08b6afd7",
+  "data/processed/mc_totals_2026.npy": "4d76b7d931934c697482c7172899599f956d842c4a4d70814fe7b61b2f02f463",
+  "data/processed/mc_totals_objective_2026.npy": "fd3cc591570c23d6a1b664cc8edb9ef3fffe6690ccb7059d19539a852bf4fa94"
+ },
+ "frozen_inputs_unchanged_during_build": true,
+ "counts": {
+  "season_players": 663,
+  "matches": 207,
+  "priced_selections": 1171,
+  "settled_selections": 653,
+  "unsettleable": 518,
+  "unmodelled_excluded": 504,
+  "unresolved_actual_vote_rows": 2
+ },
+ "settlement_counts": {
+  "EXACT_POSITION|loss": 15,
+  "EXACT_POSITION|win": 1,
+  "PLAYER_H2H|loss": 23,
+  "PLAYER_H2H|push": 2,
+  "PLAYER_H2H|win": 23,
+  "PLAYER_VOTES_OU|loss": 19,
+  "PLAYER_VOTES_OU|win": 19,
+  "TEAM_VOTES_OU|loss": 35,
+  "TEAM_VOTES_OU|win": 35,
+  "TOP_N|dead_heat": 6,
+  "TOP_N|loss": 131,
+  "TOP_N|win": 43,
+  "TO_POLL_A_VOTE|loss": 79,
+  "TO_POLL_A_VOTE|win": 50,
+  "WINNER|loss": 63,
+  "WINNER|win": 2,
+  "X_PLUS_VOTES|loss": 52,
+  "X_PLUS_VOTES|win": 55
+ }
+}

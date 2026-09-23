@@ -1,0 +1,123 @@
+grouping,group,subset,bets,wins,pushes,losses,hit_rate,flat_unit_pnl,roi,avg_model_prob_conservative,avg_production_prob,avg_objective_prob,avg_implied_prob,avg_odds,small_sample
+market_type,EXACT_POSITION,all priced selections,16,1,0,15,0.0625,13.0,0.8125,0.0357,0.0616,0.0576,0.0889,33.312,True
+market_type x bookmaker,EXACT_POSITION @ pointsbet_1,all priced selections,16,1,0,15,0.0625,13.0,0.8125,0.0357,0.0616,0.0576,0.0889,33.312,True
+market_type,PLAYER_H2H,all priced selections,48,23,2,23,0.5,-4.92,-0.1025,0.3066,0.4616,0.473,0.535,1.887,False
+market_type x bookmaker,PLAYER_H2H @ neds,all priced selections,16,8,0,8,0.5,-1.62,-0.1012,0.3008,0.4623,0.4722,0.5374,1.872,True
+market_type x bookmaker,PLAYER_H2H @ pointsbet_2,all priced selections,32,15,2,15,0.5,-3.3,-0.1031,0.3095,0.4613,0.4733,0.5339,1.894,False
+market_type,PLAYER_VOTES_OU,all priced selections,38,19,0,19,0.5,-2.47,-0.065,0.3077,0.5,0.5,0.5348,1.87,False
+market_type x bookmaker,PLAYER_VOTES_OU @ neds,all priced selections,38,19,0,19,0.5,-2.47,-0.065,0.3077,0.5,0.5,0.5348,1.87,False
+market_type,TEAM_VOTES_OU,all priced selections,70,35,0,35,0.5,-4.72,-0.0674,0.3165,0.5,0.5,0.5347,1.871,False
+market_type x bookmaker,TEAM_VOTES_OU @ neds,all priced selections,36,18,0,18,0.5,-2.34,-0.065,0.3173,0.5,0.5,0.5348,1.87,False
+market_type x bookmaker,TEAM_VOTES_OU @ pointsbet_1,all priced selections,34,17,0,17,0.5,-2.38,-0.07,0.3156,0.5,0.5,0.5346,1.872,False
+market_type,TOP_N,all priced selections,180,49,0,131,0.2722222222222222,-84.5433,-0.4697,0.1664,0.246,0.2469,0.2782,27.091,False
+market_type x bookmaker,TOP_N @ neds,all priced selections,102,25,0,77,0.24509803921568626,-50.55,-0.4956,0.1528,0.2254,0.2281,0.2521,29.377,False
+market_type x bookmaker,TOP_N @ pointsbet_1,all priced selections,78,24,0,54,0.3076923076923077,-33.9933,-0.4358,0.1841,0.2728,0.2715,0.3124,24.102,False
+market_type,TO_POLL_A_VOTE,all priced selections,129,50,0,79,0.3875968992248062,-28.88,-0.2239,0.3491,0.4592,0.4546,0.525,2.442,False
+market_type x bookmaker,TO_POLL_A_VOTE @ neds,all priced selections,129,50,0,79,0.3875968992248062,-28.88,-0.2239,0.3491,0.4592,0.4546,0.525,2.442,False
+market_type,WINNER,all priced selections,65,2,0,63,0.03076923076923077,-62.97,-0.9688,0.0276,0.0308,0.0308,0.0355,328.724,False
+market_type x bookmaker,WINNER @ neds,all priced selections,24,1,0,23,0.041666666666666664,-22.99,-0.9579,0.0374,0.0417,0.0417,0.0473,277.917,False
+market_type x bookmaker,WINNER @ pointsbet_1,all priced selections,41,1,0,40,0.024390243902439025,-39.98,-0.9751,0.0219,0.0244,0.0244,0.0286,358.464,False
+market_type,X_PLUS_VOTES,all priced selections,107,55,0,52,0.514018691588785,27.54,0.2574,0.2486,0.3383,0.4165,0.4443,6.316,False
+market_type x bookmaker,X_PLUS_VOTES @ pointsbet_1,all priced selections,107,55,0,52,0.514018691588785,27.54,0.2574,0.2486,0.3383,0.4165,0.4443,6.316,False
+market_type,ALL,all priced selections,653,234,2,417,0.35944700460829493,-147.9633,-0.2266,0.2335,0.3337,0.3481,0.3867,42.971,False
+bet_value,Model Disagreement,all priced selections,128,51,1,76,0.4015748031496063,-7.24,-0.0566,0.2346,0.2816,0.5637,0.4169,11.453,False
+bet_value,Moderate Bet Value,all priced selections,80,34,0,46,0.425,7.76,0.097,0.4919,0.5096,0.7138,0.3806,8.138,False
+bet_value,No Value,all priced selections,302,92,0,210,0.304635761589404,-138.79,-0.4596,0.1425,0.2399,0.1692,0.3708,81.422,False
+bet_value,Speculative Bet Value,all priced selections,119,52,1,66,0.4406779661016949,-10.6633,-0.0896,0.2608,0.495,0.3137,0.4189,8.873,False
+bet_value,Strong Bet Value,all priced selections,2,0,0,2,0.0,-2.0,-1.0,0.7661,0.7661,0.7827,0.5348,1.87,True
+bet_value,Strong Bet Value + Wheelo Support,all priced selections,22,5,0,17,0.22727272727272727,2.97,0.135,0.3421,0.349,0.3648,0.2623,13.353,False
+likelihood_band,High,all priced selections,47,34,0,13,0.723404255319149,1.54,0.0328,0.7282,0.7653,0.8658,0.6804,1.598,False
+likelihood_band,Low,all priced selections,109,54,1,54,0.5,10.8967,0.1,0.3414,0.4398,0.5395,0.4998,2.544,False
+likelihood_band,Moderate,all priced selections,67,39,0,28,0.582089552238806,-2.42,-0.0361,0.5508,0.631,0.7369,0.6537,1.656,False
+likelihood_band,Very High,all priced selections,24,20,0,4,0.8333333333333334,-0.09,-0.0037,0.8792,0.8949,0.9377,0.8558,1.236,False
+likelihood_band,Very Low,all priced selections,406,87,1,318,0.21481481481481482,-157.89,-0.3889,0.0568,0.176,0.1377,0.2505,67.899,False
+likelihood_band,High,Bet Value selections only,36,23,0,13,0.6388888888888888,0.25,0.0069,0.7264,0.7637,0.8814,0.6133,1.745,False
+likelihood_band,Low,Bet Value selections only,54,22,0,32,0.4074074074074074,15.44,0.2859,0.3449,0.4562,0.4999,0.3639,3.403,False
+likelihood_band,Moderate,Bet Value selections only,35,19,0,16,0.5428571428571428,0.98,0.028,0.5607,0.6738,0.7145,0.5726,1.864,False
+likelihood_band,Very High,Bet Value selections only,9,7,0,2,0.7777777777777778,-0.86,-0.0956,0.868,0.9202,0.9232,0.8327,1.294,True
+likelihood_band,Very Low,Bet Value selections only,89,20,1,68,0.22727272727272727,-17.7433,-0.1994,0.0812,0.2797,0.1347,0.2008,18.887,False
+wheelo_support,INSUFFICIENT_WHEELO_DATA,all priced selections,70,35,0,35,0.5,-4.72,-0.0674,0.3165,0.5,0.5,0.5347,1.871,False
+wheelo_support,PARTIAL_WHEELO_SUPPORT,all priced selections,136,59,1,76,0.43703703703703706,10.9867,0.0808,0.3137,0.4827,0.3879,0.3655,12.957,False
+wheelo_support,STRONG_WHEELO_SUPPORT,all priced selections,117,44,0,73,0.37606837606837606,-24.24,-0.2072,0.3224,0.4355,0.4268,0.4989,2.537,False
+wheelo_support,WHEELO_DISAGREES,all priced selections,330,96,1,233,0.2917933130699088,-129.99,-0.3939,0.1514,0.2036,0.2715,0.3242,78.394,False
+wheelo_support,INSUFFICIENT_WHEELO_DATA,Bet Value selections only,17,7,0,10,0.4117647058823529,-3.91,-0.23,0.6661,0.6661,0.9021,0.5313,1.884,True
+wheelo_support,PARTIAL_WHEELO_SUPPORT,Bet Value selections only,136,59,1,76,0.43703703703703706,10.9867,0.0808,0.3137,0.4827,0.3879,0.3655,12.957,False
+wheelo_support,STRONG_WHEELO_SUPPORT,Bet Value selections only,69,25,0,44,0.36231884057971014,-8.01,-0.1161,0.3583,0.4519,0.5096,0.4087,2.977,False
+wheelo_support,WHEELO_DISAGREES,Bet Value selections only,1,0,0,1,0.0,-1.0,-1.0,0.7245,0.7245,0.7732,0.2083,4.8,True
+model_agreement,both see value,all priced selections,104,39,0,65,0.375,8.73,0.0839,0.4655,0.4806,0.6413,0.3586,9.121,False
+model_agreement,neither sees value,all priced selections,296,89,0,207,0.30067567567567566,-138.08,-0.4665,0.1354,0.2399,0.1627,0.3678,83.032,False
+model_agreement,one model missing,all priced selections,6,3,0,3,0.5,-0.71,-0.1183,0.4932,,0.4932,0.5215,1.988,True
+model_agreement,only one sees value,all priced selections,247,103,2,142,0.4204081632653061,-17.9033,-0.0725,0.2472,0.3844,0.4433,0.4179,10.21,False
+model_agreement,both see value,Bet Value selections only,104,39,0,65,0.375,8.73,0.0839,0.4655,0.4806,0.6413,0.3586,9.121,False
+model_agreement,only one sees value,Bet Value selections only,119,52,1,66,0.4406779661016949,-10.6633,-0.0896,0.2608,0.495,0.3137,0.4189,8.873,False
+internal_gap_band,15-30pp,all priced selections,156,64,0,92,0.41025641025641024,-23.3967,-0.15,0.3059,0.4167,0.4194,0.4496,4.418,False
+internal_gap_band,7.5-15pp,all priced selections,88,35,0,53,0.3977272727272727,-33.42,-0.3798,0.364,0.4256,0.4082,0.4914,9.129,False
+internal_gap_band,<=7.5pp,all priced selections,215,34,0,181,0.15813953488372093,-93.4,-0.4344,0.1185,0.1287,0.1292,0.161,120.628,False
+internal_gap_band,>30pp,all priced selections,188,98,2,88,0.5268817204301075,2.9633,0.0158,0.2357,0.4563,0.5064,0.5391,3.3,False
+internal_gap_band,15-30pp,Bet Value selections only,83,37,0,46,0.4457831325301205,4.9167,0.0592,0.3784,0.4871,0.4946,0.3761,5.833,False
+internal_gap_band,7.5-15pp,Bet Value selections only,35,16,0,19,0.45714285714285713,-5.29,-0.1511,0.4524,0.5184,0.4913,0.4334,10.843,False
+internal_gap_band,<=7.5pp,Bet Value selections only,39,6,0,33,0.15384615384615385,-13.01,-0.3336,0.2948,0.3132,0.3108,0.2348,20.37,False
+internal_gap_band,>30pp,Bet Value selections only,66,32,1,33,0.49230769230769234,11.45,0.1735,0.3136,0.5773,0.51,0.4788,5.248,False
+prob_band,0-10%,all priced selections,307,40,1,266,0.13071895424836602,-162.11,-0.528,0.021,0.1354,0.0694,0.1881,88.62,False
+prob_band,10-20%,all priced selections,70,32,0,38,0.45714285714285713,2.89,0.0413,0.1443,0.2923,0.3093,0.4308,4.057,False
+prob_band,20-30%,all priced selections,63,33,0,30,0.5238095238095238,10.62,0.1686,0.2512,0.3781,0.462,0.5037,2.56,False
+prob_band,30-40%,all priced selections,52,26,1,25,0.5098039215686274,6.5567,0.1261,0.3493,0.4229,0.5606,0.4759,2.73,False
+prob_band,40-50%,all priced selections,44,19,0,25,0.4318181818181818,-6.15,-0.1398,0.4493,0.5121,0.6697,0.5387,2.072,False
+prob_band,50-60%,all priced selections,26,17,0,9,0.6538461538461539,1.61,0.0619,0.5513,0.6445,0.7047,0.6545,1.597,False
+prob_band,60-70%,all priced selections,37,24,0,13,0.6486486486486487,-3.72,-0.1005,0.6534,0.7268,0.8006,0.7021,1.524,False
+prob_band,70-80%,all priced selections,30,23,0,7,0.7666666666666667,2.43,0.081,0.7534,0.7834,0.8721,0.6961,1.589,False
+prob_band,80-90%,all priced selections,19,15,0,4,0.7894736842105263,-1.88,-0.0989,0.8593,0.8826,0.9318,0.8695,1.204,True
+prob_band,90-100%,all priced selections,5,5,0,0,1.0,1.79,0.358,0.9545,0.9692,0.9602,0.8041,1.358,True
+prob_band,0-10%,Bet Value selections only,58,11,1,46,0.19298245614035087,-16.3533,-0.282,0.0306,0.2325,0.1014,0.1674,25.321,False
+prob_band,10-20%,Bet Value selections only,21,6,0,15,0.2857142857142857,-1.24,-0.059,0.152,0.3602,0.1665,0.2552,8.056,False
+prob_band,20-30%,Bet Value selections only,26,11,0,15,0.4230769230769231,11.32,0.4354,0.2538,0.4088,0.3631,0.3366,3.784,False
+prob_band,30-40%,Bet Value selections only,26,10,0,16,0.38461538461538464,6.44,0.2477,0.3534,0.45,0.4941,0.3344,3.708,False
+prob_band,40-50%,Bet Value selections only,19,7,0,12,0.3684210526315789,-0.3,-0.0158,0.4403,0.5383,0.6272,0.4272,2.594,True
+prob_band,50-60%,Bet Value selections only,16,10,0,6,0.625,1.37,0.0856,0.5527,0.6516,0.7001,0.5813,1.748,True
+prob_band,60-70%,Bet Value selections only,25,13,0,12,0.52,-4.04,-0.1616,0.6545,0.742,0.8345,0.6094,1.715,False
+prob_band,70-80%,Bet Value selections only,23,16,0,7,0.6956521739130435,1.73,0.0752,0.7522,0.7836,0.8727,0.6296,1.738,False
+prob_band,80-90%,Bet Value selections only,8,6,0,2,0.75,-0.88,-0.11,0.8579,0.9115,0.92,0.8143,1.329,True
+prob_band,90-100%,Bet Value selections only,1,1,0,0,1.0,0.02,0.02,0.9488,0.9896,0.9488,0.9804,1.02,True
+edge_band,0-5pp,all priced selections,56,21,0,35,0.375,-13.12,-0.2343,0.3196,0.3867,0.4153,0.3641,18.757,False
+edge_band,5-15pp,all priced selections,82,32,1,49,0.3950617283950617,-0.97,-0.0118,0.3503,0.4865,0.4352,0.394,7.87,False
+edge_band,<=0pp,all priced selections,433,144,1,288,0.3333333333333333,-142.76,-0.3297,0.1721,0.2435,0.3026,0.3825,60.219,False
+edge_band,>15pp,all priced selections,76,34,0,42,0.4473684210526316,9.5967,0.1263,0.3736,0.6438,0.452,0.4086,3.65,False
+edge_band,0-5pp,Bet Value selections only,56,21,0,35,0.375,-13.12,-0.2343,0.3196,0.3867,0.4153,0.3641,18.757,False
+edge_band,5-15pp,Bet Value selections only,78,32,1,45,0.4155844155844156,3.03,0.0388,0.3509,0.4793,0.4401,0.3868,8.178,False
+edge_band,<=0pp,Bet Value selections only,19,6,0,13,0.3157894736842105,-3.7,-0.1947,0.3141,0.3141,0.6459,0.4599,2.631,True
+edge_band,>15pp,Bet Value selections only,70,32,0,38,0.45714285714285713,11.8567,0.1694,0.4029,0.6268,0.4881,0.3978,3.802,False
+market_type x bet_value,EXACT_POSITION | Model Disagreement,all priced selections,2,1,0,1,0.5,27.0,13.5,0.0175,0.0175,0.1079,0.0887,18.0,True
+market_type x bet_value,EXACT_POSITION | No Value,all priced selections,9,0,0,9,0.0,-9.0,-1.0,0.0179,0.045,0.0277,0.0932,44.611,True
+market_type x bet_value,EXACT_POSITION | Speculative Bet Value,all priced selections,3,0,0,3,0.0,-3.0,-1.0,0.0483,0.1052,0.0483,0.0832,23.167,True
+market_type x bet_value,EXACT_POSITION | Strong Bet Value + Wheelo Support,all priced selections,2,0,0,2,0.0,-2.0,-1.0,0.1152,0.1152,0.1556,0.0788,13.0,True
+market_type x bet_value,PLAYER_H2H | Model Disagreement,all priced selections,11,4,1,6,0.4,-2.52,-0.2291,0.3494,0.3494,0.777,0.5251,1.917,True
+market_type x bet_value,PLAYER_H2H | Moderate Bet Value,all priced selections,10,5,0,5,0.5,-1.08,-0.108,0.6649,0.7113,0.857,0.5244,1.937,True
+market_type x bet_value,PLAYER_H2H | No Value,all priced selections,17,7,0,10,0.4117647058823529,-5.1,-0.3,0.1227,0.2509,0.2027,0.5453,1.853,True
+market_type x bet_value,PLAYER_H2H | Speculative Bet Value,all priced selections,10,7,1,2,0.7777777777777778,3.78,0.378,0.2139,0.6936,0.2139,0.5392,1.862,True
+market_type x bet_value,PLAYER_VOTES_OU | Model Disagreement,all priced selections,13,6,0,7,0.46153846153846156,-1.78,-0.1369,0.2676,0.2676,0.7578,0.5348,1.87,True
+market_type x bet_value,PLAYER_VOTES_OU | Moderate Bet Value,all priced selections,5,3,0,2,0.6,0.61,0.122,0.6868,0.7255,0.8298,0.5348,1.87,True
+market_type x bet_value,PLAYER_VOTES_OU | No Value,all priced selections,9,5,0,4,0.5555555555555556,0.35,0.0389,0.1474,0.357,0.1719,0.5348,1.87,True
+market_type x bet_value,PLAYER_VOTES_OU | Speculative Bet Value,all priced selections,10,5,0,5,0.5,-0.65,-0.065,0.2749,0.795,0.2749,0.5348,1.87,True
+market_type x bet_value,PLAYER_VOTES_OU | Strong Bet Value + Wheelo Support,all priced selections,1,0,0,1,0.0,-1.0,-1.0,0.7036,0.7308,0.7036,0.5348,1.87,True
+market_type x bet_value,TEAM_VOTES_OU | Model Disagreement,all priced selections,26,14,0,12,0.5384615384615384,0.18,0.0069,0.2646,0.496,0.6045,0.5348,1.87,False
+market_type x bet_value,TEAM_VOTES_OU | Moderate Bet Value,all priced selections,15,7,0,8,0.4666666666666667,-1.91,-0.1273,0.6528,0.6528,0.918,0.5309,1.885,True
+market_type x bet_value,TEAM_VOTES_OU | No Value,all priced selections,27,14,0,13,0.5185185185185185,-0.99,-0.0367,0.1462,0.3818,0.1462,0.5367,1.864,False
+market_type x bet_value,TEAM_VOTES_OU | Strong Bet Value,all priced selections,2,0,0,2,0.0,-2.0,-1.0,0.7661,0.7661,0.7827,0.5348,1.87,True
+market_type x bet_value,TOP_N | Model Disagreement,all priced selections,35,5,0,30,0.14285714285714285,-26.15,-0.7471,0.1016,0.1016,0.3159,0.2056,27.374,False
+market_type x bet_value,TOP_N | Moderate Bet Value,all priced selections,20,6,0,14,0.3,4.55,0.2275,0.2848,0.2974,0.475,0.2173,19.431,False
+market_type x bet_value,TOP_N | No Value,all priced selections,84,24,0,60,0.2857142857142857,-45.86,-0.546,0.1287,0.2249,0.1644,0.3157,30.882,False
+market_type x bet_value,TOP_N | Speculative Bet Value,all priced selections,32,14,0,18,0.4375,-8.0833,-0.2526,0.2226,0.4086,0.2226,0.3173,22.364,False
+market_type x bet_value,TOP_N | Strong Bet Value + Wheelo Support,all priced selections,9,0,0,9,0.0,-9.0,-1.0,0.3059,0.3117,0.3289,0.2071,24.441,True
+market_type x bet_value,TO_POLL_A_VOTE | Model Disagreement,all priced selections,3,1,0,2,0.3333333333333333,-1.6,-0.5333,0.592,0.592,0.9182,0.8236,1.227,True
+market_type x bet_value,TO_POLL_A_VOTE | Moderate Bet Value,all priced selections,20,9,0,11,0.45,1.92,0.096,0.5313,0.5521,0.7381,0.3939,3.218,False
+market_type x bet_value,TO_POLL_A_VOTE | No Value,all priced selections,53,22,0,31,0.41509433962264153,-17.7,-0.334,0.2948,0.4302,0.3335,0.6469,1.841,False
+market_type x bet_value,TO_POLL_A_VOTE | Speculative Bet Value,all priced selections,45,15,0,30,0.3333333333333333,-10.6,-0.2356,0.3068,0.4506,0.4469,0.4548,2.696,False
+market_type x bet_value,TO_POLL_A_VOTE | Strong Bet Value + Wheelo Support,all priced selections,8,3,0,5,0.375,-0.9,-0.1125,0.4006,0.4097,0.418,0.3272,3.506,True
+market_type x bet_value,WINNER | Model Disagreement,all priced selections,4,0,0,4,0.0,-4.0,-1.0,0.0046,0.0046,0.0492,0.0208,48.5,True
+market_type x bet_value,WINNER | No Value,all priced selections,59,0,0,59,0.0,-59.0,-1.0,0.0,0.0,0.0004,0.0043,358.831,False
+market_type x bet_value,WINNER | Speculative Bet Value,all priced selections,2,2,0,0,1.0,0.03,0.015,0.8888,0.9907,0.8888,0.9852,1.015,True
+market_type x bet_value,X_PLUS_VOTES | Model Disagreement,all priced selections,34,20,0,14,0.5882352941176471,1.63,0.0479,0.3072,0.3072,0.7004,0.4942,5.3,False
+market_type x bet_value,X_PLUS_VOTES | Moderate Bet Value,all priced selections,10,4,0,6,0.4,3.67,0.367,0.3152,0.3246,0.6351,0.2345,14.107,True
+market_type x bet_value,X_PLUS_VOTES | No Value,all priced selections,44,20,0,24,0.45454545454545453,-1.49,-0.0339,0.2063,0.3068,0.2364,0.4891,5.153,False
+market_type x bet_value,X_PLUS_VOTES | Speculative Bet Value,all priced selections,17,9,0,8,0.5294117647058824,7.86,0.4624,0.1934,0.4924,0.1934,0.3688,6.471,True
+market_type x bet_value,X_PLUS_VOTES | Strong Bet Value + Wheelo Support,all priced selections,2,2,0,0,1.0,15.87,7.935,0.3173,0.3173,0.3538,0.2986,8.935,True

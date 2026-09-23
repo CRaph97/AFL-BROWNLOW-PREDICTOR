@@ -1,0 +1,7 @@
+model,universe,n_players,predicted_leader,predicted_leader_ev,actual_winner,winner_predicted_correctly,winner_predicted_rank,winner_rank_error,mae,rmse,mean_bias,mae_relevant,n_relevant,spearman_rho,kendall_tau,top3_hit_rate,top3_n,top5_hit_rate,top5_n,top10_hit_rate,top10_n,top20_hit_rate,top20_n,mean_abs_rank_error_actual_top30,n_actual_top30
+Production,own coverage,578,Nick Daicos,47.12,Nick Daicos,True,1,0,0.757,1.481,0.009,1.751,211,0.7561,0.6341,1.0,3,0.714,7,0.8,10,0.85,20,4.94,31
+Objective,own coverage,663,Nick Daicos,38.68,Nick Daicos,True,1,0,0.869,1.83,-0.004,2.379,217,0.7086,0.5816,1.0,3,0.571,7,0.6,10,0.8,20,8.65,31
+Wheelo,own coverage,661,Nick Daicos,46.08,Nick Daicos,True,1,0,0.62,1.386,-0.006,1.689,213,0.7398,0.6249,1.0,3,0.714,7,0.6,10,0.9,20,6.16,31
+Production,common (all three models),576,Nick Daicos,47.12,Nick Daicos,True,1,0,0.757,1.482,0.007,1.753,210,0.7553,0.6336,1.0,3,0.714,7,0.8,10,0.85,20,4.94,31
+Objective,common (all three models),576,Nick Daicos,38.68,Nick Daicos,True,1,0,0.986,1.953,-0.017,2.382,214,0.7261,0.5959,1.0,3,0.571,7,0.6,10,0.8,20,8.61,31
+Wheelo,common (all three models),576,Nick Daicos,46.08,Nick Daicos,True,1,0,0.707,1.484,-0.008,1.698,211,0.7654,0.6457,1.0,3,0.714,7,0.6,10,0.9,20,6.16,31
