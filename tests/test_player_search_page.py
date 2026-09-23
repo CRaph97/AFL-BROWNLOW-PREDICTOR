@@ -175,12 +175,13 @@ class TestPlayerSearchPage:
         assert titles.index("Player Search") == titles.index("Finishing Order") + 1
         # Player Comparison was later inserted directly after Player Search
         # (pages/29_Player_Comparison.py); Teams and Round-by-Round
-        # (pages/30, pages/31) were inserted after that -- To Poll a Vote
-        # now follows Round-by-Round, not Player Search/Comparison directly.
+        # (pages/30, pages/31) were inserted after that, then Clinch Round
+        # (pages/32) -- To Poll a Vote now follows Clinch Round.
         assert titles.index("Player Comparison") == titles.index("Player Search") + 1
         assert titles.index("Teams") == titles.index("Player Comparison") + 1
         assert titles.index("Round-by-Round") == titles.index("Teams") + 1
-        assert titles.index("To Poll a Vote") == titles.index("Round-by-Round") + 1
+        assert titles.index("Clinch Round") == titles.index("Round-by-Round") + 1
+        assert titles.index("To Poll a Vote") == titles.index("Clinch Round") + 1
 
 
 def test_no_model_data_or_simulation_files_changed():

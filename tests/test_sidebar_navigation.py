@@ -146,7 +146,8 @@ def test_teams_and_round_by_round_visible_in_main_at_expected_position():
     titles = [line.split('title="')[1].split('"')[0] for line in main_block.splitlines() if 'title="' in line]
     assert titles.index("Teams") == titles.index("Player Comparison") + 1
     assert titles.index("Round-by-Round") == titles.index("Teams") + 1
-    assert titles.index("To Poll a Vote") == titles.index("Round-by-Round") + 1
+    assert titles.index("Clinch Round") == titles.index("Round-by-Round") + 1
+    assert titles.index("To Poll a Vote") == titles.index("Clinch Round") + 1
 
 
 def test_post_brownlow_diagnostic_pages_kept_in_model_analysis():
