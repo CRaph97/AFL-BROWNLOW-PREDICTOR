@@ -88,6 +88,7 @@ SIDEBAR_SECTION_ACCENTS = {
     "MAIN": "#3b6fa0",  # navy/blue
     "MODEL ANALYSIS": "#7c5cbf",  # purple
     "EXTERNAL VALIDATION": "#b8860b",  # amber/gold
+    "R&D": "#2e8b57",  # sea green
 }
 
 

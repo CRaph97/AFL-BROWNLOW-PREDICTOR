@@ -126,6 +126,11 @@ pages = {
         st.Page("pages/21_External_Winning_Order.py", title="External Winning Order"),
         st.Page("pages/22_External_Leader_After_Round.py", title="External Leader After Round"),
     ],
+    # 2027 R&D: walk-forward candidate models, ablations, Error Lab, registry.
+    # Kept out of MAIN so the normal 2026 workflow is not cluttered.
+    "R&D": [
+        st.Page("pages/40_2027_Model_Lab.py", title="2027 Model Lab"),
+    ],
 }
 
 # position="hidden": st.navigation still owns routing/registration (required
@@ -138,6 +143,7 @@ SECTION_DEFAULT_EXPANDED = {
     "MAIN": True,
     "MODEL ANALYSIS": False,
     "EXTERNAL VALIDATION": False,
+    "R&D": False,
 }
 
 # One global stylesheet, injected exactly once here -- not per page. Every
