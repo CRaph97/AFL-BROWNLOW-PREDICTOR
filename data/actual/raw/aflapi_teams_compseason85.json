@@ -1,0 +1,135 @@
+{
+ "url": "https://aflapi.afl.com.au/afl/v2/teams?compSeasonId=85&pageSize=100",
+ "status": 200,
+ "retrieved_at": "2026-09-23T11:46:13.711953+00:00",
+ "body": {
+  "teams": [
+   {
+    "id": 1,
+    "providerId": "CD_T10",
+    "abbreviation": "ADEL",
+    "name": "Adelaide Crows",
+    "nickname": "Crows"
+   },
+   {
+    "id": 2,
+    "providerId": "CD_T20",
+    "abbreviation": "BL",
+    "name": "Brisbane Lions",
+    "nickname": "Lions"
+   },
+   {
+    "id": 3,
+    "providerId": "CD_T40",
+    "abbreviation": "COLL",
+    "name": "Collingwood",
+    "nickname": "Magpies"
+   },
+   {
+    "id": 4,
+    "providerId": "CD_T1000",
+    "abbreviation": "GCFC",
+    "name": "Gold Coast SUNS",
+    "nickname": "SUNS"
+   },
+   {
+    "id": 5,
+    "providerId": "CD_T30",
+    "abbreviation": "CARL",
+    "name": "Carlton",
+    "nickname": "Blues"
+   },
+   {
+    "id": 6,
+    "providerId": "CD_T100",
+    "abbreviation": "NMFC",
+    "name": "North Melbourne",
+    "nickname": "Kangaroos"
+   },
+   {
+    "id": 7,
+    "providerId": "CD_T110",
+    "abbreviation": "PORT",
+    "name": "Port Adelaide",
+    "nickname": "Power"
+   },
+   {
+    "id": 8,
+    "providerId": "CD_T140",
+    "abbreviation": "WB",
+    "name": "Western Bulldogs",
+    "nickname": "Bulldogs"
+   },
+   {
+    "id": 9,
+    "providerId": "CD_T80",
+    "abbreviation": "HAW",
+    "name": "Hawthorn",
+    "nickname": "Hawks"
+   },
+   {
+    "id": 10,
+    "providerId": "CD_T70",
+    "abbreviation": "GEEL",
+    "name": "Geelong Cats",
+    "nickname": "Cats"
+   },
+   {
+    "id": 11,
+    "providerId": "CD_T130",
+    "abbreviation": "STK",
+    "name": "St Kilda",
+    "nickname": "Saints"
+   },
+   {
+    "id": 12,
+    "providerId": "CD_T50",
+    "abbreviation": "ESS",
+    "name": "Essendon",
+    "nickname": "Bombers"
+   },
+   {
+    "id": 13,
+    "providerId": "CD_T160",
+    "abbreviation": "SYD",
+    "name": "Sydney Swans",
+    "nickname": "Swans"
+   },
+   {
+    "id": 14,
+    "providerId": "CD_T60",
+    "abbreviation": "FRE",
+    "name": "Fremantle",
+    "nickname": "Dockers"
+   },
+   {
+    "id": 15,
+    "providerId": "CD_T1010",
+    "abbreviation": "GWS",
+    "name": "GWS GIANTS",
+    "nickname": "GIANTS"
+   },
+   {
+    "id": 16,
+    "providerId": "CD_T120",
+    "abbreviation": "RICH",
+    "name": "Richmond",
+    "nickname": "Tigers"
+   },
+   {
+    "id": 17,
+    "providerId": "CD_T90",
+    "abbreviation": "MELB",
+    "name": "Melbourne",
+    "nickname": "Demons"
+   },
+   {
+    "id": 18,
+    "providerId": "CD_T150",
+    "abbreviation": "WCE",
+    "name": "West Coast Eagles",
+    "nickname": "Eagles"
+   }
+  ]
+ }
+}

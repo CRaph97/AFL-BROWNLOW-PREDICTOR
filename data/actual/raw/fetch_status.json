@@ -1,0 +1,186 @@
+{
+ "fetcher_version": "1.0.0-afl-tracker-network-capture",
+ "tracker_url": "https://www.afl.com.au/brownlow-medal/live-tracker?Season=85&Round=1367#leaderboard",
+ "retrieved_at": "2026-09-23T11:46:46.409918+00:00",
+ "season_cd": "CD_S2026014",
+ "comp_season_id": 85,
+ "pagination": [
+  {
+   "click": 0,
+   "rows_visible": 15
+  },
+  {
+   "click": 1,
+   "label": "Show next 15 results",
+   "rows_visible": 30
+  },
+  {
+   "click": 2,
+   "label": "Show next 15 results",
+   "rows_visible": 45
+  },
+  {
+   "click": 3,
+   "label": "Show next 15 results",
+   "rows_visible": 60
+  },
+  {
+   "click": 4,
+   "label": "Show next 15 results",
+   "rows_visible": 75
+  },
+  {
+   "click": 5,
+   "label": "Show next 15 results",
+   "rows_visible": 90
+  },
+  {
+   "click": 6,
+   "label": "Show next 15 results",
+   "rows_visible": 105
+  },
+  {
+   "click": 7,
+   "label": "Show next 15 results",
+   "rows_visible": 120
+  },
+  {
+   "click": 8,
+   "label": "Show next 15 results",
+   "rows_visible": 135
+  },
+  {
+   "click": 9,
+   "label": "Show next 15 results",
+   "rows_visible": 150
+  },
+  {
+   "click": 10,
+   "label": "Show next 15 results",
+   "rows_visible": 165
+  },
+  {
+   "click": 11,
+   "label": "Show next 15 results",
+   "rows_visible": 180
+  },
+  {
+   "click": 12,
+   "label": "Show next 3 results",
+   "rows_visible": 183
+  }
+ ],
+ "load_more_button_present_at_end": false,
+ "dom_rows_after_pagination": 183,
+ "responses_captured": {
+  "bfawards_leaderboard": 1,
+  "bfawards_season": 1,
+  "predictor_page": 13,
+  "matches": 1,
+  "teams": 1
+ },
+ "response_log": [
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/teams?compSeasonId=85&pageSize=100",
+   "status": 200,
+   "kind": "teams",
+   "retrieved_at": "2026-09-23T11:46:13.711564+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/matches?competition=1&compSeasonId=85&pageSize=250",
+   "status": 200,
+   "kind": "matches",
+   "retrieved_at": "2026-09-23T11:46:13.755670+00:00"
+  },
+  {
+   "url": "https://api.afl.com.au/cfs/afl/bfawards/leaderboard/season/CD_S2026014",
+   "status": 200,
+   "kind": "bfawards_leaderboard",
+   "retrieved_at": "2026-09-23T11:46:13.922109+00:00"
+  },
+  {
+   "url": "https://api.afl.com.au/cfs/afl/bfawards/season/CD_S2026014",
+   "status": 200,
+   "kind": "bfawards_season",
+   "retrieved_at": "2026-09-23T11:46:14.393013+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=5257,1913,857,412,5518,270,5522,1856,966,1815,899,5691,1080,4712,5694",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:14.394036+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=355,3727,1607,3728,3336,113,1722,2783,1407,1001,9363,5377,2304,1896,690",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:18.065947+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=1577,5088,2790,9351,1947,3735,2722,2465,5321,776,657,3250,1395,5689,1684",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:19.834278+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=500,5018,170,990,6773,5592,1855,5680,782,3232,6395,2238,482,1768,2362",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:21.679954+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=5232,3726,5685,852,816,792,1381,2524,1412,1948,703,5146,1410,4063,118",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:23.662682+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=4046,695,223,212,3075,1810,692,1621,868,584,1555,1343,2542,5692,1808",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:25.702687+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=1929,10,2341,6564,9299,924,810,8503,1786,1864,249,5305,1135,2602,1849",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:27.723492+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=1322,5252,2786,514,35,1694,1402,1846,8470,215,1321,1363,3733,7975,2591",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:29.965562+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=7508,5679,1741,922,1301,6706,1563,2541,8622,919,1787,9891,154,1405,3734",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:32.316643+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=9159,306,4350,1595,1598,8422,1755,789,4313,6608,1330,2941,1740,5292,842",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:34.778850+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=12390,1083,112,1409,5178,864,1574,193,8525,1355,1333,4951,836,6874,893",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:37.307465+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=1590,892,6645,1359,1072,2770,13207,1943,6641,4868,9224,1904,5282,2284,8",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:39.932920+00:00"
+  },
+  {
+   "url": "https://aflapi.afl.com.au/afl/v2/compseasons/85/award/brownlow?page=0&pageSize=20&players=652,5434,1408",
+   "status": 200,
+   "kind": "predictor_page",
+   "retrieved_at": "2026-09-23T11:46:42.485074+00:00"
+  }
+ ]
+}

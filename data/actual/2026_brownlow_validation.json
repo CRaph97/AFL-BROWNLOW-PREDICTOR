@@ -1,0 +1,304 @@
+{
+ "builder_version": "1.0.0",
+ "built_at": "2026-09-23T11:51:15.991371+00:00",
+ "source_retrieved_at": "2026-09-23T11:46:46.409918+00:00",
+ "all_hard_checks_pass": true,
+ "n_hard_checks": 20,
+ "counts": {
+  "players": 183,
+  "matches": 207,
+  "vote_rows": 621,
+  "player_round_rows": 4575,
+  "eligible_players": 169
+ },
+ "checks": {
+  "every_match_has_3_2_1": {
+   "ok": true,
+   "bad": {}
+  },
+  "match_vote_total_is_6": {
+   "ok": true,
+   "bad": {}
+  },
+  "no_duplicate_vote_positions": {
+   "ok": true,
+   "duplicates": 0
+  },
+  "no_player_voted_twice_in_a_match": {
+   "ok": true,
+   "duplicates": 0
+  },
+  "match_count_207": {
+   "ok": true,
+   "matches": 207,
+   "vote_rows": 621
+  },
+  "all_afl_matches_mapped_to_canonical": {
+   "ok": true,
+   "unmapped": [],
+   "date_mismatch": []
+  },
+  "all_canonical_matches_have_votes": {
+   "ok": true,
+   "missing": []
+  },
+  "round_coverage_0_to_24": {
+   "ok": true,
+   "actual": {
+    "0": 5,
+    "1": 9,
+    "2": 7,
+    "3": 7,
+    "4": 8,
+    "5": 9,
+    "6": 9,
+    "7": 9,
+    "8": 9,
+    "9": 9,
+    "10": 9,
+    "11": 9,
+    "12": 7,
+    "13": 8,
+    "14": 7,
+    "15": 7,
+    "16": 7,
+    "17": 9,
+    "18": 9,
+    "19": 9,
+    "20": 9,
+    "21": 9,
+    "22": 9,
+    "23": 9,
+    "24": 9
+   },
+   "canonical": {
+    "0": 5,
+    "1": 9,
+    "2": 7,
+    "3": 7,
+    "4": 8,
+    "5": 9,
+    "6": 9,
+    "7": 9,
+    "8": 9,
+    "9": 9,
+    "10": 9,
+    "11": 9,
+    "12": 7,
+    "13": 8,
+    "14": 7,
+    "15": 7,
+    "16": 7,
+    "17": 9,
+    "18": 9,
+    "19": 9,
+    "20": 9,
+    "21": 9,
+    "22": 9,
+    "23": 9,
+    "24": 9
+   }
+  },
+  "opening_round_is_round_0": {
+   "ok": true,
+   "opening_round_vote_rows": 15
+  },
+  "player_team_is_home_or_away": {
+   "ok": true,
+   "bad": []
+  },
+  "reconstructed_totals_equal_afl_leaderboard": {
+   "ok": true,
+   "mismatches": []
+  },
+  "sum_of_leaderboard_totals_equals_all_votes": {
+   "ok": true,
+   "leaderboard_sum": 1242,
+   "match_votes_sum": 1242
+  },
+  "every_vote_getter_on_leaderboard_and_vice_versa": {
+   "ok": true,
+   "only_in_matches": [],
+   "only_on_leaderboard": []
+  },
+  "nick_daicos_total_47": {
+   "ok": true,
+   "rows": [
+    {
+     "afl_total_actual_votes": 47,
+     "reconstructed_total_votes": 47,
+     "winner": true
+    }
+   ]
+  },
+  "leaderboard_pagination_exhausted": {
+   "ok": true,
+   "api_players": 183,
+   "dom_rows": 183,
+   "clicks": 12,
+   "button_present_at_end": false,
+   "last_click_label": "Show next 3 results"
+  },
+  "dom_leaderboard_matches_api": {
+   "ok": true,
+   "cell_mismatches": [],
+   "total_mismatches": []
+  },
+  "identity_unresolved_only_known_gaps": {
+   "ok": true,
+   "unresolved_rows": [
+    {
+     "round": 8,
+     "match_id": "2026_R8_west_coast_v_richmond_2026-05-02",
+     "player_name": "Jack Ross",
+     "afl_player_id": "CD_I1006133",
+     "player_team": "richmond",
+     "identity_status": "unresolved"
+    },
+    {
+     "round": 22,
+     "match_id": "2026_R22_adelaide_v_richmond_2026-08-08",
+     "player_name": "Jack Ross",
+     "afl_player_id": "CD_I1006133",
+     "player_team": "richmond",
+     "identity_status": "unresolved"
+    }
+   ],
+   "unexpected_unresolved_rows": [],
+   "known_gaps": {
+    "CD_I1006133": "Jack Ross (Richmond): only NOID2026_* placeholder rows in canonical 2026 data"
+   },
+   "status_counts": {
+    "resolved": 618,
+    "unresolved": 2,
+    "resolved_exact_full_name": 1
+   }
+  },
+  "identity_one_to_one": {
+   "ok": true,
+   "afl_ids_with_multiple_canonical": {},
+   "canonical_ids_with_multiple_afl": {}
+  },
+  "leaderboard_player_id_unique": {
+   "ok": true,
+   "duplicated_canonical": 0
+  },
+  "ineligible_players_report": {
+   "ok": true,
+   "count": 14,
+   "players": [
+    {
+     "player_name": "Jason Horne-Francis",
+     "player_team": "port_adelaide",
+     "afl_total_actual_votes": 22,
+     "rank": 12
+    },
+    {
+     "player_name": "Harley Reid",
+     "player_team": "west_coast",
+     "afl_total_actual_votes": 15,
+     "rank": 23
+    },
+    {
+     "player_name": "Zac Bailey",
+     "player_team": "brisbane_lions",
+     "afl_total_actual_votes": 13,
+     "rank": 30
+    },
+    {
+     "player_name": "Jacob van Rooyen",
+     "player_team": "melbourne",
+     "afl_total_actual_votes": 10,
+     "rank": 38
+    },
+    {
+     "player_name": "Riley Thilthorpe",
+     "player_team": "adelaide",
+     "afl_total_actual_votes": 5,
+     "rank": 68
+    },
+    {
+     "player_name": "Darcy Fogarty",
+     "player_team": "adelaide",
+     "afl_total_actual_votes": 4,
+     "rank": 77
+    },
+    {
+     "player_name": "James Sicily",
+     "player_team": "hawthorn",
+     "afl_total_actual_votes": 3,
+     "rank": 87
+    },
+    {
+     "player_name": "Taylor Walker",
+     "player_team": "adelaide",
+     "afl_total_actual_votes": 3,
+     "rank": 87
+    },
+    {
+     "player_name": "Tristan Xerri",
+     "player_team": "north_melbourne",
+     "afl_total_actual_votes": 3,
+     "rank": 87
+    },
+    {
+     "player_name": "Paul Curtis",
+     "player_team": "north_melbourne",
+     "afl_total_actual_votes": 2,
+     "rank": 112
+    },
+    {
+     "player_name": "Dylan Moore",
+     "player_team": "hawthorn",
+     "afl_total_actual_votes": 2,
+     "rank": 112
+    },
+    {
+     "player_name": "Darcy Byrne-Jones",
+     "player_team": "port_adelaide",
+     "afl_total_actual_votes": 1,
+     "rank": 140
+    },
+    {
+     "player_name": "Bailey Humphrey",
+     "player_team": "gold_coast",
+     "afl_total_actual_votes": 1,
+     "rank": 140
+    },
+    {
+     "player_name": "Ben Long",
+     "player_team": "gold_coast",
+     "afl_total_actual_votes": 1,
+     "rank": 140
+    }
+   ],
+   "note": "AFL lists ineligible players with their votes; votes are kept in match_votes with eligible=False."
+  },
+  "anomalies_report": {
+   "ok": true,
+   "actual_vote_on_predictor_bye_or_dnp_marker": [],
+   "players_without_predictor_record": [],
+   "afl_leaderboard_status": "CONCLUDED",
+   "afl_season_status": "CONCLUDED"
+  },
+  "frozen_prediction_files_untouched": {
+   "ok": true,
+   "changed": {}
+  }
+ },
+ "frozen_file_hashes": {
+  "reports/2026_leaderboard.csv": "c1acfb624914e743879d23e77204552bda5e60c2888e205ee06700c377cf9b8c",
+  "reports/2026_predicted_votes.csv": "1e20c44294349555bc98387aef345edb877baced481a0054d9da65f78a58924f",
+  "reports/2026_objective_leaderboard.csv": "3aeca6a1ba0c903dca60879d55a1a9bd28e752914c13bce05991865ba5c2c663",
+  "reports/2026_objective_votes.csv": "d40025d065e7c75f3741b13c8cdaf2d33d8e670de3d4f98c3f690fe8319bc522",
+  "reports/2026_match_probabilities.csv": "154bb56239545cabad369e53dc26b73ff134087151c339047e6fd0fd9a6b12bb",
+  "reports/2026_simulation_summary.csv": "90e469e80b7bcb0bf842146e8a30509ca11a23c99e89b8b77aea4a802d9ed2fd",
+  "reports/2026_order_scenarios.csv": "41349b060d19fb5ac026bd9c379c4bba16a41dfe1503179b895d53a3228594da",
+  "data/processed/model_core_2026.parquet": "90bad560eea8539fde633f80eab881530fa0c618e51cdb5c2fdf8fb373be1e75",
+  "data/processed/model_advanced_2026.parquet": "18474f3290820b99ab2eb8671fb22c0427dae29a6a3435e803e4b71362e28c25",
+  "data/processed/scenario_predictions_2026.parquet": "6faa296e1b619aff972471b95e797b230d7eb8df3db9740091186614d57201e9",
+  "data/processed/all_2026_scenarios_and_ensemble.parquet": "364f0a698e91fc54a595491924d8f81e89ea7e1e0e6629d7c1d58b45d522e5ad",
+  "data/processed/mc_totals_2026.npy": "4d76b7d931934c697482c7172899599f956d842c4a4d70814fe7b61b2f02f463",
+  "data/processed/mc_totals_objective_2026.npy": "fd3cc591570c23d6a1b664cc8edb9ef3fffe6690ccb7059d19539a852bf4fa94"
+ }
+}
