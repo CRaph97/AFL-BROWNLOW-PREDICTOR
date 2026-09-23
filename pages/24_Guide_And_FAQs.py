@@ -302,6 +302,58 @@ with st.expander("**Price Suspect**"):
 st.divider()
 
 # --------------------------------------------------------------------------
+# 2d. Evaluation metrics (2026 Evaluation page)
+# --------------------------------------------------------------------------
+st.header("Evaluation Metrics")
+st.caption(
+    "These appear on the *2026 Evaluation* page, which scores the frozen pre-count forecasts "
+    "against the AFL's actual votes. In one line: MAE / RMSE = vote-total accuracy; Spearman = "
+    "ranking accuracy; 3-vote / exact 3-2-1 = match prediction accuracy; Brier / Log Loss / ECE = "
+    "probability quality; ROI = retrospective betting performance."
+)
+
+with st.expander("**MAE -- Mean Absolute Error**"):
+    st.markdown("Average absolute difference between predicted and actual votes. Lower is better.")
+
+with st.expander("**RMSE -- Root Mean Squared Error**"):
+    st.markdown("Similar to MAE but penalises large misses more heavily. Lower is better.")
+
+with st.expander("**Spearman Correlation**"):
+    st.markdown("Measures how well predicted player rankings match actual rankings. "
+                "Range -1 to +1; higher is better.")
+
+with st.expander("**3-Vote Winner Accuracy**"):
+    st.markdown("% of matches where the model correctly identified the actual 3-vote player.")
+
+with st.expander("**Exact 3-2-1 Accuracy**"):
+    st.markdown("% of matches where the exact ordered 3-, 2- and 1-vote players were all correct.")
+
+with st.expander("**Brier Score**"):
+    st.markdown("Probability accuracy metric for binary outcomes. Lower is better; 0 is perfect.")
+
+with st.expander("**Log Loss**"):
+    st.markdown("Probability metric that heavily penalises confident wrong predictions. "
+                "Lower is better.")
+
+with st.expander("**ECE -- Expected Calibration Error**"):
+    st.markdown("Measures whether predicted probabilities match observed frequencies. "
+                "Lower is better; near 0 = well calibrated.")
+
+with st.expander("**Rank Error**"):
+    st.markdown("Absolute difference between predicted finishing rank and actual rank. "
+                "Lower is better.")
+
+with st.expander("**Top-N Hit Rate**"):
+    st.markdown("% of actual Top-N players also contained in the model's predicted Top-N.")
+
+with st.expander("**ROI -- Return on Investment**"):
+    st.markdown("Profit/loss divided by stake. Positive = profit; negative = loss. In our "
+                "evaluation this uses retrospective flat 1-unit staking only -- it is not a "
+                "staking plan or a claim about future results.")
+
+st.divider()
+
+# --------------------------------------------------------------------------
 # 3. How the model reaches a match prediction
 # --------------------------------------------------------------------------
 st.header("How the Model Reaches a Match Prediction")
