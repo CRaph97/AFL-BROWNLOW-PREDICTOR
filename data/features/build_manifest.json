@@ -1,0 +1,21 @@
+{
+ "build_version": "1.0.0",
+ "built_at": "2026-09-23T13:32:19.369812+00:00",
+ "rows": 202868,
+ "seasons": [
+  2003,
+  2026
+ ],
+ "matches": 4555,
+ "n_feature_columns": 225,
+ "label_sources": {
+  "afltables": 193346,
+  "afl_actual_2026": 9520,
+  "afl_actual_2026_name_team_fallback": 2
+ },
+ "input_hashes": {
+  "model_core_2026.parquet": "90bad560eea8539f",
+  "model_advanced_2026.parquet": "18474f3290820b99",
+  "2026_brownlow_match_votes.csv": "8651aa4917a2d28f"
+ }
+}

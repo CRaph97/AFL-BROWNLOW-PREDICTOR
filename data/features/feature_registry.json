@@ -1,0 +1,313 @@
+{
+ "raw": {
+  "timing": "same_match",
+  "columns": [
+   "disposals",
+   "kicks",
+   "handballs",
+   "marks",
+   "goals",
+   "behinds",
+   "hitouts",
+   "tackles",
+   "rebound_50s",
+   "inside_50s",
+   "clearances",
+   "clangers",
+   "frees_for",
+   "frees_against",
+   "contested_possessions",
+   "uncontested_possessions",
+   "contested_marks",
+   "marks_inside_50",
+   "one_percenters",
+   "bounces",
+   "goal_assists",
+   "time_on_ground_pct"
+  ]
+ },
+ "match_relative": {
+  "timing": "same_match",
+  "columns": [
+   "disposals_match_z",
+   "contested_possessions_match_z",
+   "clearances_match_z",
+   "tackles_match_z",
+   "goals_match_z",
+   "inside_50s_match_z",
+   "contested_marks_match_z",
+   "marks_match_z"
+  ]
+ },
+ "match_relative_ext": {
+  "timing": "same_match",
+  "columns": [
+   "kicks_match_z",
+   "kicks_match_pct",
+   "kicks_team_share",
+   "handballs_match_z",
+   "handballs_match_pct",
+   "handballs_team_share",
+   "hitouts_match_z",
+   "hitouts_match_pct",
+   "hitouts_team_share",
+   "rebound_50s_match_z",
+   "rebound_50s_match_pct",
+   "rebound_50s_team_share",
+   "marks_inside_50_match_z",
+   "marks_inside_50_match_pct",
+   "marks_inside_50_team_share",
+   "one_percenters_match_z",
+   "one_percenters_match_pct",
+   "one_percenters_team_share",
+   "goal_assists_match_z",
+   "goal_assists_match_pct",
+   "goal_assists_team_share",
+   "uncontested_possessions_match_z",
+   "uncontested_possessions_match_pct",
+   "uncontested_possessions_team_share",
+   "clangers_match_z",
+   "clangers_match_pct",
+   "clangers_team_share",
+   "behinds_match_z",
+   "behinds_match_pct",
+   "behinds_team_share",
+   "frees_for_match_z",
+   "frees_for_match_pct",
+   "frees_for_team_share",
+   "frees_against_match_z",
+   "frees_against_match_pct",
+   "frees_against_team_share",
+   "time_on_ground_pct_match_z",
+   "time_on_ground_pct_match_pct",
+   "time_on_ground_pct_team_share",
+   "effective_disposals_match_z",
+   "effective_disposals_match_pct",
+   "effective_disposals_team_share",
+   "disposal_efficiency_pct_match_z",
+   "disposal_efficiency_pct_match_pct",
+   "disposal_efficiency_pct_team_share",
+   "centre_clearances_match_z",
+   "centre_clearances_match_pct",
+   "centre_clearances_team_share",
+   "stoppage_clearances_match_z",
+   "stoppage_clearances_match_pct",
+   "stoppage_clearances_team_share",
+   "score_involvements_match_z",
+   "score_involvements_match_pct",
+   "score_involvements_team_share",
+   "metres_gained_match_z",
+   "metres_gained_match_pct",
+   "metres_gained_team_share",
+   "turnovers_match_z",
+   "turnovers_match_pct",
+   "turnovers_team_share",
+   "intercepts_match_z",
+   "intercepts_match_pct",
+   "intercepts_team_share",
+   "tackles_inside_50_match_z",
+   "tackles_inside_50_match_pct",
+   "tackles_inside_50_team_share"
+  ]
+ },
+ "team_relative": {
+  "timing": "same_match",
+  "columns": [
+   "disposals_team_rank",
+   "disposals_team_share",
+   "disposals_gap_best_team",
+   "disposals_gap_2nd_team",
+   "contested_possessions_team_rank",
+   "contested_possessions_team_share",
+   "contested_possessions_gap_best_team",
+   "contested_possessions_gap_2nd_team",
+   "clearances_team_rank",
+   "clearances_team_share",
+   "clearances_gap_best_team",
+   "clearances_gap_2nd_team",
+   "tackles_team_rank",
+   "tackles_team_share",
+   "tackles_gap_best_team",
+   "tackles_gap_2nd_team",
+   "goals_team_rank",
+   "goals_team_share",
+   "goals_gap_best_team",
+   "goals_gap_2nd_team",
+   "inside_50s_team_rank",
+   "inside_50s_team_share",
+   "inside_50s_gap_best_team",
+   "inside_50s_gap_2nd_team",
+   "contested_marks_team_rank",
+   "contested_marks_team_share",
+   "contested_marks_gap_best_team",
+   "contested_marks_gap_2nd_team",
+   "marks_team_rank",
+   "marks_team_share",
+   "marks_gap_best_team",
+   "marks_gap_2nd_team"
+  ]
+ },
+ "context": {
+  "timing": "same_match",
+  "columns": [
+   "is_win",
+   "margin",
+   "absolute_margin",
+   "is_close_game",
+   "is_blowout",
+   "win_x_margin"
+  ]
+ },
+ "teammate": {
+  "timing": "same_match",
+  "columns": [
+   "n_teammates_disposals_ge_25",
+   "n_teammates_disposals_ge_30",
+   "n_teammates_goals_ge_2",
+   "n_teammates_goals_ge_3",
+   "team_disposal_concentration"
+  ]
+ },
+ "dominance": {
+  "timing": "same_match",
+  "columns": [
+   "impact_z",
+   "impact_match_rank",
+   "impact_match_pct",
+   "impact_gap_to_match_best",
+   "match_standout_margin",
+   "is_match_top_impact",
+   "impact_gap_best_teammate",
+   "impact_gap_2nd_teammate",
+   "n_strong_teammates",
+   "n_strong_in_match",
+   "teammate_impact_concentration"
+  ]
+ },
+ "nonlinear": {
+  "timing": "same_match",
+  "columns": [
+   "disposals_over25",
+   "disposals_over30",
+   "goals_over3",
+   "goals_over5"
+  ]
+ },
+ "advanced_stats": {
+  "timing": "same_match",
+  "columns": [
+   "effective_disposals",
+   "disposal_efficiency_pct",
+   "centre_clearances",
+   "stoppage_clearances",
+   "score_involvements",
+   "metres_gained",
+   "turnovers",
+   "intercepts",
+   "tackles_inside_50"
+  ],
+  "first_season": 2015
+ },
+ "role": {
+  "timing": "prior_matches",
+  "columns": [
+   "role_MIDFIELDER",
+   "role_KEY_FORWARD",
+   "role_MEDIUM_FORWARD",
+   "role_RUCK",
+   "role_KEY_DEFENDER",
+   "role_MEDIUM_DEFENDER",
+   "role_MIDFIELDER_FORWARD",
+   "role_is_defender",
+   "role_is_forward"
+  ]
+ },
+ "role_interactions": {
+  "timing": "prior_matches",
+  "columns": [
+   "def_x_rebound50_z",
+   "def_x_one_percenters_z",
+   "def_x_marks_z",
+   "def_x_disposals_z",
+   "ruck_x_hitouts_z",
+   "ruck_x_clearances_z",
+   "fwd_x_goals_z",
+   "mid_x_clearances_z",
+   "mid_x_contested_z"
+  ]
+ },
+ "lagged_form": {
+  "timing": "prior_matches",
+  "columns": [
+   "disposals_prev3_mean",
+   "disposals_prev5_mean",
+   "disposals_prev10_mean",
+   "contested_possessions_prev3_mean",
+   "contested_possessions_prev5_mean",
+   "contested_possessions_prev10_mean",
+   "clearances_prev3_mean",
+   "clearances_prev5_mean",
+   "clearances_prev10_mean",
+   "goals_prev3_mean",
+   "goals_prev5_mean",
+   "goals_prev10_mean",
+   "disposals_season_to_date_mean",
+   "contested_possessions_season_to_date_mean",
+   "clearances_season_to_date_mean",
+   "goals_season_to_date_mean"
+  ]
+ },
+ "baseline_relative": {
+  "timing": "prior_matches",
+  "columns": [
+   "disposals_vs_prev10",
+   "disposals_vs_season_to_date",
+   "contested_possessions_vs_prev10",
+   "contested_possessions_vs_season_to_date",
+   "clearances_vs_prev10",
+   "clearances_vs_season_to_date",
+   "goals_vs_prev10",
+   "goals_vs_season_to_date",
+   "has_prior_form",
+   "career_games_prior"
+  ]
+ },
+ "team_strength": {
+  "timing": "prior_matches",
+  "columns": [
+   "team_std_win_pct",
+   "opp_std_win_pct",
+   "prev_season_win_pct",
+   "opp_prev_season_win_pct",
+   "team_strength_diff_std",
+   "team_strength_diff_prev",
+   "is_home"
+  ]
+ },
+ "reputation_pit": {
+  "timing": "prior_seasons",
+  "columns": [
+   "prior_seasons_votes_per_game",
+   "prior_seasons_total_votes",
+   "last_season_votes",
+   "last_season_votes_per_game",
+   "has_prior_season"
+  ]
+ },
+ "reputation_legacy": {
+  "timing": "same_season_unrevealed",
+  "columns": [
+   "brownlow_votes_prev5_mean",
+   "brownlow_votes_season_to_date_mean",
+   "brownlow_votes_prev3_mean",
+   "brownlow_votes_prev10_mean"
+  ]
+ },
+ "era": {
+  "timing": "same_match",
+  "columns": [
+   "season_idx",
+   "round_num"
+  ]
+ }
+}

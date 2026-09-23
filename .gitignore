@@ -13,3 +13,18 @@ data/interim/*
 !data/interim/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+
+# Raw bookmaker page snapshots (data/betting/raw/*.html) are full DOM dumps
+# of third-party pages and can incidentally embed the page vendor's own
+# client-side keys/tokens (e.g. a Google Maps JS key found in Neds' page
+# config, GitHub-flagged in commit a9f2e9c6 -- confirmed third-party, not
+# project-owned; see docs/SECRET_SCAN_2026-09.md). The extracted .json/
+# .status.json network-capture files (the actual data this project uses)
+# are unaffected and stay tracked.
+data/betting/raw/*.html
+
+# 2027 R&D bulk artefacts (rebuilt by src/features/point_in_time.py and src/validation/run_experiments.py)
+data/features/*.parquet
+data/experiments/oof/*.parquet
+data/experiments/analysis/error_lab.parquet
+data/experiments/logs/
