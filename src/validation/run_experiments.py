@@ -212,6 +212,11 @@ def suite_candidates(workers: int):
                    notes="Nonlinear stats-only variant of C (same strict feature set as C_stats_only_pl).")
 
 
+def suite_b_tuned(workers: int):
+    run_experiment("B_performance_xgb_rank_tuned", "xgb_rank", ML_FAMILIES, params={"max_depth": 6, "min_child_weight": 20, "n_estimators": 400, "learning_rate": 0.05}, workers=workers,
+                   notes="Candidate B with hyperparameters selected on pilot inner holdouts (2014-2016 folds, PL NLL): max_depth 6, min_child_weight 20 -- see analysis/ranker_tuning_summary.csv")
+
+
 def suite_ablation(workers: int):
     base = STRUCTURAL_FAMILIES
     run_experiment("ABL_full", "structural_pl", base, test_seasons=ABLATION_SEASONS, windows={"recent8": 8}, workers=workers, write_oof=False, status="ablation")
@@ -229,5 +234,5 @@ def suite_ablation(workers: int):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--suite", required=True); ap.add_argument("--workers", type=int, default=4)
     a = ap.parse_args()
-    {"reproduce": lambda w: suite_reproduce(), "baseline": suite_baseline, "candidates": suite_candidates, "ablation": suite_ablation}[a.suite](a.workers)
+    {"reproduce": lambda w: suite_reproduce(), "baseline": suite_baseline, "candidates": suite_candidates, "ablation": suite_ablation, "b_tuned": suite_b_tuned}[a.suite](a.workers)
     sys.exit(0)

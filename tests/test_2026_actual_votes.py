@@ -208,6 +208,11 @@ def test_frozen_prediction_files_not_contaminated(validation):
          str(ROOT / "src" / "simulation")],
         capture_output=True, text=True,
     ).stdout.split()
+    # 2027 R&D (docs/2027_MODEL_R&D_PLAN.md §0): src/features/point_in_time.py is the ONE sanctioned reader of
+    # data/actual/ -- it attaches the 2026 actual votes as training LABELS (label_source column), never as a
+    # feature. Its point-in-time guarantees are tested in tests/test_2027_rd.py (timing registry, shuffled-vote
+    # invariance, prior-season reputation). Every other feature/model module must still never read actual votes.
+    hits = [h for h in hits if not h.endswith("src/features/point_in_time.py")]
     assert hits == [], hits
 
 

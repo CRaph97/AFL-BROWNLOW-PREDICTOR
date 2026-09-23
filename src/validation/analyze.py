@@ -27,7 +27,7 @@ EXP = ROOT / "data" / "experiments"
 OOF, MET, OUT = EXP / "oof", EXP / "metrics", EXP / "analysis"
 FEAT = ROOT / "data" / "features" / "player_match_features.parquet"
 
-CANDIDATES = {"A_structural_pl": "Structural (A)", "B_performance_xgb_rank": "Performance ML (B)", "C_stats_only_pl": "Stats-only (C)",
+CANDIDATES = {"A_structural_pl": "Structural (A)", "B_performance_xgb_rank": "Performance ML (B, default params)", "B_performance_xgb_rank_tuned": "Performance ML (B)", "C_stats_only_pl": "Stats-only (C)",
               "C_stats_only_xgb_rank": "Stats-only ML (C-ML)", "baseline_phase4_pl_legacy": "Baseline (Phase 4 PL)"}
 ERROR_LAB_FEATURES = ["role", "is_win", "margin", "absolute_margin", "is_close_game", "is_blowout", "disposals", "contested_possessions", "clearances",
                       "tackles", "goals", "marks", "inside_50s", "rebound_50s", "one_percenters", "hitouts", "impact_z", "impact_match_rank",
@@ -44,11 +44,36 @@ def load_oof(name: str, window: str = "expanding") -> pd.DataFrame | None:
     return df.reset_index(drop=True)
 
 
+def restrict_to_common_matches(oofs: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
+    """Fair comparison: every model scored on exactly the same matches (the
+    legacy dropna baseline skips matches whose vote-getters lack lagged form)."""
+    common = None
+    for df in oofs.values():
+        pm = M.per_match_table(df)["match_id"]
+        common = set(pm) if common is None else common & set(pm)
+    return {n: df[df["match_id"].isin(common)].reset_index(drop=True) for n, df in oofs.items()}
+
+
+def restrict_to_common_players(oofs: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
+    """Season metrics on exactly the same (season, player) universe for every model."""
+    common = None
+    for df in oofs.values():
+        keys = set(zip(df["season"], df["player_id"]))
+        common = keys if common is None else common & keys
+    out = {}
+    for n, df in oofs.items():
+        m = pd.Series(list(zip(df["season"], df["player_id"]))).isin(common).to_numpy()
+        out[n] = df[m].reset_index(drop=True)
+    return out
+
+
 def comparison_tables(oofs: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
     rows = []
-    for name, df in oofs.items():
+    oofs_m = restrict_to_common_matches(oofs)
+    oofs_p = restrict_to_common_players(oofs)
+    for name, df in oofs_m.items():
         for s, g in df.groupby("season"):
-            mm = M.match_metrics(g); sm = M.season_metrics(g)["by_season"][0]
+            mm = M.match_metrics(g); sm = M.season_metrics(oofs_p[name][oofs_p[name]["season"] == s])["by_season"][0]
             rows.append({"model": CANDIDATES.get(name, name), "experiment": name, "season": int(s), **{k: v for k, v in mm.items()}, **{k: v for k, v in sm.items() if k != "season"}})
     by_season = pd.DataFrame(rows)
     cols = ["correct_3", "a3_in_top2", "a3_in_top3", "exact_321", "unordered_top3", "log_loss_p3", "brier_p3", "ece_p3", "season_mae", "season_rmse", "spearman", "rank_mae_top30", "top3_hit", "top5_hit", "top10_hit", "winner_correct"]
@@ -101,8 +126,12 @@ def calibration_study(oofs: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _b_name(oofs: dict) -> str:
+    return "B_performance_xgb_rank_tuned" if "B_performance_xgb_rank_tuned" in oofs else "B_performance_xgb_rank"
+
+
 def disagreement_study(oofs: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    names = [n for n in ("A_structural_pl", "B_performance_xgb_rank", "C_stats_only_pl") if n in oofs]
+    names = [n for n in ("A_structural_pl", _b_name(oofs), "C_stats_only_pl") if n in oofs]
     if len(names) < 2:
         return pd.DataFrame(), pd.DataFrame()
     base = None
@@ -135,7 +164,9 @@ def disagreement_study(oofs: dict[str, pd.DataFrame]) -> tuple[pd.DataFrame, pd.
                              **{f"{CANDIDATES[n]}_correct": g[f"correct_{n}"].mean() for n in names}, "share_of_matches": len(g) / len(sub)})
     # season-level: |EV gap| between A and B vs error
     sp = base.groupby(["season", "player_id"]).agg(actual=("brownlow_votes", "sum"), **{f"ev_{n}": (f"ev_{n}", "sum") for n in names}).reset_index()
-    if "A_structural_pl" in names and "B_performance_xgb_rank" in names:
+    bn = _b_name(oofs)
+    if "A_structural_pl" in names and bn in names:
+        sp = sp.rename(columns={f"ev_{bn}": "ev_B_performance_xgb_rank"})
         sp["gap"] = (sp["ev_A_structural_pl"] - sp["ev_B_performance_xgb_rank"]).abs()
         sp["gap_bin"] = pd.cut(sp["gap"], [-0.01, 1, 3, 6, 100], labels=["0-1", "1-3", "3-6", "6+"]).astype(str)
         sp["err_A"] = (sp["ev_A_structural_pl"] - sp["actual"]).abs(); sp["err_B"] = (sp["ev_B_performance_xgb_rank"] - sp["actual"]).abs()
@@ -194,13 +225,13 @@ def forensic_by_season(oofs: dict[str, pd.DataFrame], feat: pd.DataFrame) -> pd.
 
 
 def error_lab(oofs: dict[str, pd.DataFrame], feat: pd.DataFrame) -> pd.DataFrame:
-    names = [n for n in ("A_structural_pl", "B_performance_xgb_rank", "C_stats_only_pl") if n in oofs]
+    names = [n for n in ("A_structural_pl", _b_name(oofs), "C_stats_only_pl") if n in oofs]
     base = feat[["season", "match_id", "player_id", "player_name", "team_id", "brownlow_votes"] + ERROR_LAB_FEATURES].copy()
     base = base[base["season"] >= min(int(oofs[n]["season"].min()) for n in names)]
     for n in names:
         d = oofs[n][["match_id", "player_id", "p3", "p2", "p1", "expected_votes"]].copy()
         d["rank_in_match"] = d.groupby("match_id")["p3"].rank(ascending=False, method="first")
-        short = {"A_structural_pl": "A", "B_performance_xgb_rank": "B", "C_stats_only_pl": "C"}[n]
+        short = {"A_structural_pl": "A", "B_performance_xgb_rank": "B", "B_performance_xgb_rank_tuned": "B", "C_stats_only_pl": "C"}[n]
         d = d.rename(columns={c: f"{c}_{short}" for c in ("p3", "p2", "p1", "expected_votes", "rank_in_match")})
         base = base.merge(d, on=["match_id", "player_id"], how="left")
     return base
@@ -215,12 +246,20 @@ def run() -> dict:
     summary = {"models": list(oofs)}
     by_season, pooled = comparison_tables(oofs)
     by_season.to_csv(OUT / "comparison_by_season.csv", index=False); pooled.to_csv(OUT / "comparison_pooled.csv", index=False)
+    # recent-8 window (the deployed Production window) as a second view
+    oofs8 = {n: load_oof(n, window="recent8") for n in CANDIDATES}
+    oofs8 = {n: d for n, d in oofs8.items() if d is not None and len(d)}
+    if oofs8:
+        b8, p8 = comparison_tables(oofs8)
+        b8.to_csv(OUT / "comparison_by_season_recent8.csv", index=False); p8.to_csv(OUT / "comparison_pooled_recent8.csv", index=False)
+        summary["pooled_recent8"] = p8.to_dict("records")
     pairs = []
-    if "A_structural_pl" in oofs:
-        for other in oofs:
-            if other != "A_structural_pl":
-                for metric in ("correct_3", "log_loss_p3", "exact_321"):
-                    pairs.append({"a": "A_structural_pl", "b": other, **paired_bootstrap(oofs["A_structural_pl"], oofs[other], metric)})
+    for ref in ("A_structural_pl", "baseline_phase4_pl_legacy"):
+        if ref in oofs:
+            for other in oofs:
+                if other != ref:
+                    for metric in ("correct_3", "log_loss_p3", "exact_321"):
+                        pairs.append({"a": ref, "b": other, **paired_bootstrap(oofs[ref], oofs[other], metric)})
     pd.DataFrame(pairs).to_csv(OUT / "paired_bootstrap_vs_A.csv", index=False)
     calibration_study({n: oofs[n] for n in oofs if n != "baseline_phase4_pl_legacy"}).to_csv(OUT / "calibration_study.csv", index=False)
     mt, ds = disagreement_study(oofs)
@@ -229,7 +268,7 @@ def run() -> dict:
     forensic_by_season(oofs, feat).to_csv(OUT / "forensic_by_season.csv", index=False)
     el = error_lab(oofs, feat); el.to_parquet(OUT / "error_lab.parquet", index=False)
     # ensemble research
-    comps = {n: oofs[n] for n in ("A_structural_pl", "B_performance_xgb_rank", "C_stats_only_pl") if n in oofs}
+    comps = {n: oofs[n] for n in ("A_structural_pl", _b_name(oofs), "C_stats_only_pl") if n in oofs}
     if len(comps) >= 2:
         learned, equal, w = walk_forward_ensemble(comps, sorted(oofs["A_structural_pl"]["season"].unique()))
         ens_rows = []
@@ -240,9 +279,11 @@ def run() -> dict:
         er = pd.DataFrame(ens_rows); er.to_csv(OUT / "ensemble_by_season.csv", index=False); w.to_csv(OUT / "ensemble_weights.csv", index=False)
         learned[["season", "match_id", "player_id", "brownlow_votes", "p3", "p2", "p1", "p0", "expected_votes"]].to_parquet(OOF / "ENS_learned_ABC.parquet", index=False)
         summary["ensemble_pooled"] = er.groupby("model")[["correct_3", "log_loss_p3", "ece_p3", "exact_321", "season_mae", "spearman"]].mean().round(4).to_dict("index")
-        summary["ensemble_seasons_learned_beats_best_single_logloss"] = int(sum(
-            er[(er["model"] == "Learned ensemble (A+B+C)") & (er["season"] == s)]["log_loss_p3"].iloc[0] < er[(er["model"] != "Learned ensemble (A+B+C)") & (er["model"] != "Equal-weight ensemble") & (er["season"] == s)]["log_loss_p3"].min()
-            for s in er["season"].unique()))
+        pv = er.pivot(index="season", columns="model", values="log_loss_p3"); pa = er.pivot(index="season", columns="model", values="correct_3")
+        comp = [c for c in pv.columns if "ensemble" not in c.lower()]
+        summary["ensemble_seasons_learned_beats_best_single_logloss"] = int((pv["Learned ensemble (A+B+C)"] < pv[comp].min(axis=1)).sum())
+        summary["ensemble_seasons_beats_each_component_logloss"] = {c: int((pv["Learned ensemble (A+B+C)"] < pv[c]).sum()) for c in comp}
+        summary["ensemble_seasons_beats_each_component_correct3"] = {c: int((pa["Learned ensemble (A+B+C)"] > pa[c]).sum()) for c in comp}
         summary["ensemble_n_seasons"] = int(er["season"].nunique())
     summary["pooled"] = pooled.to_dict("records")
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1, default=str))

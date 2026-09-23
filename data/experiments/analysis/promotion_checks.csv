@@ -1,0 +1,6 @@
+model,seasons_logloss_wins,seasons_compared,pooled_log_loss,pooled_correct_3,pooled_season_mae,pooled_logloss_and_accuracy_better,season_mae_spearman_not_worse,majority_seasons_logloss,recent_window_logloss,pre2026_majority_logloss,paired_bootstrap_ci_excludes_zero_vs_incumbent,promotable
+Performance ML (B),13,15,1.2393214670033394,0.588562693056153,0.8742996185875351,True,True,True,True,True,True,True
+"Performance ML (B, default params)",13,15,1.251759182915244,0.5880917134172952,0.887313851284455,True,True,True,True,True,True,True
+Stats-only (C),8,15,1.2836542652212477,0.5919949972883202,0.9216320876845506,False,False,True,True,False,False,False
+Stats-only ML (C-ML),12,15,1.262307948905005,0.5897355814211952,0.8905315067276687,True,True,True,True,True,True,True
+Structural (A),14,15,1.262557765821737,0.5967898464182412,0.9005386060075116,True,True,True,True,True,True,True

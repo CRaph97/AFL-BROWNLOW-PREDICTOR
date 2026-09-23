@@ -236,3 +236,39 @@ def test_frozen_outputs_unchanged_by_rd():
         p = ROOT / rel
         if p.exists() and h:
             assert hashlib.sha256(p.read_bytes()).hexdigest() == h, rel
+
+
+# ---------------------------------------------------------------- analysis outputs / page (require the candidate suite + analyze)
+AN = ROOT / "data" / "experiments" / "analysis"
+
+
+@pytest.mark.skipif(not (AN / "comparison_pooled.csv").exists(), reason="analysis outputs not built")
+def test_analysis_outputs_are_consistent():
+    pooled = pd.read_csv(AN / "comparison_pooled.csv"); by = pd.read_csv(AN / "comparison_by_season.csv")
+    # every model is scored on exactly the same matches within a scope (fair comparison)
+    for scope, g in pooled.groupby("window_seasons"):
+        assert g["n_matches"].nunique() == 1, (scope, g["n_matches"].tolist())
+    assert set(by["season"]) >= set(range(2012, 2027))
+    assert by["correct_3"].between(0, 1).all() and (by["log_loss_p3"] > 0).all()
+    champ = pd.read_csv(AN / "champion.csv"); assert "Champion (2027 headline single model)" in set(champ["role"])
+    w = pd.read_csv(AN / "ensemble_weights.csv")
+    wcols = [c for c in w.columns if c.startswith("w_")]
+    assert np.allclose(w[wcols].sum(axis=1), 1.0) and (w[wcols] >= -1e-9).all().all()
+    assert (w["test_season"] > 2012).all()  # weights only ever fit on earlier seasons
+    cal = pd.read_csv(AN / "calibration_study.csv")
+    assert set(cal["method"]) == {"raw", "isotonic", "platt"}
+    reg = pd.read_json(ROOT / "data" / "experiments" / "registry.jsonl", lines=True)
+    assert reg["experiment_id"].is_unique and {"A_structural_pl", "C_stats_only_pl", "baseline_phase4_pl_legacy"} <= set(reg["name"])
+    assert (reg["git_commit"].str.len() >= 7).all()
+
+
+@pytest.mark.skipif(not (AN / "comparison_pooled.csv").exists(), reason="analysis outputs not built")
+def test_model_lab_page_renders_and_is_in_rd_nav():
+    from streamlit.testing.v1 import AppTest
+    at = AppTest.from_file(str(ROOT / "pages" / "40_2027_Model_Lab.py"), default_timeout=180).run()
+    assert not at.exception, at.exception
+    assert at.title[0].value == "2027 Model Lab"
+    router = (ROOT / "app.py").read_text()
+    assert '"R&D": [' in router and 'st.Page("pages/40_2027_Model_Lab.py", title="2027 Model Lab")' in router
+    main_block = router[router.index('"MAIN": ['):router.index("],", router.index('"MAIN": ['))]
+    assert "40_2027_Model_Lab" not in main_block

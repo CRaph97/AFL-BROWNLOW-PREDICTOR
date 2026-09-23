@@ -47,13 +47,13 @@ def decide() -> pd.DataFrame:
         }
         ci_ok = False
         if not pb.empty:
-            # paired bootstraps are vs A; for A itself use its rows vs the incumbent
-            exp_name = {"Structural (A)": "A_structural_pl"}.get(m)
-            sub = pb[(pb["b"] == "baseline_phase4_pl_legacy")] if exp_name == "A_structural_pl" else pd.DataFrame()
+            exp_name = {v: k for k, v in __import__("src.validation.analyze", fromlist=["CANDIDATES"]).CANDIDATES.items()}.get(m)
+            # rows are (a=baseline, b=model): model better <=> baseline minus model < 0 on accuracy, > 0 on log loss
+            sub = pb[(pb["a"] == "baseline_phase4_pl_legacy") & (pb["b"] == exp_name)]
             if len(sub):
-                ci_ok = bool(((sub["metric"] == "correct_3") & (sub["ci_lo"] > 0)).any() or ((sub["metric"] == "log_loss_p3") & (sub["ci_hi"] < 0)).any())
+                ci_ok = bool(((sub["metric"] == "correct_3") & (sub["ci_hi"] < 0)).any() or ((sub["metric"] == "log_loss_p3") & (sub["ci_lo"] > 0)).any())
         checks["paired_bootstrap_ci_excludes_zero_vs_incumbent"] = ci_ok
-        promoted = all(v for k, v in checks.items() if k != "paired_bootstrap_ci_excludes_zero_vs_incumbent") and (ci_ok or m != "Structural (A)")
+        promoted = all(checks.values())
         rows.append({"model": m, "seasons_logloss_wins": int(ll_wins.sum()), "seasons_compared": int(len(common)), "pooled_log_loss": r["log_loss_p3"], "pooled_correct_3": r["correct_3"],
                      "pooled_season_mae": r["season_mae"], **checks, "promotable": bool(promoted)})
     dec = pd.DataFrame(rows)

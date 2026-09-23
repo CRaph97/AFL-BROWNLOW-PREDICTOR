@@ -1,0 +1,7 @@
+role,model,reason
+Champion (2027 headline single model),Performance ML (B),"passed all promotion rules; pooled P3 log loss 1.239 vs incumbent 1.283, wins 13/15 seasons"
+"Challenger (promotable, not champion)","Performance ML (B, default params)",passed rules; pooled log loss 1.252
+Challenger (not promoted),Stats-only (C),"failed: pooled_logloss_and_accuracy_better, season_mae_spearman_not_worse, pre2026_majority_logloss"
+"Challenger (promotable, not champion)",Stats-only ML (C-ML),passed rules; pooled log loss 1.262
+"Challenger (promotable, not champion)",Structural (A),passed rules; pooled log loss 1.263
+Ensemble,Learned ensemble (A+B+C),learned ensemble beat the best single component on log loss in 10/12 seasons

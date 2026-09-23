@@ -33,9 +33,15 @@ def pooled_predict(stacked: pd.DataFrame, names: list[str], w: np.ndarray) -> pd
 
 
 def _nll(w: np.ndarray, stacked: pd.DataFrame, names: list[str]) -> float:
-    pred = pooled_predict(stacked, names, w)
-    a3 = pred[pred["brownlow_votes"] == 3]
-    return float(-np.log(np.clip(a3["p3"], 1e-9, 1)).mean())
+    """Mean per-match P3 log loss of the log-linear pool (P3 = within-match
+    softmax of sum_m w_m log p3_m) -- cheap, no full 3-2-1 marginalisation needed."""
+    logp = np.column_stack([np.log(np.clip(stacked[f"p3__{n}"].to_numpy(), 1e-9, 1)) for n in names])
+    u = logp @ w
+    codes, _ = pd.factorize(stacked["match_id"].to_numpy(), sort=False)
+    mx = np.full(codes.max() + 1, -np.inf); np.maximum.at(mx, codes, u)
+    lse = mx + np.log(np.bincount(codes, weights=np.exp(u - mx[codes])))
+    logp3 = u - lse[codes]
+    return float(-logp3[stacked["brownlow_votes"].to_numpy() == 3].mean())
 
 
 def fit_weights(oof: dict[str, pd.DataFrame], train_seasons: list[int]) -> tuple[np.ndarray, list[str]]:
@@ -44,8 +50,12 @@ def fit_weights(oof: dict[str, pd.DataFrame], train_seasons: list[int]) -> tuple
     def obj(theta):
         w = np.exp(theta) / np.exp(theta).sum()
         return _nll(w, stacked, names)
-    res = minimize(obj, np.zeros(k), method="Nelder-Mead", options={"maxiter": 200, "xatol": 1e-3, "fatol": 1e-5})
-    w = np.exp(res.x) / np.exp(res.x).sum()
+    best = None
+    for start in (np.zeros(k), *[np.eye(k)[i] * 2.0 for i in range(k)]):
+        res = minimize(obj, start, method="Nelder-Mead", options={"maxiter": 2000, "xatol": 1e-4, "fatol": 1e-8, "initial_simplex": np.vstack([start, *[start + np.eye(k)[i] for i in range(k)]])})
+        if best is None or res.fun < best.fun:
+            best = res
+    w = np.exp(best.x) / np.exp(best.x).sum()
     return w, names
 
 
