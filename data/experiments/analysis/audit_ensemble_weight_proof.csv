@@ -1,0 +1,4 @@
+test_season,n_prior_seasons,stored_n_train_seasons,max_abs_diff_stored_vs_refit_prior_only,max_abs_diff_if_test_season_included
+2015,3,3,1.3877787807814457e-17,0.11252622656895389
+2021,9,9,6.591949208711867e-17,0.017912299049318126
+2026,14,14,2.211772431870429e-17,0.022200224168403806

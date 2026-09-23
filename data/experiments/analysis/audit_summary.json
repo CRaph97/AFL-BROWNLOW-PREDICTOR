@@ -1,0 +1,155 @@
+{
+ "seasons": [
+  2015,
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "same_period_pooled": [
+  {
+   "model": "Learned ensemble (A+B+C)",
+   "n_matches": 2366,
+   "correct_3": 0.5993,
+   "exact_321": 0.1037,
+   "log_loss_p3": 1.2255,
+   "brier_p3": 0.0121,
+   "ece_p3": 0.0046,
+   "season_mae": 0.7268,
+   "spearman": 0.7511,
+   "n_seasons": 12
+  },
+  {
+   "model": "Performance ML (B)",
+   "n_matches": 2366,
+   "correct_3": 0.5924,
+   "exact_321": 0.0988,
+   "log_loss_p3": 1.2427,
+   "brier_p3": 0.0123,
+   "ece_p3": 0.0046,
+   "season_mae": 0.7306,
+   "spearman": 0.7509,
+   "n_seasons": 12
+  },
+  {
+   "model": "Structural (A)",
+   "n_matches": 2366,
+   "correct_3": 0.5982,
+   "exact_321": 0.0951,
+   "log_loss_p3": 1.2626,
+   "brier_p3": 0.0124,
+   "ece_p3": 0.0044,
+   "season_mae": 0.7487,
+   "spearman": 0.7479,
+   "n_seasons": 12
+  }
+ ],
+ "ens_vs_B_wins": {
+  "correct_3": {
+   "ens_better": 6,
+   "ties": 3
+  },
+  "log_loss_p3": {
+   "ens_better": 12,
+   "ties": 0
+  },
+  "exact_321": {
+   "ens_better": 8,
+   "ties": 0
+  },
+  "season_mae": {
+   "ens_better": 7,
+   "ties": 0
+  }
+ },
+ "paired_bootstrap": [
+  {
+   "metric": "correct_3",
+   "n_matches": 2366,
+   "mean_diff": 0.007185122569737954,
+   "ci_lo": -0.0012785291631445472,
+   "ci_hi": 0.015226120033812332
+  },
+  {
+   "metric": "log_loss_p3",
+   "n_matches": 2366,
+   "mean_diff": -0.017555374806050194,
+   "ci_lo": -0.0239699816275159,
+   "ci_hi": -0.011320951331347556
+  },
+  {
+   "metric": "exact_321",
+   "n_matches": 2366,
+   "mean_diff": 0.005494505494505495,
+   "ci_lo": -0.00253592561284869,
+   "ci_hi": 0.013112848689771757
+  },
+  {
+   "metric": "brier_p3",
+   "n_matches": 2366,
+   "mean_diff": -0.00017164511937678526,
+   "ci_lo": -0.00024257333263778453,
+   "ci_hi": -0.00010532805108760773
+  }
+ ],
+ "weight_proof": [
+  {
+   "test_season": 2015,
+   "n_prior_seasons": 3,
+   "stored_n_train_seasons": 3,
+   "max_abs_diff_stored_vs_refit_prior_only": 1.3877787807814457e-17,
+   "max_abs_diff_if_test_season_included": 0.11252622656895389
+  },
+  {
+   "test_season": 2021,
+   "n_prior_seasons": 9,
+   "stored_n_train_seasons": 9,
+   "max_abs_diff_stored_vs_refit_prior_only": 6.591949208711867e-17,
+   "max_abs_diff_if_test_season_included": 0.017912299049318126
+  },
+  {
+   "test_season": 2026,
+   "n_prior_seasons": 14,
+   "stored_n_train_seasons": 14,
+   "max_abs_diff_stored_vs_refit_prior_only": 2.211772431870429e-17,
+   "max_abs_diff_if_test_season_included": 0.022200224168403806
+  }
+ ],
+ "calibration_pooled": [
+  {
+   "model": "Learned ensemble (A+B+C) platt",
+   "correct_3": 0.5998,
+   "log_loss_p3": 1.2051,
+   "brier_p3": 0.012,
+   "ece_p3": 0.0034
+  },
+  {
+   "model": "Learned ensemble (A+B+C) raw",
+   "correct_3": 0.5993,
+   "log_loss_p3": 1.2255,
+   "brier_p3": 0.0121,
+   "ece_p3": 0.0046
+  },
+  {
+   "model": "Performance ML (B) platt",
+   "correct_3": 0.5886,
+   "log_loss_p3": 1.2292,
+   "brier_p3": 0.0123,
+   "ece_p3": 0.0034
+  },
+  {
+   "model": "Performance ML (B) raw",
+   "correct_3": 0.5886,
+   "log_loss_p3": 1.2457,
+   "brier_p3": 0.0124,
+   "ece_p3": 0.0045
+  }
+ ]
+}

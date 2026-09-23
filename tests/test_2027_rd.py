@@ -272,3 +272,35 @@ def test_model_lab_page_renders_and_is_in_rd_nav():
     assert '"R&D": [' in router and 'st.Page("pages/40_2027_Model_Lab.py", title="2027 Model Lab")' in router
     main_block = router[router.index('"MAIN": ['):router.index("],", router.index('"MAIN": ['))]
     assert "40_2027_Model_Lab" not in main_block
+
+
+# ---------------------------------------------------------------- pre-freeze audit
+@pytest.mark.skipif(not (AN / "audit_summary.json").exists(), reason="audit not run")
+def test_audit_ensemble_weights_learned_only_from_earlier_seasons():
+    proof = pd.read_csv(AN / "audit_ensemble_weight_proof.csv")
+    assert (proof["max_abs_diff_stored_vs_refit_prior_only"] < 1e-9).all()
+    assert (proof["n_prior_seasons"] == proof["stored_n_train_seasons"]).all()
+    assert (proof["max_abs_diff_if_test_season_included"] > 1e-4).any()  # including the test season would have changed the weights
+    w = pd.read_csv(AN / "ensemble_weights.csv")
+    assert (w["n_train_seasons"] == w["test_season"] - 2012).all()  # OOF starts 2012: exactly the seasons strictly before t
+
+
+@pytest.mark.skipif(not (AN / "audit_summary.json").exists(), reason="audit not run")
+def test_audit_platt_calibrators_are_chronological_and_same_period_tables_align():
+    for f in ("audit_platt_fit_spans_B.csv", "audit_platt_fit_spans_ens.csv"):
+        sp = pd.read_csv(AN / f)
+        hi = sp["calibrator_fit_on_seasons"].str.split("-").str[1].astype(int)
+        assert (hi < sp["season"]).all()
+    t = pd.read_csv(AN / "audit_same_period_by_season.csv")
+    assert len({frozenset(g) for g in t.groupby("model")["season"].apply(list)}) == 1  # identical season sets
+    assert t.groupby("season")["n_matches"].nunique().eq(1).all()  # identical match counts per season
+
+
+def test_frozen_2026_production_never_used_same_season_reputation():
+    src = (ROOT / "src" / "models" / "train_2026_scenarios.py").read_text()
+    ens = (ROOT / "src" / "models" / "build_2026_ensemble.py").read_text()
+    from src.models import feature_sets as fs
+    core = fs.FAMILIES["raw"] + fs.FAMILIES["match_relative"] + fs.FAMILIES["context"] + fs.FAMILIES["teammate"] + fs.FAMILIES["role"] + fs.FAMILIES["nonlinear"] + fs.FAMILIES["lagged_form"] + fs.FAMILIES["win_margin_interaction"]
+    assert not any("brownlow" in c for c in core)
+    assert '"A_historical": 0.45' in ens and "A_with_reputation" not in ens.split("ENSEMBLE_WEIGHTS")[1].split("}")[0]
+    assert "REPUTATION_FEATURES" in src  # sensitivity scenario exists but is outside the ensemble
