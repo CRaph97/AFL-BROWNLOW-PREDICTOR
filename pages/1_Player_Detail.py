@@ -21,7 +21,7 @@ c2.metric("95% Range", f"[{row['sim_p2_5']:.0f}, {row['sim_p97_5']:.0f}]")
 c3.metric("Projected 3s / 2s / 1s", f"{row['projected_3_vote_games']} / {row['projected_2_vote_games']} / {row['projected_1_vote_games']}")
 c3.metric("Structural-Break Sensitivity", f"{row['structural_break_sensitivity']:.2f}")
 c4.metric("Model Disagreement", f"{row['model_disagreement_range']:.2f}")
-c4.metric("Reputation Effect", f"{row['reputation_effect']:.2f}")
+c4.metric("Reputation Effect", "VOID", help="Not valid for interpretation: the A_with_reputation sensitivity scenario is contaminated by same-season vote information (data/canonical/contaminated_artefacts.json).")
 
 rbr = d.build_player_round_by_round(pid)
 

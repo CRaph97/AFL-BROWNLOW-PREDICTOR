@@ -62,6 +62,8 @@ class _TemperedUtilityModel:
 
     def __init__(self, features: list[str], **params):
         self.features = list(dict.fromkeys(features))
+        from src.validation.denylist import assert_not_denied
+        assert_not_denied(self.features, context=type(self).__name__)
         self.params = params
         self.tau = 1.0
         self._mu, self._sd = 0.0, 1.0

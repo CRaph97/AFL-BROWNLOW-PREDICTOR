@@ -1,0 +1,25 @@
+{
+ "version": "1.0.0",
+ "declared_at": "2026-09-24",
+ "reason": "The legacy reputation columns average Brownlow votes from earlier rounds of the SAME season. Those votes are not revealed until count night, so for any historical season the columns encode information that did not exist at match time (docs/2027_MODEL_R&D_PLAN.md section 0; audit in docs/2027_MODEL_R&D_RESULTS.md). The frozen 2026 Production ensemble (A_historical 0.45 / B_recent_era 0.20 / C_stats_assisted 0.35) and the Phase 4 walk-forward backtest never used them.",
+ "denied_feature_columns": [
+  "brownlow_votes_prev3_mean",
+  "brownlow_votes_prev5_mean",
+  "brownlow_votes_prev10_mean",
+  "brownlow_votes_prevN_count",
+  "brownlow_votes_season_to_date_mean"
+ ],
+ "denied_output_columns": {
+  "reports/2026_leaderboard.csv": ["A_with_reputation", "reputation_effect"],
+  "reports/2026_scenario_comparison.csv": ["A_with_reputation", "reputation_effect"],
+  "data/processed/all_2026_scenarios_and_ensemble.parquet": ["A_with_reputation"],
+  "data/processed/scenario_predictions_2026.parquet": ["A_with_reputation"]
+ },
+ "contaminated_artefacts": [
+  {"artefact": "docs/REPUTATION_EXPERIMENT.md", "status": "CONTAMINATED / NON-DEPLOYABLE", "detail": "Phase 4 with-reputation variant trained and scored on rows carrying same-season votes; its historical advantage is not achievable at forecast time."},
+  {"artefact": "reports/2026_leaderboard.csv:A_with_reputation", "status": "CONTAMINATED / NON-DEPLOYABLE", "detail": "2026 sensitivity scenario trained on contaminated 2018-2025 rows and served on a frozen end-of-last-season proxy (train/serve mismatch). Not part of FINAL_ENSEMBLE."},
+  {"artefact": "reports/2026_leaderboard.csv:reputation_effect", "status": "VOID / NOT VALID FOR INTERPRETATION", "detail": "Difference A_with_reputation minus A_historical; inherits the contamination above. File preserved unchanged for provenance."}
+ ],
+ "denied_experiment_names": ["ABL_plus_reputation_legacy"],
+ "allowed_alternative": "reputation_pit family (prior_seasons_votes_per_game, prior_seasons_total_votes, last_season_votes, last_season_votes_per_game, has_prior_season) -- strictly prior-season revealed votes."
+}

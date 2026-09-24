@@ -21,6 +21,8 @@ class StructuralPL:
 
     def __init__(self, features: list[str], l2: float = 1.0):
         self.features = list(dict.fromkeys(features))
+        from src.validation.denylist import assert_not_denied
+        assert_not_denied(self.features, context=type(self).__name__)
         self.l2 = l2
         self._median: pd.Series | None = None
         self.model = PlackettLuceModel(feature_names=self.features)

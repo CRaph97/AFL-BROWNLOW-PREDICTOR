@@ -1,0 +1,279 @@
+{
+ "manifest_version": "1.0.0",
+ "built_at": "2026-09-24T00:31:22.471857+00:00",
+ "git_commit": "ec1222b",
+ "status": "ARCHITECTURE FROZEN -- no 2027 model trained (2027 input rows do not exist yet)",
+ "environment": {
+  "python": "3.14.7",
+  "platform": "macOS-14.7.6-x86_64-i386-64bit-Mach-O",
+  "xgboost": "3.4.1",
+  "scikit_learn": "1.9.1",
+  "numpy": "2.5.3",
+  "pandas": "3.0.5",
+  "scipy": "1.18.1",
+  "blas": "accelerate (numpy.show_config)",
+  "thread_settings": {
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "VECLIB_MAXIMUM_THREADS": "1",
+   "xgboost_n_jobs": 2
+  }
+ },
+ "seeds": {
+  "global": 20270101,
+  "xgboost_random_state": 20270101,
+  "simulator": 20270101,
+  "bootstrap": 20270101
+ },
+ "feature_schema": {
+  "build_version": "1.0.0",
+  "registry_path": "data/features/feature_registry.json",
+  "registry_sha256": "cc852bf69411f6c4837f67b6742a880da42c4750279f1bb93a0fb17d5a49b98a",
+  "n_registered_columns": 225,
+  "input_hashes": {
+   "model_core_2026.parquet": "90bad560eea8539f",
+   "model_advanced_2026.parquet": "18474f3290820b99",
+   "2026_brownlow_match_votes.csv": "8651aa4917a2d28f"
+  },
+  "builder": "src/features/point_in_time.py"
+ },
+ "denylist": {
+  "path": "data/canonical/contaminated_artefacts.json",
+  "sha256": "dfca258d7c1f236147db1a54b0cccdf5746da7f66299bdf293c930151c0a617d",
+  "denied_feature_columns": [
+   "brownlow_votes_prev3_mean",
+   "brownlow_votes_prev5_mean",
+   "brownlow_votes_prev10_mean",
+   "brownlow_votes_prevN_count",
+   "brownlow_votes_season_to_date_mean"
+  ]
+ },
+ "models": {
+  "A_structural": {
+   "class": "src.models.structural.pl_model.StructuralPL",
+   "families": [
+    "raw",
+    "match_relative",
+    "match_relative_ext",
+    "team_relative",
+    "context",
+    "teammate",
+    "dominance",
+    "nonlinear",
+    "role",
+    "role_interactions",
+    "lagged_form",
+    "baseline_relative",
+    "team_strength",
+    "reputation_pit"
+   ],
+   "n_features": 210,
+   "hyperparameters": {
+    "l2": 1.0,
+    "optimizer": "L-BFGS-B analytic gradient (fast_pl)",
+    "maxiter": 500,
+    "imputation": "train median"
+   },
+   "window": "expanding 2003-2026",
+   "role_free_decision": "A (current, with role) retained",
+   "role_free_reason": "role-free A failed: pooled_logloss_and_accuracy_better, majority_seasons_logloss, pre2026_majority_logloss, paired_bootstrap_ci_excludes_zero",
+   "source_experiment": {
+    "experiment_id": "A_structural_pl__e109ac43",
+    "git_commit": "8e3f8a5",
+    "timestamp": "2026-09-23T14:06:42.723126+00:00",
+    "n_features": 210,
+    "status": "promotable"
+   }
+  },
+  "B_performance_ml": {
+   "class": "src.models.performance_ml.ranker.PerformanceRanker",
+   "families": [
+    "raw",
+    "match_relative",
+    "match_relative_ext",
+    "team_relative",
+    "context",
+    "teammate",
+    "dominance",
+    "nonlinear",
+    "role",
+    "role_interactions",
+    "lagged_form",
+    "baseline_relative",
+    "team_strength",
+    "reputation_pit"
+   ],
+   "n_features": 210,
+   "hyperparameters": {
+    "n_estimators": 400,
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 20,
+    "reg_lambda": 5.0,
+    "objective": "rank:ndcg",
+    "lambdarank_pair_method": "topk",
+    "lambdarank_num_pair_per_sample": 8,
+    "random_state": 20270101,
+    "n_jobs": 2,
+    "tree_method": "hist"
+   },
+   "temperature": "fit on last training season by PL likelihood, then refit on all training seasons",
+   "window": "expanding 2003-2026",
+   "source_experiment": {
+    "experiment_id": "B_performance_xgb_rank_tuned__a1cd4cce",
+    "git_commit": "8e3f8a5",
+    "timestamp": "2026-09-23T15:13:26.856200+00:00",
+    "n_features": 210,
+    "status": "promoted"
+   },
+   "tuning": "analysis/ranker_tuning_summary.csv (pilot inner holdouts 2013-2015)"
+  },
+  "C_stats_only": {
+   "class": "src.models.stats_only.learned_pl.StatsOnlyPL",
+   "families": [
+    "raw",
+    "match_relative",
+    "match_relative_ext",
+    "team_relative",
+    "context",
+    "teammate",
+    "dominance",
+    "nonlinear"
+   ],
+   "n_features": 154,
+   "hyperparameters": {
+    "l2": 1.0
+   },
+   "guard": "src.models.stats_only.learned_pl.assert_stats_only",
+   "window": "expanding 2003-2026",
+   "source_experiment": {
+    "experiment_id": "C_stats_only_pl__c7fa3d0f",
+    "git_commit": "8e3f8a5",
+    "timestamp": "2026-09-23T14:12:41.990115+00:00",
+    "n_features": 154,
+    "status": "rejected"
+   },
+   "role": "benchmark and ensemble component"
+  }
+ },
+ "ensemble": {
+  "method": "log-linear pool of component P3 (utility = sum_m w_m log p3_m), Plackett-Luce marginalisation for P2/P1",
+  "module": "src.models.ensemble.stacking",
+  "weights_fit": "minimise OOF per-match P3 log loss on walk-forward OOF predictions of seasons <= 2026 only (softmax-parametrised Nelder-Mead, multi-start)",
+  "components": [
+   "A_structural",
+   "B_performance_ml",
+   "C_stats_only"
+  ],
+  "weights_latest_walk_forward_row": {
+   "test_season": 2026,
+   "A": 0.3873774812305886,
+   "B": 0.6090071098808414,
+   "C": 0.00361540888857
+  },
+  "note": "final 2027 weights are refit on all OOF seasons 2012-2026 at freeze; expected close to the 2026 row",
+  "evidence": "analysis/audit_same_period_*.csv, audit_ensemble_weight_proof.csv"
+ },
+ "calibration": {
+  "method": "Platt: logistic regression on logit(P3), renormalised within match; fit on OOF seasons <= 2026",
+  "estimator": "sklearn.linear_model.LogisticRegression(C=1e6)",
+  "applies_to": "headline ensemble and B",
+  "evidence": "analysis/audit_calibration_by_season.csv"
+ },
+ "headline": {
+  "probability_model": "Platt-calibrated learned ensemble (A+B+C)",
+  "primary_standalone": "B_performance_ml",
+  "structural_challenger": "A_structural (3-vote pick model, reported alongside)",
+  "stats_only_challenger": "C_stats_only (benchmark)",
+  "wheelo": "external corroboration and evaluation only; never a training target or ensemble input"
+ },
+ "cutoff_rules": [
+  "training labels: seasons 2003-2026; 2026 labels from data/actual (label_source recorded)",
+  "no 2027 vote or any post-match information enters a feature; every prior_matches/prior_seasons feature is dated before the match",
+  "denied columns (denylist) may never be consumed by any 2027 pipeline",
+  "role for 2027 rows = lagged proxy only",
+  "no in-season refit; per-round runs are inference only",
+  "frozen output directory immutable after Round 1"
+ ],
+ "simulator_contract": {
+  "module": "src.simulation.season_sim",
+  "entry": "simulate_matches(preds, n_sims, seed)",
+  "input_columns": [
+   "match_id",
+   "round",
+   "player_id",
+   "player_name",
+   "team_id",
+   "p3"
+  ],
+  "n_sims_production": 100000,
+  "seed": 20270101,
+  "outputs": [
+   "totals",
+   "players",
+   "votes_by_round"
+  ],
+  "queries": [
+   "summarise",
+   "h2h",
+   "exact_order",
+   "team_leader",
+   "clinch_round"
+  ],
+  "validated_against": "reports/2026_simulation_summary.csv (validate_against_frozen)"
+ },
+ "source_experiments": {
+  "baseline_phase4_pl_legacy": {
+   "experiment_id": "baseline_phase4_pl_legacy__79c7ec8c",
+   "git_commit": "1dc75d6",
+   "timestamp": "2026-09-23T13:57:55.091565+00:00",
+   "n_features": 68,
+   "status": "baseline"
+  },
+  "A_structural_pl": {
+   "experiment_id": "A_structural_pl__e109ac43",
+   "git_commit": "8e3f8a5",
+   "timestamp": "2026-09-23T14:06:42.723126+00:00",
+   "n_features": 210,
+   "status": "promotable"
+  },
+  "A_structural_pl_rolefree": {
+   "experiment_id": "A_structural_pl_rolefree__9dc48871",
+   "git_commit": "ec1222b",
+   "timestamp": "2026-09-24T00:28:09.523496+00:00",
+   "n_features": 192,
+   "status": "candidate"
+  },
+  "B_performance_xgb_rank_tuned": {
+   "experiment_id": "B_performance_xgb_rank_tuned__a1cd4cce",
+   "git_commit": "8e3f8a5",
+   "timestamp": "2026-09-23T15:13:26.856200+00:00",
+   "n_features": 210,
+   "status": "promoted"
+  },
+  "C_stats_only_pl": {
+   "experiment_id": "C_stats_only_pl__c7fa3d0f",
+   "git_commit": "8e3f8a5",
+   "timestamp": "2026-09-23T14:12:41.990115+00:00",
+   "n_features": 154,
+   "status": "rejected"
+  },
+  "C_stats_only_xgb_rank": {
+   "experiment_id": "C_stats_only_xgb_rank__0e75b6a9",
+   "git_commit": "8e3f8a5",
+   "timestamp": "2026-09-23T14:54:56.446674+00:00",
+   "n_features": 154,
+   "status": "promotable"
+  }
+ },
+ "artefact_hashes": {
+  "data/experiments/analysis/comparison_pooled.csv": "3d7dbb026172bf7526db7a04e470e1824044ed34ca79f5c9fa8f6d1afba3849a",
+  "data/experiments/analysis/ensemble_weights.csv": "58729765137c6ddcf48472cba8f43f51f6625c26c6de159b4ec2ba47b709b31c",
+  "data/experiments/analysis/champion.csv": "15c06b01b6a31c1bdac66007d8eeb9792a1119d26760f4532c9f9d18c3b6bb20",
+  "data/experiments/analysis/a_decision.json": "4826ff7da8c96fd340ea721f7eb965cf09039571d8e9853dca2144823988481d",
+  "data/experiments/registry.jsonl": "eeda1befd00c0b8abbd8b4bfac7b3598a5f21d97b12454c13e209181f9fe3205"
+ }
+}

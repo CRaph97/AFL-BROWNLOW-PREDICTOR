@@ -304,3 +304,75 @@ def test_frozen_2026_production_never_used_same_season_reputation():
     assert not any("brownlow" in c for c in core)
     assert '"A_historical": 0.45' in ens and "A_with_reputation" not in ens.split("ENSEMBLE_WEIGHTS")[1].split("}")[0]
     assert "REPUTATION_FEATURES" in src  # sensitivity scenario exists but is outside the ensemble
+
+
+# ---------------------------------------------------------------- pre-freeze closure
+def test_denylist_guards_block_contaminated_columns():
+    from src.validation.denylist import assert_not_denied, DeniedFeatureError, load, assert_output_columns_not_consumed
+    d = load()
+    assert "brownlow_votes_season_to_date_mean" in d["denied_feature_columns"]
+    with pytest.raises(DeniedFeatureError):
+        assert_not_denied(["disposals", "brownlow_votes_prev5_mean"])
+    with pytest.raises(DeniedFeatureError):
+        assert_output_columns_not_consumed("reports/2026_leaderboard.csv", ["rank", "reputation_effect"])
+    assert_not_denied(["disposals", "prior_seasons_votes_per_game"])  # the point-in-time alternative is allowed
+    from src.models.structural.pl_model import StructuralPL
+    from src.models.performance_ml.ranker import PerformanceRanker
+    for cls in (StructuralPL, PerformanceRanker):
+        with pytest.raises(DeniedFeatureError):
+            cls(["disposals", "brownlow_votes_season_to_date_mean"])
+    # no registered candidate (other than the named historical-record ablation) consumes a denied column
+    reg = pd.read_json(ROOT / "data" / "experiments" / "registry.jsonl", lines=True)
+    for _, r in reg.iterrows():
+        if r["name"] not in d["denied_experiment_names"]:
+            assert not (set(r["features"]) & set(d["denied_feature_columns"])), r["name"]
+    # the frozen leaderboard file itself is untouched (provenance preserved) and the doc carries the banner
+    assert "reputation_effect" in pd.read_csv(ROOT / "reports" / "2026_leaderboard.csv", nrows=0).columns
+    assert "CONTAMINATED / NON-DEPLOYABLE" in (ROOT / "docs" / "REPUTATION_EXPERIMENT.md").read_text()
+
+
+@pytest.mark.skipif(not (AN / "a_decision.json").exists(), reason="role-free comparison not run")
+def test_rolefree_experiment_is_reproducible_and_compared_fairly():
+    from src.models.structural.pl_model import StructuralPL
+    from src.validation.run_experiments import STRUCTURAL_FAMILIES, family_features, _load
+    reg = pd.read_json(ROOT / "data" / "experiments" / "registry.jsonl", lines=True)
+    rf = reg[reg["name"] == "A_structural_pl_rolefree"].iloc[-1]; cur = reg[reg["name"] == "A_structural_pl"].iloc[-1]
+    assert not any(f.startswith(("role_", "def_x", "ruck_x", "fwd_x", "mid_x")) for f in rf["features"])
+    assert set(cur["features"]) - set(rf["features"]) == set(family_features(["role", "role_interactions"]))
+    assert rf["hyperparameters"] == cur["hyperparameters"] and rf["validation_seasons"] == cur["validation_seasons"] and rf["window"] == cur["window"]
+    # reproducibility: refit one fold (recent8 -> 2026) and compare to the stored coefficients
+    extras = json.loads((ROOT / "data" / "experiments" / "metrics" / "A_structural_pl_rolefree_extras.json").read_text())
+    feats = rf["features"]; df = _load(feats)
+    tr = df[df["season"].between(2018, 2025)]
+    beta = StructuralPL(feats).fit(tr).coefficients()
+    stored = pd.Series(extras["recent8_2026"]["coefficients"])
+    assert np.allclose(beta.reindex(stored.index).to_numpy(), stored.to_numpy(), atol=1e-6)
+    by = pd.read_csv(AN / "rolefree_by_season_expanding.csv")
+    assert by.groupby("season")["n_matches"].nunique().eq(1).all()  # common matches per season
+
+
+@pytest.mark.skipif(not (ROOT / "data" / "deployment" / "2027_freeze_manifest.json").exists(), reason="manifest not built")
+def test_freeze_manifest_integrity_and_environment_guards():
+    import sklearn, xgboost
+    m = json.loads((ROOT / "data" / "deployment" / "2027_freeze_manifest.json").read_text())
+    env = m["environment"]
+    assert env["xgboost"] == xgboost.__version__ and env["scikit_learn"] == sklearn.__version__ and env["numpy"] == np.__version__ and env["pandas"] == pd.__version__
+    assert env["python"] == __import__("platform").python_version()
+    assert hashlib.sha256((ROOT / m["feature_schema"]["registry_path"]).read_bytes()).hexdigest() == m["feature_schema"]["registry_sha256"]
+    assert hashlib.sha256((ROOT / m["denylist"]["path"]).read_bytes()).hexdigest() == m["denylist"]["sha256"]
+    reg = pd.read_json(ROOT / "data" / "experiments" / "registry.jsonl", lines=True)
+    ids = set(reg["experiment_id"])
+    for k, v in m["source_experiments"].items():
+        assert v["experiment_id"] in ids, k
+    for name in ("A_structural", "B_performance_ml", "C_stats_only"):
+        assert m["models"][name]["source_experiment"]["experiment_id"] in ids
+    assert not (set(m["models"]["B_performance_ml"]["families"]) & {"reputation_legacy", "era"})
+    assert all(f not in m["models"]["C_stats_only"]["families"] for f in ("role", "lagged_form", "reputation_pit", "team_strength"))
+    w = m["ensemble"]["weights_latest_walk_forward_row"]; assert abs(w["A"] + w["B"] + w["C"] - 1) < 1e-6
+    assert m["seeds"]["global"] == 20270101 and m["environment"]["thread_settings"]["OMP_NUM_THREADS"] == "1"
+    assert "no 2027 model trained" in m["status"]
+    for rel, h in m["artefact_hashes"].items():
+        assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == h, rel
+    dec = json.loads((AN / "a_decision.json").read_text())
+    assert m["models"]["A_structural"]["role_free_decision"] == dec["decision"]
+    assert ("role" in m["models"]["A_structural"]["families"]) == (not dec["decision"].startswith("A role-free"))

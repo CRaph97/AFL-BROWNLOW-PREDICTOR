@@ -134,6 +134,9 @@ def run_experiment(name: str, kind: str, families: list[str], features: list[str
                    windows: dict | None = None, test_seasons: list[int] | None = None, workers: int = 4, notes: str = "",
                    status: str = "candidate", legacy_dropna: bool = False, write_oof: bool = True) -> pd.DataFrame:
     features = features or family_features(families)
+    from src.validation.denylist import assert_not_denied, load as _load_denylist
+    if name not in _load_denylist()["denied_experiment_names"]:
+        assert_not_denied(features, context=f"experiment {name}")
     windows = windows or {"expanding": None, "recent8": 8}
     test_seasons = test_seasons or TEST_SEASONS
     seasons = sorted(pd.read_parquet(FEAT, columns=["season"])["season"].unique())
@@ -217,6 +220,12 @@ def suite_b_tuned(workers: int):
                    notes="Candidate B with hyperparameters selected on pilot inner holdouts (2014-2016 folds, PL NLL): max_depth 6, min_child_weight 20 -- see analysis/ranker_tuning_summary.csv")
 
 
+def suite_a_rolefree(workers: int):
+    fams = [f for f in STRUCTURAL_FAMILIES if f not in ("role", "role_interactions")]
+    run_experiment("A_structural_pl_rolefree", "structural_pl", fams, workers=workers,
+                   notes="Pre-freeze closure: Structural A with role dummies and role interactions removed; identical folds, windows, l2, seeds.")
+
+
 def suite_ablation(workers: int):
     base = STRUCTURAL_FAMILIES
     run_experiment("ABL_full", "structural_pl", base, test_seasons=ABLATION_SEASONS, windows={"recent8": 8}, workers=workers, write_oof=False, status="ablation")
@@ -234,5 +243,5 @@ def suite_ablation(workers: int):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--suite", required=True); ap.add_argument("--workers", type=int, default=4)
     a = ap.parse_args()
-    {"reproduce": lambda w: suite_reproduce(), "baseline": suite_baseline, "candidates": suite_candidates, "ablation": suite_ablation, "b_tuned": suite_b_tuned}[a.suite](a.workers)
+    {"reproduce": lambda w: suite_reproduce(), "baseline": suite_baseline, "candidates": suite_candidates, "ablation": suite_ablation, "b_tuned": suite_b_tuned, "a_rolefree": suite_a_rolefree}[a.suite](a.workers)
     sys.exit(0)

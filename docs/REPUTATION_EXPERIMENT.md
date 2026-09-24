@@ -1,5 +1,8 @@
 # Reputation Experiment — Phase 4, Section P
 
+> **STATUS (2026-09-24): CONTAMINATED / NON-DEPLOYABLE.** The `with_reputation` variant uses `brownlow_votes_prev5_mean` and `brownlow_votes_season_to_date_mean`, which average votes from earlier rounds of the same season -- information that does not exist until count night. Its historical advantage is therefore not achievable at forecast time. Kept unchanged for provenance; the 2027 framework uses the prior-season-only `reputation_pit` family instead. Denylist: `data/canonical/contaminated_artefacts.json`.
+
+
 Status: **Complete.**
 Last updated: 2026-09-17
 
